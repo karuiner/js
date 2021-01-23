@@ -9,31 +9,33 @@
 
 body {
     background: white;
+    background-image: url("./sky-690293.jpg");
+    background-size: cover;
 }
 
 .upper_moniter {
     background: white;
-    width: 410px;
+    width: 500px;
     height: 30px;
     font-size: 16px;
     text-align: right;
     vertical-align: middle;
     padding: 25px 15px;
-    border-top-left-radius: 25%;
-    border-top-right-radius: 25%;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
     overflow: hidden;
     overflow-wrap: break-word;
 }
 
 .lower_moniter {
     background: white;
-    width: 410px;
+    width: 500px;
     height: 80px;
-    font-size: 40px;
+    font-size: 35px;
     text-align: right;
     vertical-align: top;
-    border-bottom-left-radius: 50%;
-    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 40%;
+    border-bottom-right-radius: 40%;
     overflow: hidden;
     overflow-wrap: break-word;
 }
@@ -49,7 +51,7 @@ body {
     /* background: grey; */
     background-size: 90px;
     background-color: grey;
-    width: 440px;
+    width: 520px;
     height: 400px;
     border-radius: 10px;
     box-shadow: 0px 155px 0 0 grey inset, 0 0 20px 5px rgba(103, 56, 56, 0.262), 3px 3px 0 0 darkgrey(189, 109, 109);
@@ -62,7 +64,7 @@ body {
     /* background: grey; */
     background-size: 90px;
     background-color: grey;
-    width: 420px;
+    width: 480px;
     height: 250px;
     border: solid 6px grey;
     border-radius: 50%;
@@ -71,35 +73,35 @@ body {
 .button_low1 {
     display: flex;
     vertical-align: middle;
-    width: 400px;
+    width: 500px;
     height: 50px;
 }
 
 .button_low2 {
     display: flex;
     vertical-align: middle;
-    width: 400px;
+    width: 500px;
     height: 50px;
 }
 
 .button_low3 {
     display: flex;
     vertical-align: middle;
-    width: 400px;
+    width: 500px;
     height: 50px;
 }
 
 .button_low4 {
     display: flex;
     vertical-align: middle;
-    width: 400px;
+    width: 500px;
     height: 50px;
 }
 
 .button_low5 {
     display: flex;
     vertical-align: middle;
-    width: 400px;
+    width: 500px;
     height: 50px;
 }
 
@@ -109,7 +111,7 @@ body {
     width: 40px;
     height: 40px;
     font-size: 16px;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 15px;
     border: solid 6px palegreen;
     border-radius: 25%;
 }
@@ -120,7 +122,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 15px;
     border: solid 6px goldenrod;
     border-radius: 50%;
 }
@@ -131,7 +133,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 15px;
     border: solid 6px goldenrod;
     border-radius: 50%;
 }
@@ -142,7 +144,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 15px;
     border: solid 6px goldenrod;
     border-radius: 50%;
 }
@@ -153,7 +155,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 15px;
     border: solid 6px palegreen;
     border-radius: 25%;
 }
@@ -164,7 +166,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 15px;
     border: solid 6px palegreen;
     border-radius: 25%;
 }
