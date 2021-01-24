@@ -30,3 +30,18 @@ function enumerate(arr) {
 }
 
 console.log(enumerate(range(10, 20)));
+
+function enumerate2(arr) {
+    let ans = [];
+    let j = 0;
+    for (let i of arr) {
+        ans.push([j, i]);
+        j++;
+    }
+    return ans;
+}
+console.log(enumerate2(range(10, 20)));
+let i, j;
+for ([i, j] of enumerate2(range(10, 20))) {
+    console.log(i, j);
+}

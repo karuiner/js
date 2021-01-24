@@ -1,0 +1,17 @@
+body {
+    background: white;
+}
+.items {
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    width: 500px;
+    align-items: center;
+    vertical-align: middle;
+    justify-content: space-between;
+}
+.button {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+}

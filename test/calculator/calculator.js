@@ -16,6 +16,34 @@ let firstNum,
     acon = false,
     inv = false;
 
+function range(a, b, c) {
+    let i,
+        j,
+        k,
+        ans = [];
+    if (b === undefined && c === undefined) {
+        [i, j, k] = [0, a, 1];
+    } else if (c === undefined) {
+        [i, j, k] = [a, b, 1];
+    } else {
+        [i, j, k] = [a, b, c];
+    }
+    for (; i < j; i += k) {
+        ans.push(i);
+    }
+    return ans;
+}
+
+function enumerate(arr) {
+    let ans = [];
+    let j = 0;
+    for (let i of arr) {
+        ans.push([j, i]);
+        j++;
+    }
+    return ans;
+}
+
 function paren_Cal(s) {
     let ans = [],
         oper = ["*", "+", "-", "/"],
@@ -127,6 +155,10 @@ function new_Calculate(inp) {
     return cc < cm ? inp : "error";
 }
 
+function tri_Calculate(inp) {
+    return inp;
+}
+
 function total_Calculate(inp) {
     if (inp.indexOf("(") >= 0) {
         let rc = inp.match(/[)]/gi) !== null ? inp.match(/[)]/gi).length : 0;
@@ -202,9 +234,9 @@ buttons.addEventListener("click", function (event) {
         if (action === "fbutton") {
             if (buttonContent === "sin" || buttonContent === "cos" || buttonContent === "tan") {
                 if (input === "0") {
-                    input = `${buttonContent} (`;
+                    input = `${buttonContent}(`;
                 } else {
-                    input += ` ${buttonContent} (`;
+                    input += ` ${buttonContent}(`;
                 }
                 previousKey = buttonContent;
             }

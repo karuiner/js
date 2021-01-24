@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #4a4a4a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+  header, footer {
+    font-size: large;
+    text-align: center;
+    padding: 0.3em 0;
+    background-color: #4a4a4a;
+    color: #f9f9f9;
+  }
+  nav {
+    background: #eee;
+    width: 100px;
+  height: 100px;
+  }
+  main {
+    background: #f9f9f9;
+    width: 1000px;
+  height: 1000px;
+  }
+  aside {
+    background: white;
+    width: 100px;
+  height: 100px;
+  }
+  .container2 {
+    display: flex;
+    flex: 1;
+  }
+  .button {
+    color: red;
+  }
