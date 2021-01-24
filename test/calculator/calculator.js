@@ -24,46 +24,59 @@ function paren_Cal(s) {
         a,
         b,
         c,
-        r,
+        r = [],
         end,
         i,
-        j;
-    s = s.split(" ");
+        j,
+        km = s.length;
+    //    s = s.split(" ");
     [i, j] = [s.indexOf("("), s.lastIndexOf(")")];
-    start = s.slice(0, i).join(" ");
-    end = s.slice(j + 1).join(" ");
+    start = s.slice(0, i);
+    end = s.slice(j + 1);
     s = s.slice(i + 1, j);
-    while (s.length || k > 20) {
+    while (s.length || k > km) {
         [i, j] = [s.indexOf("("), s.lastIndexOf(")")];
-        if (j !== s.length - 1 && j > 0) {
-            ans.unshift(s.slice(j + 1).join(" "));
-        } else if (i > 0) {
-            ans.unshift(s.slice(0, i).join(" "));
-        } else if (i < 0 && j < 0) {
-            ans.unshift(s.join(" "));
+        if (i >= 0 || j >= 0) {
+            a = s.slice(0, i);
+            b = s.slice(j + 1);
+            ans.unshift([a, b]);
+            s = s.slice(i + 1, j);
+        } else {
+            ans.unshift(s);
             s = "";
         }
-        s = s.slice(i + 1, j);
         k++;
         console.log(ans, s);
     }
     for (let k of ans) {
-        if (k.split(" ").length === 3) {
-            [a, b, c] = k.split(" ");
-            r = calculate(a, b, c);
-        } else if (k.split(" ").length === 2) {
-            [a, b] = k.split(" ");
-            if (oper.includes(a)) {
-                r = calculate(r, a, b);
-            } else {
-                r = calculate(a, b, r);
-            }
+        if (k.length === 2) {
+            [a, b] = k;
+            r = a.concat(r, b);
+        } else if (oper.includes(k[0][0])) {
+            r = r.concat(k);
         } else {
+            r = k.concat(r);
+        }
+        r = new_Calculate(r);
+        if (r === "error") {
             return "error";
         }
+        // if (k.split(" ").length === 3) {
+        //     [a, b, c] = k.split(" ");
+        //     r = calculate(a, b, c);
+        // } else if (k.split(" ").length === 2) {
+        //     [a, b] = k.split(" ");
+        //     if (oper.includes(a)) {
+        //         r = calculate(r, a, b);
+        //     } else {
+        //         r = calculate(a, b, r);
+        //     }
+        // } else {
+        //     return "error";
+        // }
     }
 
-    return `${start} ${r} ${end}`.trim();
+    return start.concat(r, end);
 }
 
 function calculate(n1, operator, n2) {
@@ -83,7 +96,7 @@ function calculate(n1, operator, n2) {
     return String(result);
 }
 
-function new_calculate(inp) {
+function new_Calculate(inp) {
     // 사칙 연산 우선 순위대로 계산하는 코드작성
     // 입력 inp는 arr을 가정
     //교환시 splice 활용
@@ -92,8 +105,9 @@ function new_calculate(inp) {
         tI,
         dI,
         cI,
-        cc = 0; // pulse index, minus index, times index, divide index, calculate index
-    while (inp.length > 1 && cc < 10) {
+        cc = 0,
+        cm = inp.length; // pulse index, minus index, times index, divide index
+    while (inp.length > 1 && cc < cm) {
         pI = inp.indexOf("+");
         mI = inp.indexOf("-");
         tI = inp.indexOf("X");
@@ -107,11 +121,10 @@ function new_calculate(inp) {
             [num1, intermediateOperator, num2] = inp.slice(cI - 1, cI + 2);
             inp.splice(cI - 1, 3, calculate(num1, intermediateOperator, num2));
         }
-
         cc++;
     }
 
-    return inp.join("");
+    return cc < cm ? inp : "error";
 }
 
 function total_Calculate(inp) {
@@ -123,23 +136,30 @@ function total_Calculate(inp) {
                 inp += " )";
             }
         }
-        console.log(inp);
+    }
+
+    if (inp.indexOf("(") >= 0) {
         inp = paren_Cal(inp);
         if (inp === "error") {
             return inp;
         }
     }
-    save = inp.split(" ");
-    while (save.length > 3) {
-        [num1, intermediateOperator, num2] = save.slice(0, 3);
-        save = save.slice(3);
-        save.unshift(calculate(num1, intermediateOperator, num2));
+    console.log("137", inp);
+    if (inp !== "error" && !Array.isArray(inp)) {
+        inp = inp.split(" ");
     }
+    inp = new_Calculate(inp);
+    // save = inp.split(" ");
+    // while (save.length > 3) {
+    //     [num1, intermediateOperator, num2] = save.slice(0, 3);
+    //     save = save.slice(3);
+    //     save.unshift(calculate(num1, intermediateOperator, num2));
+    // }
 
-    [num1, intermediateOperator, num2] = save;
-    inp = calculate(num1, intermediateOperator, num2);
-
-    return inp;
+    // [num1, intermediateOperator, num2] = save;
+    // inp = calculate(num1, intermediateOperator, num2);
+    console.log("151", inp);
+    return inp.join("");
 }
 
 buttons.addEventListener("click", function (event) {
@@ -180,6 +200,15 @@ buttons.addEventListener("click", function (event) {
         }
 
         if (action === "fbutton") {
+            if (buttonContent === "sin" || buttonContent === "cos" || buttonContent === "tan") {
+                if (input === "0") {
+                    input = `${buttonContent} (`;
+                } else {
+                    input += ` ${buttonContent} (`;
+                }
+                previousKey = buttonContent;
+            }
+
             if (buttonContent === "(") {
                 if (input === "0") {
                     input = buttonContent;
