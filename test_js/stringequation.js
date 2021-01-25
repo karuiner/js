@@ -65,6 +65,54 @@ function paren_Cal(s) {
 }
 
 s = "( 1 + ( ( 1 + 2 ) + 3 ) ) + 4 ";
-console.log(paren_Cal(s));
+//console.log(paren_Cal(s));
 s = "( 1.2 + ( 3.4 + 4.5 ) ) + 5.6";
-console.log(paren_Cal(s));
+//console.log(paren_Cal(s));
+
+function enumerate(arr) {
+    let ans = [];
+    let j = 0;
+    for (let i of arr) {
+        ans.push([j, i]);
+        j++;
+    }
+    return ans;
+}
+
+// function paren_Cal2(arr) {
+//     let ans = [],
+//         k = 0,
+//         iii = [];
+
+//     for (let [i, j] of enumerate(arr)) {
+//         if (j === "(") {
+//             ans.push(iii);
+//             ans[k].push(i);
+//             k += 1;
+//         } else if (j === ")") {
+//             ans[k].push(i);
+//             k -= 1;
+//         }
+//     }
+
+//     return ans;
+// }
+
+// s = "( 1.2 + ( 3.4 + 4.5 ) ) + 5.6".split(" ");
+// console.log(paren_Cal2(s));
+// s = "( 1 + ( ( 1 + 2 ) + 3 ) ) + 4".split(" ");
+// console.log(paren_Cal2(s));
+
+function zip(arr1, arr2) {
+    let ans = [];
+    if (arr1.length !== arr2.length) {
+        return "not a same length";
+    }
+    for (let i = 0; i < arr1.length; i++) {
+        ans.push([arr1[i], arr2[i]]);
+    }
+
+    return ans;
+}
+
+console.log(zip([1, 2, 3, 4, 5], [6, 7, 8, 9, 10]));

@@ -22,17 +22,6 @@ console.log(range(0, 10, 3));
 
 function enumerate(arr) {
     let ans = [];
-    let index = range(arr.length);
-    for (let i of index) {
-        ans.push([i, arr[i]]);
-    }
-    return ans;
-}
-
-console.log(enumerate(range(10, 20)));
-
-function enumerate2(arr) {
-    let ans = [];
     let j = 0;
     for (let i of arr) {
         ans.push([j, i]);
@@ -40,8 +29,22 @@ function enumerate2(arr) {
     }
     return ans;
 }
-console.log(enumerate2(range(10, 20)));
+console.log(enumerate(range(10, 20)));
 let i, j;
-for ([i, j] of enumerate2(range(10, 20))) {
+for ([i, j] of enumerate(range(10, 20))) {
     console.log(i, j);
 }
+
+function enumerate2(arr) {
+    let ans = [];
+    let index = range(arr.length);
+    for (let i of index) {
+        ans.push([i, arr[i]]);
+    }
+    return ans;
+}
+
+console.log(enumerate2(range(10, 20)));
+
+exports.range = range;
+exports.enumerate = enumerate;
