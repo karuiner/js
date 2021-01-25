@@ -116,3 +116,22 @@ function zip(arr1, arr2) {
 }
 
 console.log(zip([1, 2, 3, 4, 5], [6, 7, 8, 9, 10]));
+
+function f_cal(arr) {
+    let lmap = [],
+        l = 0;
+    for (let i of arr) {
+        if (i.indexOf("(") >= 0) {
+            l += 1;
+            lmap.push(-1);
+        } else if (i.indexOf(")") >= 0) {
+            l -= 1;
+            lmap.push(-1);
+        } else {
+            lmap.push(l);
+        }
+    }
+    return lmap;
+}
+s = "( 1.2 + ( 3.4 + 4.5 ) ) + 5.6".split(" ");
+console.log(f_cal(s));
