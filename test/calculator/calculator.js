@@ -135,6 +135,10 @@ function new_Calculate(inp) {
         cI,
         cc = 0,
         cm = inp.length; // pulse index, minus index, times index, divide index
+    if (inp.length === 1) {
+        return inp;
+    }
+
     while (inp.length > 1 && cc < cm) {
         pI = inp.indexOf("+");
         mI = inp.indexOf("-");
@@ -155,8 +159,88 @@ function new_Calculate(inp) {
     return cc < cm ? inp : "error";
 }
 
-function tri_Calculate(inp) {
-    return inp;
+function angle_function(arr) {
+    let identifier = arr[0].slice(0, arr[0].length - 1),
+        in_Arr = arr.slice(1, arr.length - 1),
+        ans;
+    let angle_obj = { sin: Math.sin, cos: Math.cos, tan: Math.cos };
+    if (in_Arr.length === 1) {
+        ans = angle_obj[identifier](parseFloat(in_Arr));
+    } else if (in_Arr.leanth % 2) {
+        ans = angle_obj[identifier](new_Calculate(in_Arr));
+    } else {
+        return "error";
+    }
+    return ans;
+}
+
+function main_Calculation(arr) {
+    let ans = 0;
+    let isAngle = arr[0].indexOf("(") >= 0,
+        isParen = arr[0] === "(";
+
+    if (isAngle && !isParen) {
+        ans = angle_function(arr);
+    } else if (isParen) {
+        in_Arr = arr.slice(1, arr.length - 1);
+        ans = new_Calculate(in_Arr);
+    } else {
+        ans = new_Calculate(arr);
+    }
+
+    return String(ans);
+}
+
+function mk_Lmap(s) {
+    let l = 0,
+        lmap = [],
+        ml = 0;
+    for (let j of s) {
+        if (j.indexOf("(") >= 0) {
+            l += 1;
+            lmap.push(l);
+            ml = l > ml ? l : ml;
+        } else if (j.indexOf(")") >= 0) {
+            lmap.push(l);
+            l -= 1;
+        } else {
+            lmap.push(l);
+        }
+    }
+    return lmap;
+}
+
+function get_Level(arr, lmap, ml) {
+    let i, j, k, v;
+    for (let comb of lmap.entries()) {
+        [k, v] = comb;
+        if (v === ml) {
+            i = i === undefined ? k : i;
+            j = j === undefined ? k : k - j === 1 ? k : j;
+        }
+    }
+    return [arr.slice(i, j + 1), [i, j]];
+}
+
+function put_Level(arr, lmap, index, v) {
+    let [i, j] = index;
+    arr.splice(i, j - i + 1, v);
+    lmap.splice(i, j - i + 1, lmap[i] - 1);
+    return [arr, lmap];
+}
+
+function string_Caculation_f(str_Arr) {
+    let lmap = mk_Lmap(str_Arr); // 주어진 수식의 레벨 맵을 작성
+    let ml = lmap.reduce((x, y) => (x > y ? x : y));
+    let ps_Area, ps_Index, ps_Value; // ps: present_stage 현재 단계를 표현하기위한 약어
+    while (ml >= 0) {
+        [ps_Area, ps_Index] = get_Level(str_Arr, lmap, ml);
+        ps_Value = main_Calculation(ps_Area);
+        [str_Arr, lmap] = put_Level(str_Arr, lmap, ps_Index, ps_Value);
+        ml = lmap.reduce((x, y) => (x > y ? x : y));
+        console.log(ps_Area, ps_Value, str_Arr, ml);
+    }
+    return ps_Area;
 }
 
 function total_Calculate(inp) {
@@ -169,29 +253,21 @@ function total_Calculate(inp) {
             }
         }
     }
-
-    if (inp.indexOf("(") >= 0) {
-        inp = paren_Cal(inp);
-        if (inp === "error") {
-            return inp;
+    inp = inp.split(" ");
+    let select_Index = [];
+    for (let i = 0; i < inp.length; i++) {
+        if (inp[i].indexOf("(") >= 0) {
+            if (!isNaN(inp[i - 1]) || inp[i - 1] === ")") {
+                inp[i - 1] = `${inp[i - 1]} X`;
+            }
         }
     }
-    console.log("137", inp);
-    if (inp !== "error" && !Array.isArray(inp)) {
-        inp = inp.split(" ");
-    }
-    inp = new_Calculate(inp);
-    // save = inp.split(" ");
-    // while (save.length > 3) {
-    //     [num1, intermediateOperator, num2] = save.slice(0, 3);
-    //     save = save.slice(3);
-    //     save.unshift(calculate(num1, intermediateOperator, num2));
-    // }
+    inp = inp.join(" ").split(" ");
 
-    // [num1, intermediateOperator, num2] = save;
-    // inp = calculate(num1, intermediateOperator, num2);
-    console.log("151", inp);
-    return inp.join("");
+    console.log(inp);
+    inp = string_Caculation_f(inp);
+
+    return inp.join(" ");
 }
 
 buttons.addEventListener("click", function (event) {
@@ -210,7 +286,7 @@ buttons.addEventListener("click", function (event) {
                     pinput = input;
                 }
                 input = buttonContent;
-            } else if (previousKey === "operator" || previousKey === "(" || !(input.split(" ").length % 2)) {
+            } else if (previousKey === "operator" || previousKey === "(" || previousKey === "angle_function" || !(input.split(" ").length % 2)) {
                 console.log(previousKey === "operator" || !(input.split(" ").length % 2));
                 input += ` ${buttonContent}`;
             } else {
@@ -238,7 +314,7 @@ buttons.addEventListener("click", function (event) {
                 } else {
                     input += ` ${buttonContent}(`;
                 }
-                previousKey = buttonContent;
+                previousKey = "angle_function";
             }
 
             if (buttonContent === "(") {
@@ -296,29 +372,12 @@ buttons.addEventListener("click", function (event) {
 
         if (action === "Enter") {
             // 우선 삼요소가 다 입력 되었는지를 따진다.
-            // if (intermediateOperator !== undefined) {
-            //     if (previousKey === "calculate") {
-            //         display.textContent = calculate(firstNum, intermediateOperator, previousNum);
-            //         firstNum = display.textContent;
-            //     } else {
-            //         previousNum = display.textContent;
-            //         firstNum = display.textContent = calculate(firstNum, intermediateOperator, previousNum);
-            //     }
-            // }
             console.log(input.split(" ").length, input.split(" ").length % 2);
             if (!(input.split(" ").length % 2) && input.indexOf("(") === -1) {
                 pinput = "0";
             } else {
                 if (input.split(" ").length >= 3) {
-                    // save = input.split(" ");
-                    // while (save.length > 3) {
-                    //     [num1, intermediateOperator, num2] = save.slice(0, 3);
-                    //     save = save.slice(3);
-                    //     save.unshift(calculate(num1, intermediateOperator, num2));
-                    // }
-                    // [num1, intermediateOperator, num2] = save;
                     pinput = input;
-                    // input = calculate(num1, intermediateOperator, num2);
                     input = total_Calculate(input);
                 } else {
                     pinput = "0";

@@ -1,4 +1,4 @@
-let s = "1 * 2 + 3 / ( 4 + sin( 1 / 2 ) / 2 + ( 3 / 4 + 5 * ( 1 + 3.4 + cos( 0.5 ) * 2 ) ) ) + 3".split(" ");
+let s = "1 X 2 + 3 / ( 4 + sin( 1 / 2 ) / 2 + ( 3 / 4 + 5 X ( 1 + 3.4 + cos( 0.5 ) X 2 ) ) ) + 3".split(" ");
 
 function mk_Lmap(s) {
     let l = 0,
@@ -16,19 +16,11 @@ function mk_Lmap(s) {
             lmap.push(l);
         }
     }
-    return {
-        map: function () {
-            return lmap;
-        },
-        max: function () {
-            return ml;
-        },
-    };
+    return lmap;
 }
 
-let lmap = mk_Lmap(s).map();
-let ml = mk_Lmap(s).max();
-
+let lmap = mk_Lmap(s);
+let ml = lmap.reduce((x, y) => (x > y ? x : y));
 function get_Level(arr, lmap, ml) {
     let i, j, k, v;
     for (let comb of lmap.entries()) {
@@ -38,14 +30,7 @@ function get_Level(arr, lmap, ml) {
             j = j === undefined ? k : k - j === 1 ? k : j;
         }
     }
-    return {
-        array: function () {
-            return arr.slice(i, j + 1);
-        },
-        index: function () {
-            return [i, j];
-        },
-    };
+    return [arr.slice(i, j + 1), [i, j]];
 }
 
 function calculate(n1, operator, n2) {
@@ -100,38 +85,40 @@ function new_Calculate(inp) {
 // console.log(get_Level(s, lmap, ml).array());
 // console.log(get_Level(s, lmap, ml).index());
 
-let cal_Arr_Test = get_Level(s, lmap, ml).array();
-let cal_Arr_Index = get_Level(s, lmap, ml).index();
+let [cal_Arr_Test, cal_Arr_Index] = get_Level(s, lmap, ml);
+
+function angle_function(arr) {
+    let identifier = arr[0].slice(0, arr[0].length - 1),
+        in_Arr = arr.slice(1, arr.length - 1),
+        ans;
+    let angle_obj = { sin: Math.sin, cos: Math.cos, tan: Math.cos };
+    if (in_Arr.length === 1) {
+        ans = angle_obj[identifier](parseFloat(in_Arr));
+    } else if (in_Arr.leanth % 2) {
+        ans = angle_obj[identifier](new_Calculate(in_Arr));
+    } else {
+        return "error";
+    }
+    return ans;
+}
 
 function main_Calculation(arr) {
-    let sin = Math.sin,
-        cos = Math.cos,
-        tan = Math.tan,
-        ans = 0;
-    let isSin = arr[0].indexOf("sin") >= 0,
-        isCos = arr[0].indexOf("cos") >= 0,
-        isTan = arr[0].indexOf("tan") >= 0,
-        isAsin = arr[0].indexOf("asin") >= 0,
-        isAcos = arr[0].indexOf("acos") >= 0,
-        isAtan = arr[0].indexOf("atan") >= 0;
+    let ans = 0;
+    let isAngle = arr[0].indexOf("(") >= 0,
+        isParen = arr[0] === "(";
 
-    if (isSin || isCos || isTan) {
-        in_Arr = arr.slice(1, arr.length - 1);
-        if (in_Arr.length == 1) {
-            if (isSin) {
-                ans = sin(parseFloat(in_Arr));
-            } else if (isCos) {
-                ans = cos(parseFloat(in_Arr));
-            } else {
-                ans = tan(parseFloat(in_Arr));
-            }
-        } else if (in_Arr.leanth % 2) {
-        } else {
-            return "error";
-        }
+    if (isAngle) {
+        ans = angle_function(arr);
     }
 
-    return ans;
+    if (isParen) {
+        in_Arr = arr.slice(1, arr.length - 1);
+        ans = new_Calculate(in_Arr);
+    } else {
+        ans = new_Calculate(arr);
+    }
+
+    return String(ans);
 }
 
 // console.log(main_Calculation(cal_Arr_Test));
@@ -143,26 +130,27 @@ function put_Level(arr, lmap, index, v) {
     lmap.splice(i, j - i + 1, lmap[i] - 1);
     return [arr, lmap];
 }
-console.log(s.join(" "));
-[s, lmap] = put_Level(s, lmap, cal_Arr_Index, u);
-console.log(s.join(" "));
-console.log(cal_Arr_Index);
-console.log(lmap);
+// console.log(s.join(" "));
+// [s, lmap] = put_Level(s, lmap, cal_Arr_Index, u);
+// console.log(s.join(" "));
+// console.log(cal_Arr_Index);
+// console.log(lmap);
+// ml = lmap.reduce((x, y) => (x > y ? x : y));
+// cal_Arr_Test = get_Level(s, lmap, ml).array();
+// cal_Arr_Index = get_Level(s, lmap, ml).index();
+// console.log(cal_Arr_Test);
+// console.log(new_Calculate(cal_Arr_Test.slice(1, cal_Arr_Test.length - 1)));
 
 function string_Caculation_f(str_Arr) {
-    let lmap = mk_Lmap(str_Arr).map(); // 주어진 수식의 레벨 맵을 작성
-    let ml = mk_Lmap(str_Arr).max(); // 주어진 수식의 최대 연산 레벨을 결정
-    let ps_Area,
-        ps_Index,
-        ps_Value,
-        kk = 0; // ps: present_stage 현재 단계를 표현하기위한 약어
-    while (ml >= 0 && kk < 100) {
-        ps_Area = get_Level(str_Arr, lmap, ml).array();
-        ps_Index = get_Level(str_Arr, lmap, ml).index();
+    let lmap = mk_Lmap(str_Arr); // 주어진 수식의 레벨 맵을 작성
+    let ml = lmap.reduce((x, y) => (x > y ? x : y));
+    let ps_Area, ps_Index, ps_Value; // ps: present_stage 현재 단계를 표현하기위한 약어
+    while (ml >= 0) {
+        [ps_Area, ps_Index] = get_Level(str_Arr, lmap, ml);
         ps_Value = main_Calculation(ps_Area);
         [str_Arr, lmap] = put_Level(str_Arr, lmap, ps_Index, ps_Value);
-
-        kk++;
+        ml = lmap.reduce((x, y) => (x > y ? x : y));
     }
-    console.log();
+    return ps_Area;
 }
+console.log(string_Caculation_f(s));
