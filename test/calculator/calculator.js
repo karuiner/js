@@ -4,6 +4,8 @@ const display2 = document.querySelector(".upper_moniter");
 const operator = document.querySelector(".operator");
 const buttons = calculator.querySelector(".buttons");
 const ac = document.querySelector(".clear");
+const Rad_Button = document.querySelector("#Rad");
+const Deg_Button = document.querySelector("#Deg");
 let firstNum,
     num1,
     num2,
@@ -15,97 +17,7 @@ let firstNum,
     pinput = "",
     acon = false,
     inv = false;
-
-function range(a, b, c) {
-    let i,
-        j,
-        k,
-        ans = [];
-    if (b === undefined && c === undefined) {
-        [i, j, k] = [0, a, 1];
-    } else if (c === undefined) {
-        [i, j, k] = [a, b, 1];
-    } else {
-        [i, j, k] = [a, b, c];
-    }
-    for (; i < j; i += k) {
-        ans.push(i);
-    }
-    return ans;
-}
-
-function enumerate(arr) {
-    let ans = [];
-    let j = 0;
-    for (let i of arr) {
-        ans.push([j, i]);
-        j++;
-    }
-    return ans;
-}
-
-function paren_Cal(s) {
-    let ans = [],
-        oper = ["*", "+", "-", "/"],
-        k = 0,
-        start,
-        a,
-        b,
-        c,
-        r = [],
-        end,
-        i,
-        j,
-        km = s.length;
-    //    s = s.split(" ");
-    [i, j] = [s.indexOf("("), s.lastIndexOf(")")];
-    start = s.slice(0, i);
-    end = s.slice(j + 1);
-    s = s.slice(i + 1, j);
-    while (s.length || k > km) {
-        [i, j] = [s.indexOf("("), s.lastIndexOf(")")];
-        if (i >= 0 || j >= 0) {
-            a = s.slice(0, i);
-            b = s.slice(j + 1);
-            ans.unshift([a, b]);
-            s = s.slice(i + 1, j);
-        } else {
-            ans.unshift(s);
-            s = "";
-        }
-        k++;
-        console.log(ans, s);
-    }
-    for (let k of ans) {
-        if (k.length === 2) {
-            [a, b] = k;
-            r = a.concat(r, b);
-        } else if (oper.includes(k[0][0])) {
-            r = r.concat(k);
-        } else {
-            r = k.concat(r);
-        }
-        r = new_Calculate(r);
-        if (r === "error") {
-            return "error";
-        }
-        // if (k.split(" ").length === 3) {
-        //     [a, b, c] = k.split(" ");
-        //     r = calculate(a, b, c);
-        // } else if (k.split(" ").length === 2) {
-        //     [a, b] = k.split(" ");
-        //     if (oper.includes(a)) {
-        //         r = calculate(r, a, b);
-        //     } else {
-        //         r = calculate(a, b, r);
-        //     }
-        // } else {
-        //     return "error";
-        // }
-    }
-
-    return start.concat(r, end);
-}
+isRadian = true;
 
 function calculate(n1, operator, n2) {
     let result = 0;
@@ -164,10 +76,11 @@ function angle_function(arr) {
         in_Arr = arr.slice(1, arr.length - 1),
         ans;
     let angle_obj = { sin: Math.sin, cos: Math.cos, tan: Math.cos };
+    let toDeg = isRadian ? 1 : Math.pI / 180;
     if (in_Arr.length === 1) {
-        ans = angle_obj[identifier](parseFloat(in_Arr));
+        ans = angle_obj[identifier](parseFloat(in_Arr) * toDeg);
     } else if (in_Arr.leanth % 2) {
-        ans = angle_obj[identifier](new_Calculate(in_Arr));
+        ans = angle_obj[identifier](new_Calculate(in_Arr) * toDeg);
     } else {
         return "error";
     }
@@ -261,6 +174,13 @@ function total_Calculate(inp) {
                 inp[i - 1] = `${inp[i - 1]} X`;
             }
         }
+        if (inp.indexOf("PI") >= 0) {
+            inp[inp.indexOf("PI")] = `${Math.PI}`;
+        }
+
+        if (inp.indexOf("e") >= 0) {
+            inp[inp.indexOf("e")] = `${Math.E}`;
+        }
     }
     inp = inp.join(" ").split(" ");
 
@@ -309,7 +229,7 @@ buttons.addEventListener("click", function (event) {
 
         if (action === "fbutton") {
             if (buttonContent === "sin" || buttonContent === "cos" || buttonContent === "tan") {
-                if (input === "0") {
+                if (input === "0" || previousKey === "calculate") {
                     input = `${buttonContent}(`;
                 } else {
                     input += ` ${buttonContent}(`;
@@ -317,8 +237,44 @@ buttons.addEventListener("click", function (event) {
                 previousKey = "angle_function";
             }
 
+            if (buttonContent === "asin" || buttonContent === "acos" || buttonContent === "atan") {
+                if (input === "0" || previousKey === "calculate") {
+                    input = `${buttonContent}(`;
+                } else {
+                    input += ` ${buttonContent}(`;
+                }
+                previousKey = "angle_function";
+            }
+
+            if (buttonContent === "Rad") {
+                isRadian = true;
+                Rad_Button.style.opacity = 1;
+                Deg_Button.style.opacity = 0.3;
+            }
+
+            if (buttonContent === "Deg") {
+                isRadian = false;
+                Rad_Button.style.opacity = 0.3;
+                Deg_Button.style.opacity = 1;
+            }
+
+            if (buttonContent === "pi") {
+                if (input === "0" || previousKey === "calculate") {
+                    input = "PI";
+                } else {
+                    input += ` ${"PI"}`;
+                }
+            }
+            if (buttonContent === "e") {
+                if (input === "0" || previousKey === "calculate") {
+                    input = "e";
+                } else {
+                    input += ` ${"e"}`;
+                }
+            }
+
             if (buttonContent === "(") {
-                if (input === "0") {
+                if (input === "0" || previousKey === "calculate") {
                     input = buttonContent;
                 } else {
                     input += ` ${buttonContent}`;
@@ -356,13 +312,16 @@ buttons.addEventListener("click", function (event) {
                 ac.textContent = "CE";
                 acon = false;
             } else {
-                save = input;
-                console.log(save[save.length - 1], save.substring(0, save.length - 1), save.substring(0, save.length - 3));
+                save = input.split(" ");
+                console.log(save, input);
                 if (input.length > 1) {
-                    if (save[save.length - 1] === " ") {
-                        input = save.substring(0, save.length - 3);
+                    let end_string = save[save.length - 1];
+                    if (!isNaN(end_string) && end_string.length > 1) {
+                        save[save.length - 1] = save[save.length - 1].substring(0, end_string.length - 1);
+                        input = save.join(" ");
                     } else {
-                        input = save.substring(0, save.length - 1);
+                        input = save.slice(0, save.length - 1).join(" ");
+                        input = input.length === 0 ? "0" : input;
                     }
                 } else {
                     input = "0";

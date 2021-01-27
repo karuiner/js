@@ -170,3 +170,15 @@ body {
     border: solid 6px palegreen;
     border-radius: 25%;
 }
+
+#Rad {
+    opacity: 1;
+}
+#Deg {
+    opacity: 0.3;
+}
+
+.key:hover {
+    background: skyblue;
+    border: solid 6px skyblue;
+}
