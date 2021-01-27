@@ -17,7 +17,7 @@ let firstNum,
     pinput = "",
     acon = false,
     inv = false;
-isRadian = true;
+(answer = "0"), (isRadian = true);
 
 function calculate(n1, operator, n2) {
     let result = 0;
@@ -86,14 +86,24 @@ function angle_function(arr) {
     }
     return ans;
 }
+function log_function(arr) {
+    let identifier = arr[0].slice(0, arr[0].length - 1),
+        in_Arr = arr.slice(1, arr.length - 1);
+    let log_obj = { log: Math.log10, ln: Math.log };
+    return log_obj[identifier](new_Calculate(in_Arr));
+}
 
 function main_Calculation(arr) {
     let ans = 0;
-    let isAngle = arr[0].indexOf("(") >= 0,
+    let isString = arr[0].indexOf("(") >= 0,
         isParen = arr[0] === "(";
 
-    if (isAngle && !isParen) {
-        ans = angle_function(arr);
+    if (isString && !isParen) {
+        if (arr[0].indexOf("log") >= 0 || arr[0].indexOf("ln") >= 0) {
+            ans = log_function(arr);
+        } else {
+            ans = angle_function(arr);
+        }
     } else if (isParen) {
         in_Arr = arr.slice(1, arr.length - 1);
         ans = new_Calculate(in_Arr);
@@ -169,7 +179,7 @@ function total_Calculate(inp) {
     inp = inp.split(" ");
     let select_Index = [];
     for (let i = 0; i < inp.length; i++) {
-        if (inp[i].indexOf("(") >= 0) {
+        if (inp[i].indexOf("(") >= 0 || inp[i].indexOf("Ans") >= 0) {
             if (!isNaN(inp[i - 1]) || inp[i - 1] === ")") {
                 inp[i - 1] = `${inp[i - 1]} X`;
             }
@@ -180,6 +190,10 @@ function total_Calculate(inp) {
 
         if (inp.indexOf("e") >= 0) {
             inp[inp.indexOf("e")] = `${Math.E}`;
+        }
+
+        if (inp.indexOf("Ans") >= 0) {
+            inp[inp.indexOf("Ans")] = `${answer}`;
         }
     }
     inp = inp.join(" ").split(" ");
@@ -206,11 +220,12 @@ buttons.addEventListener("click", function (event) {
                     pinput = input;
                 }
                 input = buttonContent;
-            } else if (previousKey === "operator" || previousKey === "(" || previousKey === "angle_function" || !(input.split(" ").length % 2)) {
-                console.log(previousKey === "operator" || !(input.split(" ").length % 2));
-                input += ` ${buttonContent}`;
-            } else {
+            } else if (previousKey === "number" || previousKey === "decimal") {
                 input += buttonContent;
+            } else if (previousKey === "Ans") {
+                input += ` X ${buttonContent}`;
+            } else {
+                input += ` ${buttonContent}`;
             }
             previousKey = "number";
         }
@@ -246,6 +261,24 @@ buttons.addEventListener("click", function (event) {
                 previousKey = "angle_function";
             }
 
+            if (buttonContent === "log") {
+                if (input === "0" || previousKey === "calculate") {
+                    input = `${buttonContent}(`;
+                } else {
+                    input += ` ${buttonContent}(`;
+                }
+                previousKey = "log_function";
+            }
+
+            if (buttonContent === "ln") {
+                if (input === "0" || previousKey === "calculate") {
+                    input = `${buttonContent}(`;
+                } else {
+                    input += ` ${buttonContent}(`;
+                }
+                previousKey = "log_function";
+            }
+
             if (buttonContent === "Rad") {
                 isRadian = true;
                 Rad_Button.style.opacity = 1;
@@ -264,6 +297,7 @@ buttons.addEventListener("click", function (event) {
                 } else {
                     input += ` ${"PI"}`;
                 }
+                previousKey = buttonContent;
             }
             if (buttonContent === "e") {
                 if (input === "0" || previousKey === "calculate") {
@@ -271,6 +305,18 @@ buttons.addEventListener("click", function (event) {
                 } else {
                     input += ` ${"e"}`;
                 }
+                previousKey = buttonContent;
+            }
+
+            if (buttonContent === "Ans") {
+                if (input === "0" || previousKey === "calculate") {
+                    input = "Ans";
+                } else if (previousKey === "Ans") {
+                    input += ` X ${"Ans"}`;
+                } else {
+                    input += ` ${"Ans"}`;
+                }
+                previousKey = buttonContent;
             }
 
             if (buttonContent === "(") {
@@ -338,6 +384,7 @@ buttons.addEventListener("click", function (event) {
                 if (input.split(" ").length >= 3) {
                     pinput = input;
                     input = total_Calculate(input);
+                    answer = input;
                 } else {
                     pinput = "0";
                 }
