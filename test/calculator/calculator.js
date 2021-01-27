@@ -20,19 +20,15 @@ let firstNum,
 (answer = "0"), (isRadian = true);
 
 function calculate(n1, operator, n2) {
-    let result = 0;
+    let result = 0,
+        fn1 = parseFloat(n1),
+        fn2 = parseFloat(n2);
     // TODO : n1과 n2를 operator에 따라 계산하는 함수를 만드세요.
     // ex) 입력값이 n1 : '1', operator : '+', n2 : '2' 인 경우, 3이 리턴됩니다.
-    if (operator === "+") {
-        result = parseFloat(n1) + parseFloat(n2);
-    } else if (operator === "-") {
-        result = parseFloat(n1) - parseFloat(n2);
-    } else if (operator === "X") {
-        result = parseFloat(n1) * parseFloat(n2);
-    } else if (operator === "/") {
-        result = parseFloat(n1) / parseFloat(n2);
-    }
-
+    result = operator === "+" ? fn1 + fn2 : result;
+    result = operator === "-" ? fn1 - fn2 : result;
+    result = operator === "X" ? fn1 * fn2 : result;
+    result = operator === "/" ? fn1 / fn2 : result;
     return String(result);
 }
 
@@ -68,24 +64,19 @@ function new_Calculate(inp) {
         cc++;
     }
 
-    return cc < cm ? inp : "error";
+    return cc < cm ? parseFloat(inp) : "error";
 }
 
 function angle_function(arr) {
     let identifier = arr[0].slice(0, arr[0].length - 1),
         in_Arr = arr.slice(1, arr.length - 1),
         ans;
-    let angle_obj = { sin: Math.sin, cos: Math.cos, tan: Math.cos };
-    let toDeg = isRadian ? 1 : Math.pI / 180;
-    if (in_Arr.length === 1) {
-        ans = angle_obj[identifier](parseFloat(in_Arr) * toDeg);
-    } else if (in_Arr.leanth % 2) {
-        ans = angle_obj[identifier](new_Calculate(in_Arr) * toDeg);
-    } else {
-        return "error";
-    }
+    let angle_obj = { sin: Math.sin, cos: Math.cos, tan: Math.cos, asin: Math.asin, acos: Math.acos, atan: Math.acos };
+    let toDeg = isRadian ? 1 : Math.PI / 180;
+    ans = angle_obj[identifier](new_Calculate(in_Arr) * toDeg);
     return ans;
 }
+
 function log_function(arr) {
     let identifier = arr[0].slice(0, arr[0].length - 1),
         in_Arr = arr.slice(1, arr.length - 1);
@@ -163,7 +154,8 @@ function string_Caculation_f(str_Arr) {
         ml = lmap.reduce((x, y) => (x > y ? x : y));
         console.log(ps_Area, ps_Value, str_Arr, ml);
     }
-    return ps_Area;
+
+    return ps_Value;
 }
 
 function total_Calculate(inp) {

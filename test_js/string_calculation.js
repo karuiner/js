@@ -34,19 +34,15 @@ function get_Level(arr, lmap, ml) {
 }
 
 function calculate(n1, operator, n2) {
-    let result = 0;
+    let result = 0,
+        fn1 = parseFloat(n1),
+        fn2 = parseFloat(n2);
     // TODO : n1과 n2를 operator에 따라 계산하는 함수를 만드세요.
     // ex) 입력값이 n1 : '1', operator : '+', n2 : '2' 인 경우, 3이 리턴됩니다.
-    if (operator === "+") {
-        result = parseFloat(n1) + parseFloat(n2);
-    } else if (operator === "-") {
-        result = parseFloat(n1) - parseFloat(n2);
-    } else if (operator === "X") {
-        result = parseFloat(n1) * parseFloat(n2);
-    } else if (operator === "/") {
-        result = parseFloat(n1) / parseFloat(n2);
-    }
-
+    result = operator === "+" ? fn1 + fn2 : result;
+    result = operator === "-" ? fn1 - fn2 : result;
+    result = operator === "X" ? fn1 * fn2 : result;
+    result = operator === "/" ? fn1 / fn2 : result;
     return String(result);
 }
 
@@ -54,13 +50,10 @@ function new_Calculate(inp) {
     // 사칙 연산 우선 순위대로 계산하는 코드작성
     // 입력 inp는 arr을 가정
     //교환시 splice 활용
-    let pI,
-        mI,
-        tI,
-        dI,
-        cI,
+    let pI, mI, tI, dI; // pulse index, minus index, times index, divide index
+    let cI,
         cc = 0,
-        cm = inp.length; // pulse index, minus index, times index, divide index
+        cm = inp.length;
     while (inp.length > 1 && cc < cm) {
         pI = inp.indexOf("+");
         mI = inp.indexOf("-");
@@ -80,10 +73,6 @@ function new_Calculate(inp) {
 
     return cc < cm ? inp : "error";
 }
-
-// console.log(lmap);
-// console.log(get_Level(s, lmap, ml).array());
-// console.log(get_Level(s, lmap, ml).index());
 
 let [cal_Arr_Test, cal_Arr_Index] = get_Level(s, lmap, ml);
 
@@ -121,8 +110,6 @@ function main_Calculation(arr) {
     return String(ans);
 }
 
-// console.log(main_Calculation(cal_Arr_Test));
-
 let u = main_Calculation(cal_Arr_Test);
 function put_Level(arr, lmap, index, v) {
     let [i, j] = index;
@@ -130,16 +117,6 @@ function put_Level(arr, lmap, index, v) {
     lmap.splice(i, j - i + 1, lmap[i] - 1);
     return [arr, lmap];
 }
-// console.log(s.join(" "));
-// [s, lmap] = put_Level(s, lmap, cal_Arr_Index, u);
-// console.log(s.join(" "));
-// console.log(cal_Arr_Index);
-// console.log(lmap);
-// ml = lmap.reduce((x, y) => (x > y ? x : y));
-// cal_Arr_Test = get_Level(s, lmap, ml).array();
-// cal_Arr_Index = get_Level(s, lmap, ml).index();
-// console.log(cal_Arr_Test);
-// console.log(new_Calculate(cal_Arr_Test.slice(1, cal_Arr_Test.length - 1)));
 
 function string_Caculation_f(str_Arr) {
     let lmap = mk_Lmap(str_Arr); // 주어진 수식의 레벨 맵을 작성
