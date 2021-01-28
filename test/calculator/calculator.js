@@ -10,9 +10,9 @@ let firstNum, num1, num2;
 let intermediateOperator,
     previousKey,
     previousNum,
-    input = ["0"],
+    input = [],
     save,
-    pinput = [""],
+    pinput = [],
     acon = false,
     inv = false,
     answer = "0",
@@ -160,16 +160,15 @@ function string_Caculation_f(str_Arr) {
 
 function total_Calculate(inp) {
     if (inp.indexOf("(") >= 0) {
-        let rc = inp.match(/[)]/gi) !== null ? inp.match(/[)]/gi).length : 0;
-        let lc = inp.match(/[(]/gi).length;
+        let sinp = inp.join("");
+        let rc = sinp.match(/[)]/gi) !== null ? sinp.match(/[)]/gi).length : 0;
+        let lc = sinp.match(/[(]/gi).length;
         if (rc < lc) {
             for (let k = 0; k < lc - rc; k++) {
-                inp += " )";
+                inp = inp.concat([")"]);
             }
         }
     }
-    inp = inp.split(" ");
-    let select_Index = [];
     for (let i = 0; i < inp.length; i++) {
         if (inp[i].indexOf("(") >= 0 || inp[i].indexOf("Ans") >= 0) {
             if (!isNaN(inp[i - 1]) || inp[i - 1] === ")") {
@@ -188,12 +187,12 @@ function total_Calculate(inp) {
             inp[inp.indexOf("Ans")] = `${answer}`;
         }
     }
-    inp = inp.join(" ").split(" ");
 
+    inp = [...inp.join(" ").split(" ")];
     console.log(inp);
     inp = string_Caculation_f(inp);
 
-    return inp.join(" ");
+    return [inp];
 }
 
 buttons.addEventListener("click", function (event) {
@@ -203,8 +202,8 @@ buttons.addEventListener("click", function (event) {
     let lastIndex = input.length - 1;
     if (target.matches("button")) {
         if (action === "number") {
-            if (input[lastIndex] === "0") {
-                input[lastIndex] = buttonContent;
+            if (input === []) {
+                input = buttonContent;
             } else if (!isNaN(input[lastIndex]) || input[lastIndex] === ".") {
                 input[lastIndex] += buttonContent;
             } else {
@@ -212,7 +211,6 @@ buttons.addEventListener("click", function (event) {
                 // Ans 값이 입력시 이후 숫자는 그것과 곱셉연산이 가능 해야한다.
                 input = input.concat([buttonContent]);
             }
-            previousKey = buttonContent;
         }
 
         if (action === "operator") {
@@ -220,25 +218,37 @@ buttons.addEventListener("click", function (event) {
         }
 
         if (action === "fbutton") {
+            if (buttonContent === "(") {
+                input = input === [] ? buttonContent : input.concat("(");
+            }
+
+            if (buttonContent === ")") {
+                let sinp = input.join("");
+                let rc = sinp.match(/[)]/gi) !== null ? sinp.match(/[)]/gi).length : 0;
+                let lc = sinp.match(/[(]/gi).length;
+                if (rc < lc && !isNaN(input[lastIndex])) {
+                    input.push(")");
+                }
+            }
+
             // 개개 기능에 따라 가능한 동작을 정의해야한다.
         }
 
         if (action === "decimal") {
             // 점은 숫자와만 엮인다.
-            if (input[lastIndex] === "0") {
+            if (input === []) {
                 input[lastIndex] = buttonContent;
             } else if (input[lastIndex].indexOf(buttonContent) === -1 && !isNaN(input[lastIndex])) {
                 input[lastIndex] += buttonContent;
             } else if (isNaN(input[lastIndex])) {
                 input = input.concat([buttonContent]);
             }
-            previousKey = buttonContent;
         }
         if (action === "clear") {
             // 상황에 따라  다른 작동을 구현한다..
             if (acon) {
                 pinput = [...input];
-                input = ["0"];
+                input = [];
                 ac.textContent = "CE";
                 acon = false;
             } else {
@@ -248,11 +258,17 @@ buttons.addEventListener("click", function (event) {
                 } else {
                     save = save.slice(0, -1);
                 }
-                input = save.length > 0 ? [...save] : ["0"];
+                input = save.length > 0 ? [...save] : [];
             }
         }
 
         if (action === "Enter") {
+            pinput = [...input];
+            answer = [...total_Calculate(input)];
+            input = [...answer];
+            console.log(pinput, answer, input);
+            ac.textContent = "AC";
+            acon = true;
         }
     }
 
@@ -434,8 +450,9 @@ buttons.addEventListener("click", function (event) {
     //         previousKey = "calculate";
     //     }
     // }
+    previousKey = buttonContent;
     display2.textContent = pinput.join("");
-    display.textContent = input.join("");
+    display.textContent = input === [] ? "0" : input.join("");
 
     console.log(`End\n button : ${buttonContent}, First Num : ${firstNum},
      Operator : ${intermediateOperator}, Previous Num : ${previousNum}, 
