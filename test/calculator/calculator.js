@@ -18,7 +18,7 @@ let intermediateOperator,
     answer = "0",
     isRadian = true,
     lastInput;
-const db = { operator: ["+", "-", "/", "X"], angle_function: ["sin", "cos", "tan", "asin", "acos", "atan"], angle: ["Rad", "Deg"] };
+const db = { operator: ["+", "-", "/", "X"], angle_function: ["sin", "cos", "tan", "asin", "acos", "atan"], angle: ["Rad", "Deg"], log_function: ["log", "ln"] };
 
 function calculate(n1, operator, n2) {
     let result = 0,
@@ -160,10 +160,12 @@ function string_Caculation_f(str_Arr) {
 }
 
 function total_Calculate(inp) {
-    if (inp.indexOf("(") >= 0) {
-        let sinp = inp.join("");
-        let rc = sinp.match(/[)]/gi) !== null ? sinp.match(/[)]/gi).length : 0;
-        let lc = sinp.match(/[(]/gi).length;
+    let rc = 0,
+        lc = 0;
+    let sinp = inp.join("");
+    if (sinp.indexOf("(") >= 0) {
+        rc = sinp.match(/[)]/gi) !== null ? sinp.match(/[)]/gi).length : 0;
+        lc = sinp.match(/[(]/gi).length;
         if (rc < lc) {
             for (let k = 0; k < lc - rc; k++) {
                 inp = inp.concat([")"]);
@@ -201,6 +203,9 @@ buttons.addEventListener("click", function (event) {
     const action = target.classList[0]; // 클릭된 HTML 엘리먼트에 클레스 정보를 가져옵니다.
     const buttonContent = target.textContent; // 클
     let lastIndex = input.length - 1 >= 0 ? input.length - 1 : 0;
+    let isLogf = db["log_function"].includes(buttonContent);
+    let isAnglef = db["angle_function"].includes(buttonContent);
+
     if (target.matches("button")) {
         if (action === "number") {
             if (input === []) {
@@ -224,8 +229,13 @@ buttons.addEventListener("click", function (event) {
         }
 
         if (action === "fbutton") {
-            if (db["angle_function"].includes(buttonContent)) {
-                input.push(`${buttonContent}(`);
+            if (isAnglef || isLogf) {
+                if (previousKey !== "=") {
+                    input.push(`${buttonContent}(`);
+                } else {
+                    pinput = [...input];
+                    input = [`${buttonContent}(`];
+                }
             }
 
             if (db["angle"].includes(buttonContent)) {
