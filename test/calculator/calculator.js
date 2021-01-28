@@ -10,9 +10,9 @@ let firstNum, num1, num2;
 let intermediateOperator,
     previousKey,
     previousNum,
-    input = "0",
+    input = ["0"],
     save,
-    pinput = "",
+    pinput = [""],
     acon = false,
     inv = false,
     answer = "0",
@@ -200,204 +200,242 @@ buttons.addEventListener("click", function (event) {
     const target = event.target; // 클릭된 HTML 엘리먼트의 정보가 저장되어 있습니다.
     const action = target.classList[0]; // 클릭된 HTML 엘리먼트에 클레스 정보를 가져옵니다.
     const buttonContent = target.textContent; // 클
-
-    console.log(`start\n button : ${buttonContent}, First Num : ${firstNum},
-     Operator : ${intermediateOperator}, Previous Num : ${previousNum}, 
-     Previous Key : ${previousKey}, Display : ${display.textContent}`);
+    let lastIndex = input.length - 1;
     if (target.matches("button")) {
         if (action === "number") {
-            // 숫자 입력시 이전 배열의 값이 숫자라면 이어 붙인다.
-            if (!isNaN(input[input.length - 1])) {
-                input[input.length - 1] += buttonContent;
+            if (input[lastIndex] === "0") {
+                input[lastIndex] = buttonContent;
+            } else if (!isNaN(input[lastIndex]) || input[lastIndex] === ".") {
+                input[lastIndex] += buttonContent;
             } else {
                 // 이전에 입력 한 키에 따라 다른 결과를 나타내야한다.
                 // Ans 값이 입력시 이후 숫자는 그것과 곱셉연산이 가능 해야한다.
-
                 input = input.concat([buttonContent]);
             }
-
-            // console.log(previousKey === "operator", !(input.split(" ").length % 2));
-            // if (input === "0" || (previousKey === "calculate" && input.split(" ").length % 2)) {
-            //     if (previousKey === "calculate") {
-            //         pinput = input;
-            //     }
-            //     input = buttonContent;
-            // } else if (previousKey === "number" || previousKey === "decimal") {
-            //     input += buttonContent;
-            // } else if (previousKey === "Ans") {
-            //     input += ` X ${buttonContent}`;
-            // } else {
-            //     input += ` ${buttonContent}`;
-            // }
             previousKey = buttonContent;
         }
 
         if (action === "operator") {
-            if (input !== "0") {
-                if (input.split(" ").length % 2 || input.match(/[(]/gi) !== null) {
-                    input += ` ${buttonContent}`;
-                } else {
-                    input = input.split(" ")[0] + ` ${buttonContent}`;
-                }
-            }
-
-            previousKey = "operator";
+            //연산자는 무엇으로 구분하는가. 이전 키를 키이름으로 입력을 받는다면 어떻게 처리할 것인가..
         }
 
         if (action === "fbutton") {
-            if (buttonContent === "sin" || buttonContent === "cos" || buttonContent === "tan") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = `${buttonContent}(`;
-                } else {
-                    input += ` ${buttonContent}(`;
-                }
-                previousKey = "angle_function";
-            }
-
-            if (buttonContent === "asin" || buttonContent === "acos" || buttonContent === "atan") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = `${buttonContent}(`;
-                } else {
-                    input += ` ${buttonContent}(`;
-                }
-                previousKey = "angle_function";
-            }
-
-            if (buttonContent === "log") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = `${buttonContent}(`;
-                } else {
-                    input += ` ${buttonContent}(`;
-                }
-                previousKey = "log_function";
-            }
-
-            if (buttonContent === "ln") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = `${buttonContent}(`;
-                } else {
-                    input += ` ${buttonContent}(`;
-                }
-                previousKey = "log_function";
-            }
-
-            if (buttonContent === "Rad") {
-                isRadian = true;
-                Rad_Button.style.opacity = 1;
-                Deg_Button.style.opacity = 0.3;
-            }
-
-            if (buttonContent === "Deg") {
-                isRadian = false;
-                Rad_Button.style.opacity = 0.3;
-                Deg_Button.style.opacity = 1;
-            }
-
-            if (buttonContent === "pi") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = "PI";
-                } else {
-                    input += ` ${"PI"}`;
-                }
-                previousKey = buttonContent;
-            }
-            if (buttonContent === "e") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = "e";
-                } else {
-                    input += ` ${"e"}`;
-                }
-                previousKey = buttonContent;
-            }
-
-            if (buttonContent === "Ans") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = "Ans";
-                } else if (previousKey === "Ans") {
-                    input += ` X ${"Ans"}`;
-                } else {
-                    input += ` ${"Ans"}`;
-                }
-                previousKey = buttonContent;
-            }
-
-            if (buttonContent === "(") {
-                if (input === "0" || previousKey === "calculate") {
-                    input = buttonContent;
-                } else {
-                    input += ` ${buttonContent}`;
-                }
-                previousKey = buttonContent;
-            }
-
-            if (buttonContent === ")") {
-                let rc = input.match(/[)]/gi) !== null ? input.match(/[)]/gi).length : 0;
-                let lc = input.match(/[(]/gi).length;
-                if (rc < lc) {
-                    input += ` ${buttonContent}`;
-                }
-                previousKey = buttonContent;
-            }
-
-            // 미완성 기능 나중에 추가할것 (그전에 html  클래스  이름부터뜯어 고쳐야...)
-            console.log(`fbutton : ${buttonContent}`);
-            // previousKey = "fbutton";
+            // 개개 기능에 따라 가능한 동작을 정의해야한다.
         }
+
         if (action === "decimal") {
-            save = input;
-            if (previousKey === "operator") {
-                input += ` ${buttonContent}`;
-            } else if (previousKey != "decimal" && save.split(" ")[save.split(" ").length - 1].indexOf(buttonContent) === -1) {
-                input += buttonContent;
+            // 점은 숫자와만 엮인다.
+            if (input[lastIndex] === "0") {
+                input[lastIndex] = buttonContent;
+            } else if (input[lastIndex].indexOf(buttonContent) === -1 && !isNaN(input[lastIndex])) {
+                input[lastIndex] += buttonContent;
+            } else if (isNaN(input[lastIndex])) {
+                input = input.concat([buttonContent]);
             }
-            previousKey = "decimal";
+            previousKey = buttonContent;
         }
-
         if (action === "clear") {
+            // 상황에 따라  다른 작동을 구현한다..
             if (acon) {
-                pinput = input;
-                input = "0";
+                pinput = [...input];
+                input = ["0"];
                 ac.textContent = "CE";
                 acon = false;
             } else {
-                save = input.split(" ");
-                console.log(save, input);
-                if (input.length > 1) {
-                    let end_string = save[save.length - 1];
-                    if (!isNaN(end_string) && end_string.length > 1) {
-                        save[save.length - 1] = save[save.length - 1].substring(0, end_string.length - 1);
-                        input = save.join(" ");
-                    } else {
-                        input = save.slice(0, save.length - 1).join(" ");
-                        input = input.length === 0 ? "0" : input;
-                    }
+                save = [...input];
+                if (!isNaN(save[lastIndex]) && save[lastIndex].length > 1) {
+                    save[lastIndex] = save[lastIndex].slice(0, -1);
                 } else {
-                    input = "0";
+                    save = save.slice(0, -1);
                 }
+                input = save.length > 0 ? [...save] : ["0"];
             }
         }
 
         if (action === "Enter") {
-            // 우선 삼요소가 다 입력 되었는지를 따진다.
-            console.log(input.split(" ").length, input.split(" ").length % 2);
-            if (!(input.split(" ").length % 2) && input.indexOf("(") === -1) {
-                pinput = "0";
-            } else {
-                if (input.split(" ").length >= 3) {
-                    pinput = input;
-                    input = total_Calculate(input);
-                    answer = input;
-                } else {
-                    pinput = "0";
-                }
-                ac.textContent = "AC";
-                acon = true;
-            }
-            previousKey = "calculate";
         }
     }
-    display2.textContent = pinput.split(" ").join("");
-    display.textContent = input.split(" ").join("");
+
+    //         console.log(previousKey === "operator", !(input.split(" ").length % 2));
+    //         if (input === "0" || (previousKey === "calculate" && input.split(" ").length % 2)) {
+    //             if (previousKey === "calculate") {
+    //                 pinput = input;
+    //             }
+    //             input = buttonContent;
+    //         } else if (previousKey === "number" || previousKey === "decimal") {
+    //             input += buttonContent;
+    //         } else if (previousKey === "Ans") {
+    //             input += ` X ${buttonContent}`;
+    //         } else {
+    //             input += ` ${buttonContent}`;
+    //         }
+
+    //     if (action === "operator") {
+    //         if (input !== "0") {
+    //             if (input.split(" ").length % 2 || input.match(/[(]/gi) !== null) {
+    //                 input += ` ${buttonContent}`;
+    //             } else {
+    //                 input = input.split(" ")[0] + ` ${buttonContent}`;
+    //             }
+    //         }
+
+    //         previousKey = "operator";
+    //     }
+
+    //     if (action === "fbutton") {
+    //         if (buttonContent === "sin" || buttonContent === "cos" || buttonContent === "tan") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = `${buttonContent}(`;
+    //             } else {
+    //                 input += ` ${buttonContent}(`;
+    //             }
+    //             previousKey = "angle_function";
+    //         }
+
+    //         if (buttonContent === "asin" || buttonContent === "acos" || buttonContent === "atan") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = `${buttonContent}(`;
+    //             } else {
+    //                 input += ` ${buttonContent}(`;
+    //             }
+    //             previousKey = "angle_function";
+    //         }
+
+    //         if (buttonContent === "log") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = `${buttonContent}(`;
+    //             } else {
+    //                 input += ` ${buttonContent}(`;
+    //             }
+    //             previousKey = "log_function";
+    //         }
+
+    //         if (buttonContent === "ln") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = `${buttonContent}(`;
+    //             } else {
+    //                 input += ` ${buttonContent}(`;
+    //             }
+    //             previousKey = "log_function";
+    //         }
+
+    //         if (buttonContent === "Rad") {
+    //             isRadian = true;
+    //             Rad_Button.style.opacity = 1;
+    //             Deg_Button.style.opacity = 0.3;
+    //         }
+
+    //         if (buttonContent === "Deg") {
+    //             isRadian = false;
+    //             Rad_Button.style.opacity = 0.3;
+    //             Deg_Button.style.opacity = 1;
+    //         }
+
+    //         if (buttonContent === "pi") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = "PI";
+    //             } else {
+    //                 input += ` ${"PI"}`;
+    //             }
+    //             previousKey = buttonContent;
+    //         }
+    //         if (buttonContent === "e") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = "e";
+    //             } else {
+    //                 input += ` ${"e"}`;
+    //             }
+    //             previousKey = buttonContent;
+    //         }
+
+    //         if (buttonContent === "Ans") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = "Ans";
+    //             } else if (previousKey === "Ans") {
+    //                 input += ` X ${"Ans"}`;
+    //             } else {
+    //                 input += ` ${"Ans"}`;
+    //             }
+    //             previousKey = buttonContent;
+    //         }
+
+    //         if (buttonContent === "(") {
+    //             if (input === "0" || previousKey === "calculate") {
+    //                 input = buttonContent;
+    //             } else {
+    //                 input += ` ${buttonContent}`;
+    //             }
+    //             previousKey = buttonContent;
+    //         }
+
+    //         if (buttonContent === ")") {
+    //             let rc = input.match(/[)]/gi) !== null ? input.match(/[)]/gi).length : 0;
+    //             let lc = input.match(/[(]/gi).length;
+    //             if (rc < lc) {
+    //                 input += ` ${buttonContent}`;
+    //             }
+    //             previousKey = buttonContent;
+    //         }
+
+    //         // 미완성 기능 나중에 추가할것 (그전에 html  클래스  이름부터뜯어 고쳐야...)
+    //         console.log(`fbutton : ${buttonContent}`);
+    //         // previousKey = "fbutton";
+    //     }
+    //     if (action === "decimal") {
+    //         save = input;
+    //         if (previousKey === "operator") {
+    //             input += ` ${buttonContent}`;
+    //         } else if (previousKey != "decimal" && save.split(" ")[save.split(" ").length - 1].indexOf(buttonContent) === -1) {
+    //             input += buttonContent;
+    //         }
+    //         previousKey = "decimal";
+    //     }
+
+    //     if (action === "clear") {
+    //         if (acon) {
+    //             pinput = input;
+    //             input = "0";
+    //             ac.textContent = "CE";
+    //             acon = false;
+    //         } else {
+    //             save = input.split(" ");
+    //             console.log(save, input);
+    //             if (input.length > 1) {
+    //                 let end_string = save[save.length - 1];
+    //                 if (!isNaN(end_string) && end_string.length > 1) {
+    //                     save[save.length - 1] = save[save.length - 1].substring(0, end_string.length - 1);
+    //                     input = save.join(" ");
+    //                 } else {
+    //                     input = save.slice(0, save.length - 1).join(" ");
+    //                     input = input.length === 0 ? "0" : input;
+    //                 }
+    //             } else {
+    //                 input = "0";
+    //             }
+    //         }
+    //     }
+
+    //     if (action === "Enter") {
+    //         // 우선 삼요소가 다 입력 되었는지를 따진다.
+    //         console.log(input.split(" ").length, input.split(" ").length % 2);
+    //         if (!(input.split(" ").length % 2) && input.indexOf("(") === -1) {
+    //             pinput = "0";
+    //         } else {
+    //             if (input.split(" ").length >= 3) {
+    //                 pinput = input;
+    //                 input = total_Calculate(input);
+    //                 answer = input;
+    //             } else {
+    //                 pinput = "0";
+    //             }
+    //             ac.textContent = "AC";
+    //             acon = true;
+    //         }
+    //         previousKey = "calculate";
+    //     }
+    // }
+    display2.textContent = pinput.join("");
+    display.textContent = input.join("");
 
     console.log(`End\n button : ${buttonContent}, First Num : ${firstNum},
      Operator : ${intermediateOperator}, Previous Num : ${previousNum}, 
