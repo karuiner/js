@@ -18,7 +18,7 @@ let intermediateOperator,
     answer = "0",
     isRadian = true,
     lastInput;
-const db = { operator: ["+", "-", "/", "X"] };
+const db = { operator: ["+", "-", "/", "X"], angle_function: ["sin", "cos", "tan", "asin", "acos", "atan"], angle: ["Rad", "Deg"] };
 
 function calculate(n1, operator, n2) {
     let result = 0,
@@ -224,6 +224,22 @@ buttons.addEventListener("click", function (event) {
         }
 
         if (action === "fbutton") {
+            if (db["angle_function"].includes(buttonContent)) {
+                input.push(`${buttonContent}(`);
+            }
+
+            if (db["angle"].includes(buttonContent)) {
+                if (buttonContent === "Rad") {
+                    isRadian = true;
+                    Rad_Button.style.opacity = 1;
+                    Deg_Button.style.opacity = 0.3;
+                } else {
+                    isRadian = false;
+                    Rad_Button.style.opacity = 0.3;
+                    Deg_Button.style.opacity = 1;
+                }
+            }
+
             if (buttonContent === "(") {
                 input = input.length < 1 ? input.concat(buttonContent) : input.concat("(");
             }
