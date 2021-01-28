@@ -206,29 +206,19 @@ buttons.addEventListener("click", function (event) {
      Previous Key : ${previousKey}, Display : ${display.textContent}`);
     if (target.matches("button")) {
         if (action === "number") {
-            // 숫자 입력시 이전 배열의 값이 숫자라면 이어 붙인다.
-            if (!isNaN(input[input.length - 1])) {
-                input[input.length - 1] += buttonContent;
+            console.log(previousKey === "operator", !(input.split(" ").length % 2));
+            if (input === "0" || (previousKey === "calculate" && input.split(" ").length % 2)) {
+                if (previousKey === "calculate") {
+                    pinput = input;
+                }
+                input = buttonContent;
+            } else if (previousKey === "number" || previousKey === "decimal") {
+                input += buttonContent;
+            } else if (previousKey === "Ans") {
+                input += ` X ${buttonContent}`;
             } else {
-                // 이전에 입력 한 키에 따라 다른 결과를 나타내야한다.
-                // Ans 값이 입력시 이후 숫자는 그것과 곱셉연산이 가능 해야한다.
-
-                input = input.concat([buttonContent]);
+                input += ` ${buttonContent}`;
             }
-
-            // console.log(previousKey === "operator", !(input.split(" ").length % 2));
-            // if (input === "0" || (previousKey === "calculate" && input.split(" ").length % 2)) {
-            //     if (previousKey === "calculate") {
-            //         pinput = input;
-            //     }
-            //     input = buttonContent;
-            // } else if (previousKey === "number" || previousKey === "decimal") {
-            //     input += buttonContent;
-            // } else if (previousKey === "Ans") {
-            //     input += ` X ${buttonContent}`;
-            // } else {
-            //     input += ` ${buttonContent}`;
-            // }
             previousKey = buttonContent;
         }
 
