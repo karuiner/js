@@ -117,7 +117,7 @@ body {
     width: 40px;
     height: 40px;
     font-size: 16px;
-    border: solid 6px palegreen;
+    /* border: solid 6px palegreen; */
     border-radius: 25%;
 }
 
@@ -127,7 +127,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    border: solid 6px goldenrod;
+    /* border: solid 6px goldenrod; */
     border-radius: 50%;
 }
 
@@ -137,7 +137,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    border: solid 6px goldenrod;
+    /* border: solid 6px goldenrod; */
     border-radius: 50%;
 }
 
@@ -147,7 +147,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    border: solid 6px goldenrod;
+    /* border: solid 6px goldenrod; */
     border-radius: 50%;
 }
 
@@ -157,7 +157,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    border: solid 6px palegreen;
+    /* border: solid 6px palegreen; */
     border-radius: 25%;
 }
 
@@ -167,7 +167,7 @@ body {
     height: 40px;
     font-size: 16px;
     box-sizing: border-box;
-    border: solid 6px palegreen;
+    /* border: solid 6px palegreen; */
     border-radius: 25%;
 }
 
@@ -180,12 +180,12 @@ body {
 
 .key:hover {
     background: skyblue;
-    border: solid 6px skyblue;
+    /* border: solid 6px skyblue; */
 }
 
 .not_allow {
     background: black;
-    border: solid 6px black;
+    /* border: solid 6px black; */
     opacity: 0.4;
     cursor: not-allowed;
 }
