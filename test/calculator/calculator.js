@@ -18,6 +18,7 @@ let intermediateOperator,
     answer = "0",
     isRadian = true,
     lastInput;
+const db = { operator: ["+", "-", "/", "X"] };
 
 function calculate(n1, operator, n2) {
     let result = 0,
@@ -199,7 +200,7 @@ buttons.addEventListener("click", function (event) {
     const target = event.target; // 클릭된 HTML 엘리먼트의 정보가 저장되어 있습니다.
     const action = target.classList[0]; // 클릭된 HTML 엘리먼트에 클레스 정보를 가져옵니다.
     const buttonContent = target.textContent; // 클
-    let lastIndex = input.length - 1;
+    let lastIndex = input.length - 1 >= 0 ? input.length - 1 : 0;
     if (target.matches("button")) {
         if (action === "number") {
             if (input === []) {
@@ -215,11 +216,16 @@ buttons.addEventListener("click", function (event) {
 
         if (action === "operator") {
             //연산자는 무엇으로 구분하는가. 이전 키를 키이름으로 입력을 받는다면 어떻게 처리할 것인가..
+            if (input.length < 1) {
+                input = [...["0", `${buttonContent}`]];
+            } else if (db["operator"].indexOf(buttonContent) >= 0 && db["operator"].indexOf(input[lastIndex]) < 0 && input[lastIndex].indexOf("(") < 0) {
+                input.push(buttonContent);
+            }
         }
 
         if (action === "fbutton") {
             if (buttonContent === "(") {
-                input = input === [] ? buttonContent : input.concat("(");
+                input = input.length < 1 ? input.concat(buttonContent) : input.concat("(");
             }
 
             if (buttonContent === ")") {
@@ -452,7 +458,7 @@ buttons.addEventListener("click", function (event) {
     // }
     previousKey = buttonContent;
     display2.textContent = pinput.join("");
-    display.textContent = input === [] ? "0" : input.join("");
+    display.textContent = input.length < 1 ? "0" : input.join("");
 
     console.log(`End\n button : ${buttonContent}, First Num : ${firstNum},
      Operator : ${intermediateOperator}, Previous Num : ${previousNum}, 
