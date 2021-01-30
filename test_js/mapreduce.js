@@ -1,0 +1,11 @@
+a = [1, 2, 3, 4, 5, 6];
+b = a.join("");
+b = b + ` ${b}`;
+b = b + ` ${b}`;
+c = b.split(" ");
+c = c.map((x) => x.split(""));
+console.log(c);
+c = c.map((x) => x.map((y) => parseInt(y)));
+console.log(c);
+d = c.map((x) => x.reduce((y, z) => y * z));
+console.log(d);
