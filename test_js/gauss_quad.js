@@ -14,10 +14,6 @@ function qgauss(func, a, b) {
     return xr * ss;
 }
 
-function f(x) {
-    return x;
-}
-
 function gamma(z) {
     function inner_gamma(x) {
         const a = ((1 - x) / x) ** (z - 1);
@@ -35,9 +31,28 @@ function simple_facto(x) {
     return x > 1 ? x * simple_facto(x - 1) : 1;
 }
 
+function f(x) {
+    return x;
+}
+
 // console.log(qgauss(f, 0, 2));
 for (let i = 0; i < 10; i++) {
     console.log(factorial(i), simple_facto(i));
 }
 console.log(gamma(0.5) * gamma(0.5));
 console.log(qgauss(f, 0, 1));
+
+//Lanczos approximation
+
+const p = [676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+const epsilon = 1e-7;
+function drop_imag(z) {}
+
+// stirling's approximation
+function factorial_b(n) {
+    return Math.sqrt(2 * Math.PI * n) * Math.pow(n / Math.E, n);
+}
+for (let i = 0; i < 10; i++) {
+    console.log(factorial_b(i), simple_facto(i));
+}
+console.log(factorial(8.9), factorial_b(8.9));
