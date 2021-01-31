@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0px;
+    box-sizing: border-box;
+    font-family: "monospace", cursive;
+    color: #000;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.result {
+    display: flex;
+    flex: 8 0 0;
+    background: skyblue;
+    text-align: center;
+    flex-direction: column;
+}
+
+.input {
+    display: flex;
+    flex: 3 0 0;
+    text-align: center;
+}
+
+.line {
+    flex: 1 0 0;
+}
