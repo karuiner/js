@@ -15,6 +15,7 @@ body {
 }
 
 .line {
+    background: skyblue;
     width: 100%;
     flex: 1 0 0;
 }
