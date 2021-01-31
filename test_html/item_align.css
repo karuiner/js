@@ -1,5 +1,9 @@
 body {
+    display: flex;
+    flex-direction: column;
     background: white;
+    width: 100vw;
+    height: 100vh;
 }
 .items {
     display: flex;
@@ -14,4 +18,9 @@ body {
     height: 50px;
     width: 50px;
     box-sizing: border-box;
+}
+
+.display {
+    display: flex;
+    flex: 1 0 0;
 }

@@ -4,14 +4,24 @@
         <title>Align</title>
         <link rel="stylesheet" href="item_align.css" />
         <link rel="stylesheet" href="item_align_hover.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
         <div class="items">
-            <button class="button">1</button>
-            <button class="button">2</button>
-            <button class="button">3</button>
-            <button class="button">4</button>
-            <button class="button">5</button>
+            <button class="button" accesskey="1">1</button>
+            <button class="button" accesskey="2">2</button>
+            <button class="button" accesskey="3">3</button>
+            <button class="button" accesskey="4">4</button>
+            <button class="button" accesskey="5">5</button>
         </div>
+        <div class="items">
+            <button class="button" onclick="1">1</button>
+            <button class="button" onclick="2">2</button>
+            <button class="button" onclick="3">3</button>
+            <button class="button" onclick="4">4</button>
+            <button class="button" onclick="5">5</button>
+        </div>
+        <div><input type="text" class="display" /></div>
     </body>
+    <script src="./item_align.js"></script>
 </html>
