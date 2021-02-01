@@ -24,7 +24,7 @@ body {
 }
 
 .button {
-    display: inline-flexbox;
+    display: inline-block;
     height: 50px;
     width: 100px;
     background: black;
