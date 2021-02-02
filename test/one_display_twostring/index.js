@@ -11,7 +11,7 @@ document.addEventListener("keydown", function (event) {
     const key = event.key;
     const lastindex = input.length > 0 ? input.length - 1 : 0;
     const db = { operator: ["+", "/", "-", "*"] };
-    console.log(focusOn, event);
+    console.log(event);
     if (isNaN(key)) {
         if (key === "(") {
             subinput = ")";
@@ -25,7 +25,7 @@ document.addEventListener("keydown", function (event) {
             input = input.concat(key);
         }
         if (key === "q") {
-            input = input.concat([get_em(".button").textContent, "("]);
+            input = input.concat([`${get_em(".button").textContent}(`]);
             subinput = ")";
         }
 
@@ -50,6 +50,13 @@ document.addEventListener("keydown", function (event) {
         } else {
             input[lastindex] = key;
         }
+    }
+    if (input.length > 0) {
+        if (input.join("").indexOf("(") === -1) {
+            subinput = "";
+        }
+    } else {
+        subinput = "";
     }
 
     if (subinput.length > 0) {
