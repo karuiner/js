@@ -26,9 +26,13 @@ body {
     flex-direction: row;
     float: right;
     height: 50px;
-    width: 50%;
+    width: 40%;
     border: solid 1px black;
     background: white;
+}
+.display:focus-within {
+    background: yellow;
+    outline: 1px dashed red;
 }
 .blanck {
     background: white;
@@ -51,7 +55,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 300px;
-    width: 50%;
+    width: 40%;
     border: solid 1px black;
     background: skyblue;
 }

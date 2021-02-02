@@ -1,5 +1,6 @@
 const displaym = document.querySelector(".main_display");
 const displays = document.querySelector(".sub_display");
+const display = document.querySelector(".display");
 function get_em(x) {
     return document.querySelector(x);
 }
@@ -10,7 +11,7 @@ document.addEventListener("keydown", function (event) {
     const key = event.key;
     const lastindex = input.length > 0 ? input.length - 1 : 0;
     const db = { operator: ["+", "/", "-", "*"] };
-
+    console.log(focusOn, event);
     if (isNaN(key)) {
         if (key === "(") {
             subinput = ")";
