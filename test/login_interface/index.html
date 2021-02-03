@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="index.css" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="area"></div>
+        <div class="main_area">
+            <label class="input_line">
+                <span class="input_title">ID</span>
+                <input type="text" class="input_area" id="input_id" />
+                <span class="input_desc"></span>
+            </label>
+            <label class="input_line">
+                <span class="input_title">Phone number</span>
+                <input type="tel" class="input_area" id="input_pn" />
+                <span class="input_desc">
+                    <span style="display: none"> password를 입력하세요 </span>
+                    <span style="display: none"> password는 특수문자, 영어, 숫자 각각을 하나이상 포함해야 합니다. </span>
+                </span>
+            </label>
+            <label class="input_line">
+                <span class="input_title">Email address</span>
+                <input type="email" class="input_area" id="input_em" />
+                <span class="input_desc">
+                    <span style="display: none"> email을 입력해주세요. </span>
+                    <span style="display: none"> 올바른 email의 형식이 아닙니다. </span>
+                </span>
+            </label>
+            <label class="input_line">
+                <span class="input_title">Password</span>
+                <input type="password" class="input_area" id="input_pw" />
+                <span class="input_desc">
+                    <span style="display: none"> password를 입력하세요 </span>
+                    <span style="display: none"> password는 특수문자, 영어, 숫자 각각을 하나이상 포함해야 합니다. </span>
+                </span>
+            </label>
+            <label class="input_line">
+                <span class="input_title">Password retry</span>
+                <input type="password" class="input_area" id="input_rpw" />
+                <span class="input_desc">
+                    <span class="success" style="display: none"></span>
+                    <span class="fail" style="display: none"> password를 입력하세요 </span>
+                    <span class="fail" style="display: none"> password는 특수문자, 영어, 숫자 각각을 하나이상 포함해야 합니다. </span>
+                    <span class="fail" style="display: none"> 입력된 password와 일치 하지 않습니다. </span>
+                </span>
+            </label>
+            <div class="button_line">
+                <button id="resister">resister</button>
+            </div>
+        </div>
+        <div class="area"></div>
+    </body>
+    <script src="index.js"></script>
+</html>
