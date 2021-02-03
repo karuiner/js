@@ -42,13 +42,98 @@ function limitedstandardPassword(str) {
 }
 
 resister.addEventListener("click", function () {
-    for (let i of input_list) {
-        console.log(method[i.type](i.value));
-        if (method[i.type](i.value)) {
-            console.log("pass");
-        } else {
-            i.parentElement.style.backgroundColor = "pink";
-            i.parentElement.children[0].style.color = "red";
+    let check = false,
+        password1 = undefined;
+    function turn_on(target, j) {
+        let k = 0;
+        for (let i of target) {
+            console.log(i);
+            if (k === j) {
+                i.style.display = "";
+            } else {
+                i.style.display = "none";
+            }
+            k += 1;
         }
     }
+
+    function back_change(i, check) {
+        if (check) {
+            i.style.backgroundColor = "pink";
+            i.children[0].style.color = "red";
+        } else {
+            i.style.backgroundColor = "silver";
+            i.children[0].style.color = "black";
+        }
+    }
+
+    for (let i of input_list) {
+        console.log(i.type);
+        if (i.type === "text") {
+            if (moreThanLength(i.value, 4) && onlyNumberAndEnglish(i.value)) {
+                turn_on(i.parentElement.children[2].children, 0);
+            } else if (moreThanLength(i.value, 4)) {
+                turn_on(i.parentElement.children[2].children, 3);
+                check = true;
+            } else if (onlyNumberAndEnglish(i.value)) {
+                turn_on(i.parentElement.children[2].children, 2);
+                check = true;
+            } else {
+                turn_on(i.parentElement.children[2].children, 1);
+                check = true;
+            }
+            back_change(i.parentElement, check);
+        }
+        check = false;
+        if (i.type === "tel") {
+            if (validPhoneNumber(i.value)) {
+                turn_on(i.parentElement.children[2].children, 0);
+            } else if (moreThanLength(i.value, 1)) {
+                turn_on(i.parentElement.children[2].children, 2);
+                check = true;
+            } else {
+                turn_on(i.parentElement.children[2].children, 1);
+                check = true;
+            }
+            back_change(i.parentElement, check);
+        }
+        check = false;
+        if (i.type === "email") {
+            if (validEmail(i.value)) {
+                turn_on(i.parentElement.children[2].children, 0);
+            } else if (moreThanLength(i.value, 1)) {
+                turn_on(i.parentElement.children[2].children, 2);
+                check = true;
+            } else {
+                turn_on(i.parentElement.children[2].children, 1);
+                check = true;
+            }
+            back_change(i.parentElement, check);
+        }
+        check = false;
+    }
+    if (strongPassword(input_list[3].value)) {
+        turn_on(input_list[3].parentElement.children[2].children, 0);
+    } else if (moreThanLength(input_list[3].value, 8)) {
+        turn_on(input_list[3].parentElement.children[2].children, 3);
+        check = true;
+    } else if (moreThanLength(input_list[3].value, 1)) {
+        turn_on(input_list[3].parentElement.children[2].children, 2);
+        check = true;
+    } else {
+        turn_on(input_list[3].parentElement.children[2].children, 1);
+        check = true;
+    }
+    back_change(input_list[3].parentElement, check);
+    check = false;
+    if (input_list[3].value === input_list[4].value && moreThanLength(input_list[4].value, 8)) {
+        turn_on(input_list[4].parentElement.children[2].children, 0);
+    } else if (moreThanLength(input_list[4].value, 8)) {
+        check = true;
+        turn_on(input_list[4].parentElement.children[2].children, 1);
+    } else {
+        check = true;
+        turn_on(input_list[4].parentElement.children[2].children, 2);
+    }
+    back_change(input_list[4].parentElement, check);
 });
