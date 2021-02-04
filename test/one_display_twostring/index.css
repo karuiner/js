@@ -55,12 +55,14 @@ body {
     background: white;
     color: black;
     flex: 0 0 auto;
+    font-size: 20px;
 }
 
 .sub_display {
     background: white;
-    color: grey;
+    color: rgb(182, 180, 180);
     flex: 0 0 auto;
+    font-size: 20px;
 }
 
 .area {
