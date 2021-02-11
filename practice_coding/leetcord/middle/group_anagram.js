@@ -34,17 +34,13 @@ let strs = ["eat", "tea", "tan", "ate", "nat", "bat"];
 var groupAnagrams = function (strs) {
     let db = {};
     function sum(str) {
-        return str.split("").reduce((x, y) => {
+        let nstr = str.split("");
+        nstr.sort();
+        console.log(nstr);
+        return nstr.reduce((x, y) => {
             return x + y.charCodeAt();
-        }, 0);
+        }, "");
     }
-    //     function checkana(str, str2) {
-    //         let a = str.split("");
-    //         let b = str2.split("");
-    //         a.sort();
-    //         b.sort();
-    //         return a.join("") === b.join("");
-    //     }
 
     for (let i of strs) {
         let num = sum(i);
@@ -56,10 +52,10 @@ var groupAnagrams = function (strs) {
     }, []);
     return ans;
 };
-/// 단순 연산에는 문제점이 하나있다. 같은 값을 판별해야한다.
 
 console.log(groupAnagrams(strs));
 
 let input = ["cab", "tin", "pew", "duh", "may", "ill", "buy", "bar", "max", "doc"];
 
 let output = [["max"], ["buy"], ["doc"], ["may"], ["ill"], ["duh"], ["tin"], ["bar"], ["pew"], ["cab"]];
+console.log(groupAnagrams(input));
