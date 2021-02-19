@@ -5,3 +5,5 @@ button.onclick = test;
 function test(x) {
     console.log(x);
 }
+
+test();
