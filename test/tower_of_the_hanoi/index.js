@@ -1,8 +1,10 @@
 const main = document.querySelector(".entire");
 const sky = document.querySelector(".sky");
 const pillars = document.querySelectorAll(".Pillar");
+const button = document.querySelector("button");
 const pillar1 = pillars[0];
 let dragged;
+let minwidth = 50;
 
 function mk_plate(x) {
     let p = document.createElement("div");
@@ -11,9 +13,18 @@ function mk_plate(x) {
     p.style.width = `${x}px`;
     p.style.zIndex = 1;
     p.draggable = true;
-    pillar1.append(p);
     return p;
 }
+button.addEventListener("click", function () {
+    let allplate = document.querySelectorAll(".plate");
+    if (allplate.length < 9) {
+        let p = mk_plate(minwidth);
+        pillar1.prepend(p);
+        minwidth += 20;
+    } else {
+        button.classList.add("not_allow");
+    }
+});
 
 document.addEventListener(
     "dragstart",
@@ -84,6 +95,17 @@ document.addEventListener(
                 event.target.style.background = "";
                 dragged.parentNode.removeChild(dragged);
                 event.target.appendChild(dragged);
+            }
+            for (let i of pillars) {
+                if (i.lastElementChild !== null) {
+                    for (let j of i.children) {
+                        if (j === i.lastElementChild) {
+                            j.draggable = true;
+                        } else {
+                            j.draggable = false;
+                        }
+                    }
+                }
             }
         }
         event.target.style.background = "";
