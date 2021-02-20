@@ -1,4 +1,5 @@
 const ball = document.querySelector(".ball");
+let isrunning = false;
 ball.style.transform = "translate(200px, 200px)";
 ball.style.transitionDuration = "5s";
 
@@ -20,9 +21,13 @@ function move(target) {
 }
 ball.addEventListener("click", function (event) {
     let target = event.target;
-    let p1 = new Promise(function (resolve, reject) {
-        setTimeout(move, 5000, target);
-    });
-    p1.then(() => console.log(target));
-    p1.catch(() => console.log("fail"));
+    if (!isrunning) {
+        isrunning = true;
+        let p1 = new Promise(function (resolve, reject) {
+            setTimeout(move, 5000, target);
+            resolve(target);
+        });
+        p1.then((target) => console.log(target));
+        p1.catch(() => console.log("fail"));
+    }
 });
