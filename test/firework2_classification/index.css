@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0px;
+    box-sizing: border-box;
+    font-family: "monospace", cursive;
+    color: #000;
+}
+
+@keyframes twinkle {
+    to {
+        opacity: 0;
+    }
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+.whole_page {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+}
+.page_A {
+    flex: 1 0 0;
+    background: #000;
+}
+
+.ball {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: white;
+}
+
+.mote {
+    height: 3px;
+    width: 3px;
+    border-radius: 50%;
+}
+
+.color1 {
+    background: rgb(255, 95, 95);
+}
+
+.color2 {
+    background: rgb(255, 167, 95);
+}
+
+.color3 {
+    background: rgb(244, 255, 95);
+}
+
+.color4 {
+    background: rgb(159, 255, 95);
+}
+
+.color5 {
+    background: rgb(95, 255, 162);
+}
+
+.color6 {
+    background: rgb(95, 255, 162);
+}
+
+.color7 {
+    background: rgb(95, 231, 255);
+}
+
+.color8 {
+    background: rgb(95, 164, 255);
+}
+
+.twinkle {
+    animation-duration: 0.02s;
+    animation-name: twinkle;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
