@@ -2,5 +2,6 @@ sprint/
 private/
 github_blog/
 flow/
+pair/
 pre-sprint-javascript-koans/ 
 *.code-workspace
