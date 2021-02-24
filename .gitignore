@@ -3,5 +3,6 @@ private/
 github_blog/
 flow/
 pair/
-pre-sprint-javascript-koans/ 
+pre-sprint-javascript-koans/
+typescript/ 
 *.code-workspace
