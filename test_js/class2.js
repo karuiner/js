@@ -10,6 +10,10 @@ class ball {
 }
 
 class falling_ball extends ball {
+    constructor(name, weight, radius) {
+        super(name, weight, radius);
+    }
+
     get vel() {
         return 9.8 * this.weight;
     }
