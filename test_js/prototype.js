@@ -21,9 +21,11 @@ console.log(farmer1.die());
 
 // soldier
 let soldier = function () {
+    console.log(this);
     farmer.call(this);
     this.weapon = ["창", "방패"];
     this.armor = ["가죽 갑주"];
+    console.log(this);
 };
 soldier.prototype = Object.create(farmer.prototype);
 soldier.prototype.constructor = soldier;
