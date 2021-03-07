@@ -1,27 +1,23 @@
-var allPathsSourceTarget = function (graph) {
-    db = [];
-    graph.forEach(function (x, i) {
-        //        console.log(x, i, db.length);
-        if (x.length > 0) {
-            if (db.length === 0) {
-                for (let j of x) {
-                    db.push([i, j]);
-                }
-            } else {
-                db.forEach(function (k, j) {
-                    if (k[k.length - 1] === i) {
-                        let original = db[j];
-                        for (let l of x) {
-                            db.push([...original, l]);
-                        }
-                    }
-                });
-                db = db.filter((x) => x[x.length - 1] !== i);
-            }
+/*
+ *
+ * @param {number[][]} graph
+ * @return {number[][]}
+ */
+var allPathsSourceTarget = function (graph, s = 0, e = graph.length - 1) {
+    let result = [];
+    if (s !== e) {
+        for (let i of graph[s]) {
+            let deep = allPathsSourceTarget(graph, i, e);
+            deep.forEach((x) => result.push([s, ...x]));
         }
-    });
-    return db;
+    } else {
+        result = [[s]];
+    }
+    return result;
 };
+
+//Runtime: 128 ms, faster than 38.75% of JavaScript online submissions for All Paths From Source to Target.
+//Memory Usage: 48.6 MB, less than 8.82% of JavaScript online submissions for All Paths From Source to Target.
 
 let graph = [[1, 2], [3], [3], []];
 console.log(allPathsSourceTarget(graph));
