@@ -3,40 +3,65 @@
  * @param {number} n
  * @return {string}
  */
-var countAndSay = function (n) {
-    let ans = "0",
-        p,
-        k,
-        pans;
-    for (let i = 0; i < n; i++) {
-        if (i > 0) {
-            k = 0;
-            p = undefined;
-            pans = ans;
-            ans = "";
-            for (let j of pans) {
-                if (p === undefined) {
-                    p = j;
-                    k += 1;
-                } else {
-                    if (j === p) {
-                        k += 1;
-                    } else {
-                        ans += `${k}${p}`;
-                        p = j;
-                        k = 1;
-                    }
-                }
-            }
-            ans += `${k}${p}`;
-        } else {
-            ans = "1";
-        }
-    }
-    return ans;
-};
+// var countAndSay = function(n) {
+//     let ans='0',p,k,pans;
+//     for (let i=0; i<n; i++){
+
+//         if (i >0) {
+//             k=0
+//             p=undefined
+//             pans=ans
+//             ans=''
+//             for (let j of pans ){
+//                 if (p=== undefined){
+//                     p=j
+//                     k+=1
+//                 } else {
+//                     if (j === p){
+//                         k+=1
+//                     } else{
+//                         ans+=`${k}${p}`
+//                         p=j
+//                         k=1
+//                     }
+//                 }
+
+//             }
+//             ans+=`${k}${p}`
+//         } else{
+//             ans='1'
+//         }
+//     }
+//     return ans
+// };
 //Runtime: 80 ms, faster than 87.23% of JavaScript online submissions for Count and Say.
 //Memory Usage: 40.2 MB, less than 88.47% of JavaScript online submissions for Count and Say.
+
+// var countAndSay = function (n) {
+//     let [ans, p, k, pans] = ["0", undefined, undefined, undefined];
+//     for (let i = 0; i < n; i++) {
+//         if (i > 0) {
+//             [k, p, pans, ans] = [0, undefined, ans, ""];
+//             for (let j of pans) {
+//                 if (p === undefined) {
+//                     [p, k] = [j, k + 1];
+//                 } else {
+//                     if (j === p) {
+//                         k += 1;
+//                     } else {
+//                         [ans, p, k] = [ans + `${k}${p}`, j, 1];
+//                     }
+//                 }
+//             }
+//             ans += `${k}${p}`;
+//         } else {
+//             ans = "1";
+//         }
+//     }
+//     return ans;
+// };
+//Runtime: 96 ms, faster than 24.61% of JavaScript online submissions for Count and Say.
+//Memory Usage: 44 MB, less than 5.76% of JavaScript online submissions for Count and Say.
 // 재귀함수용 인것 같다. 재귀함수 형식으로 바꿔서 만들어 보도록 하자
 var countAndSay = function (n, str = "") {
     if (str === "" && n > 0) {
