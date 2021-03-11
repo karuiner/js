@@ -4,5 +4,6 @@ github_blog/
 flow/
 pair/
 pre-sprint-javascript-koans/
-typescript/ 
+typescript/
+server_playground/ 
 *.code-workspace
