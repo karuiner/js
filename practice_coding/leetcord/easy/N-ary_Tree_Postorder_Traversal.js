@@ -7,7 +7,8 @@
  * };
  */
 
-/**
+/*
+ *
  * @param {Node} root
  * @return {number[]}
  */
