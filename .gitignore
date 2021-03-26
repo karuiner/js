@@ -8,5 +8,6 @@ typescript/
 server_playground/
 react/
 vue/ 
+codesandbox/
 *node_modules/
 *.code-workspace
