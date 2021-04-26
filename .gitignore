@@ -11,3 +11,4 @@ vue/
 codesandbox/
 *node_modules/
 *.code-workspace
+project/
