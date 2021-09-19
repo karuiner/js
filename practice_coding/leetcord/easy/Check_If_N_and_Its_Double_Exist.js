@@ -6,9 +6,8 @@
 var checkIfExist = function (arr) {
   let db = {},
     ans = false;
-  arr.sort((a, b) => Math.abs(b) - Math.abs(a));
   for (let i of arr) {
-    if (db[2 * i]) {
+    if (db[2 * i] || db[i / 2]) {
       ans = true;
       break;
     } else {
@@ -18,5 +17,5 @@ var checkIfExist = function (arr) {
   return ans;
 };
 
-// Runtime: 84 ms, faster than 37.06% of JavaScript online submissions for Check If N and Its Double Exist.
-// Memory Usage: 40.7 MB, less than 23.42% of JavaScript online submissions for Check If N and Its Double Exist.
+// Runtime: 80 ms, faster than 55.79% of JavaScript online submissions for Check If N and Its Double Exist.
+// Memory Usage: 40.4 MB, less than 35.47% of JavaScript online submissions for Check If N and Its Double Exist.
