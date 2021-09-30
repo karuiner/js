@@ -36,5 +36,5 @@ var splitListToParts = function (head, k) {
   return ans;
 };
 
-// Runtime: 88 ms
-// Memory Usage: 41.1 MB
+// Runtime: 80 ms, faster than 72.37% of JavaScript online submissions for Split Linked List in Parts.
+// Memory Usage: 41.2 MB, less than 14.47% of JavaScript online submissions for Split Linked List in Parts.
