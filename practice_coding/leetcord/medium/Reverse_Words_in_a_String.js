@@ -31,5 +31,5 @@ var reverseWords = function (s) {
   return ans;
 };
 
-// Runtime: 159 ms, faster than 5.12% of JavaScript online submissions for Reverse Words in a String.
-// Memory Usage: 40.8 MB, less than 26.77% of JavaScript online submissions for Reverse Words in a String.
+// Runtime: 83 ms, faster than 42.13% of JavaScript online submissions for Reverse Words in a String.
+// Memory Usage: 40.7 MB, less than 35.14% of JavaScript online submissions for Reverse Words in a String.
