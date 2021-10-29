@@ -22,14 +22,14 @@ var numComponents = function (head, nums) {
   while (head !== null) {
     if (conc && db[head.val] === undefined) {
       conc = false;
-      ans++;
     } else if (!conc && db[head.val]) {
       conc = true;
+      ans++;
     }
     head = head.next;
   }
-  return conc ? ans + 1 : ans;
+  return ans;
 };
 
-// Runtime: 88 ms, faster than 62.07% of JavaScript online submissions for Linked List Components.
-// Memory Usage: 43.3 MB, less than 68.97% of JavaScript online submissions for Linked List Components.
+// Runtime: 76 ms, faster than 93.10% of JavaScript online submissions for Linked List Components.
+// Memory Usage: 43.2 MB, less than 68.97% of JavaScript online submissions for Linked List Components.
