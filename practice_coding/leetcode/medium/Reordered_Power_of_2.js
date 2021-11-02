@@ -4,7 +4,7 @@
  * @return {boolean}
  */
 var reorderedPowerOf2 = function (n) {
-  function find(n, l) {
+  function find(l) {
     let a = 2,
       k = 1;
     while (`${a}`.length < l) {
@@ -42,7 +42,7 @@ var reorderedPowerOf2 = function (n) {
         db[i] += 1;
       }
     }
-    let [min, max] = find(n, l);
+    let [min, max] = find(l);
     for (let i = min; i < max + 1; i++) {
       let v = `${2 ** i}`;
       let sub = {},
