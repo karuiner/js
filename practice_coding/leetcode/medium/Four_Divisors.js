@@ -13,6 +13,7 @@ var sumFourDivisors = function (nums) {
         if (j === i / j) {
           d++;
           s += j;
+          // break // 제곱근의 경우 약수가 홀수가 되므로 해당 수에 대한 계산을 넘겨도 되므로
         } else {
           d += 2;
           s += j + i / j;
