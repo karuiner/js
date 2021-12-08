@@ -1,4 +1,3 @@
-// 풀이중
 var MagicDictionary = function () {
   this.db = {};
 };
@@ -15,13 +14,7 @@ MagicDictionary.prototype.buildDict = function (dictionary) {
       box[i.length] = {};
     }
     box = box[i.length];
-    box[i] = false;
-    for (let j of i) {
-      if (box[j] === undefined) {
-        box[j] = {};
-      }
-      box = box[j];
-    }
+    box[i] = true;
   }
 };
 
@@ -32,31 +25,26 @@ MagicDictionary.prototype.buildDict = function (dictionary) {
  */
 MagicDictionary.prototype.search = function (searchWord) {
   let ans = false,
-    c = 0;
-  if (this.db[searchWord.length]) {
-    let box = this.db[searchWord.length],
-      c = 0;
-    if (box[searchWord] === undefined) {
-      for (let j of searchWord) {
-        if (box[j] === undefined) {
-          break;
-        }
-        box = box[j];
-        c++;
-      }
-      for (let k in box) {
-        let nbox = box[k],
-          check = true;
-        for (let j of searchWord.slice(c + 1)) {
-          if (nbox[j] === undefined) {
+    n = searchWord.length;
+  if (this.db[n]) {
+    let box = this.db[n];
+    for (let i in box) {
+      if (i !== searchWord) {
+        let c = 0;
+        for (let j = 0; j < n; j++) {
+          if (c > 1) {
             break;
+          } else if (i[j] !== searchWord[j]) {
+            c++;
           }
-          nbox = nbox[j];
         }
-        if (check) {
+        if (c === 1) {
           ans = true;
           break;
         }
+      }
+      if (ans) {
+        break;
       }
     }
   }
@@ -70,3 +58,6 @@ MagicDictionary.prototype.search = function (searchWord) {
  * obj.buildDict(dictionary)
  * var param_2 = obj.search(searchWord)
  */
+
+// Runtime: 182 ms, faster than 52.13% of JavaScript online submissions for Implement Magic Dictionary.
+// Memory Usage: 47.1 MB, less than 48.94% of JavaScript online submissions for Implement Magic Dictionary.
