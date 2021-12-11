@@ -1,4 +1,3 @@
-// 풀이중
 /*
  *
  * @param {string} s
@@ -41,7 +40,7 @@ var expressiveWords = function (s, words) {
         if (
           c1 !== d1 ||
           Number(c2) < Number(d2) ||
-          Number(c2) - Number(d2) === 1
+          (Number(c2) === 2 && Number(d2)) === 1
         ) {
           ans = false;
           break;
@@ -62,3 +61,6 @@ var expressiveWords = function (s, words) {
   }
   return ans;
 };
+
+// Runtime: 108 ms, faster than 28.79% of JavaScript online submissions for Expressive Words.
+// Memory Usage: 45.4 MB, less than 9.09% of JavaScript online submissions for Expressive Words.
