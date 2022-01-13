@@ -43,22 +43,24 @@ var pairSum = function (head) {
 // Runtime: 225 ms, faster than 67.07% of JavaScript online submissions for Maximum Twin Sum of a Linked List.
 // Memory Usage: 72.6 MB, less than 77.25% of JavaScript online submissions for Maximum Twin Sum of a Linked List.
 
-// 효율성 문제 - 입력 되는 linked list 의 길이가 긴경우 생성하는 배열의 길이도 길어지기에
-// 그러한 배열의 크기가 속도를 느리는게 하는듯하다.
-// var pairSum = function (head) {
-//   let arr = [];
-//   while (head !== null) {
-//     arr = [...arr, head.val];
-//     head = head.next;
-//   }
-//   let ans = 0,
-//     n = arr.length,
-//     hn = 0.5 * n;
-//   for (let i = 0; i < hn; i++) {
-//     let k = arr[i] + arr[n - i - 1];
-//     if (k > ans) {
-//       ans = k;
-//     }
-//   }
-//   return ans;
-// };
+var pairSum = function (head) {
+  let arr = [],
+    c = 0;
+  while (head !== null) {
+    //arr = [...arr, head.val];// 입력 방식에 따른 효율성 문제.
+    arr[c] = head.val;
+    head = head.next;
+  }
+  let ans = 0,
+    n = Math.floor(0.5 * c);
+  for (let i = 0; i < n; i++) {
+    let k = arr[i] + arr[c - i - 1];
+    if (k > ans) {
+      ans = k;
+    }
+  }
+  return ans;
+};
+
+// Runtime: 179 ms, faster than 95.81% of JavaScript online submissions for Maximum Twin Sum of a Linked List.
+// Memory Usage: 85.1 MB, less than 58.68% of JavaScript online submissions for Maximum Twin Sum of a Linked List.
