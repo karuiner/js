@@ -25,12 +25,15 @@ var isAnagram = function (s, t) {
       db[t[i]]--;
     }
   }
-  let ans = 0;
+  let ans = true;
   for (let i in db) {
-    ans += Math.abs(db[i]);
+    if (db[i] !== 0) {
+      ans = false;
+      break;
+    }
   }
 
-  return ans === 0;
+  return ans;
 };
 
 // Runtime: 88 ms, faster than 85.38% of JavaScript online submissions for Valid Anagram.
