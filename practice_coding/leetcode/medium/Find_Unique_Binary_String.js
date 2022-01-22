@@ -27,5 +27,5 @@ var findDifferentBinaryString = function (nums) {
   return f(ans, 0);
 };
 
-// Runtime: 136 ms, faster than 14.06% of JavaScript online submissions for Find Unique Binary String.
-// Memory Usage: 40.2 MB, less than 29.69% of JavaScript online submissions for Find Unique Binary String.
+// Runtime: 72 ms, faster than 92.19% of JavaScript online submissions for Find Unique Binary String.
+// Memory Usage: 40.7 MB, less than 12.50% of JavaScript online submissions for Find Unique Binary String.
