@@ -4,6 +4,61 @@
  * @param {number[]} nums2
  * @return {number}
  */
+var maxUncrossedLines = function (nums1, nums2) {
+  function cvt(arr) {
+    let db = {};
+    for (let i = 0; i < arr.length; i++) {
+      if (db[arr[i]] === undefined) {
+        db[arr[i]] = [i];
+      } else {
+        db[arr[i]].push(i);
+      }
+    }
+    return db;
+  }
+
+  function sel(i, j, c) {
+    if (i >= n) {
+      return c;
+    }
+    if (db[nums1[i]] === undefined) {
+      return sel(i + 1, j, c);
+    } else {
+      let v = db[nums1[i]].filter((x) => x >= j);
+      let a = c,
+        b = c;
+      if (rel[`${i + 1}-${j}-${c}`] === undefined) {
+        a = sel(i + 1, j, c);
+        rel[`${i + 1}-${j}-${c}`] = a;
+      } else {
+        a = rel[`${i + 1}-${j}-${c}`];
+      }
+
+      if (v.length > 0) {
+        if (rel[`${i + 1}-${v[0] + 1}-${c + 1}`] === undefined) {
+          b = sel(i + 1, v[0] + 1, c + 1);
+          rel[`${i + 1}-${v[0] + 1}-${c + 1}`] = b;
+        } else {
+          b = rel[`${i + 1}-${v[0] + 1}-${c + 1}`];
+        }
+        a = a > b ? a : b;
+      }
+
+      c = a > c ? a : c;
+    }
+    return c;
+  }
+
+  let ans = 0;
+  (db = cvt(nums2)), (n = nums1.length), (rel = {});
+
+  ans = sel(0, 0, 0);
+  return ans;
+};
+
+// Runtime: 3277 ms, faster than 6.00% of JavaScript online submissions for Uncrossed Lines.
+// Memory Usage: 182.5 MB, less than 6.00% of JavaScript online submissions for Uncrossed Lines.
+
 // var maxUncrossedLines = function (nums1, nums2) {
 // let ans=0,n=nums1.length,n2=nums2.length
 // for (let i=0; i <n;i++){
@@ -66,55 +121,100 @@
 //     } else {
 //       return c;
 //     }
+//   }var maxUncrossedLines = function (nums1, nums2) {
+//   function cvt(arr) {
+//     let db = {};
+//     for (let i = 0; i < arr.length; i++) {
+//       if (db[arr[i]] === undefined) {
+//         db[arr[i]] = [i];
+//       } else {
+//         db[arr[i]].push(i);
+//       }
+//     }
+//     return db;
 //   }
 
-//   return count(0, 0, 0);
+//   function sel(i, j, c) {
+//     if (i >= n) {
+//       return c;
+//     }
+//     if (db[nums1[i]] === undefined) {
+//       return sel(i + 1, j, c);
+//     } else {
+//       let v = db[nums1[i]].filter((x) => x >= j);
+
+//       if (rel[`${i}-${j}`] === undefined) {
+//         let a = sel(i + 1, j, c);
+
+//         if (v.length > 0) {
+//           let b = sel(i + 1, v[0] + 1, c + 1);
+//           a = a > b ? a : b;
+//         }
+//         console.log(q, i, j, a, c);
+//         q++;
+//         c = a > c ? a : c;
+//         rel[`${i}-${j}`] = c;
+//       } else {
+//         c = rel[`${i}-${j}`];
+//       }
+//     }
+//     return c;
+//   }
+
+//   let ans = 0;
+//   (db = cvt(nums2)), (n = nums1.length), (rel = {}), (q = 0);
+
+//   ans = sel(0, 0, 0);
+//   console.log(rel);
+//   return ans;
+// };
+
 // };
 // 다시 수정 중/ 중복되는 개체의 기준은?
-var maxUncrossedLines = function (nums1, nums2) {
-  function cvt(arr) {
-    let db = {};
-    for (let i = 0; i < arr.length; i++) {
-      if (db[arr[i]] === undefined) {
-        db[arr[i]] = [i];
-      } else {
-        db[arr[i]].push(i);
-      }
-    }
-    return db;
-  }
+// var maxUncrossedLines = function (nums1, nums2) {
+//   function cvt(arr) {
+//     let db = {};
+//     for (let i = 0; i < arr.length; i++) {
+//       if (db[arr[i]] === undefined) {
+//         db[arr[i]] = [i];
+//       } else {
+//         db[arr[i]].push(i);
+//       }
+//     }
+//     return db;
+//   }
 
-  function sel(i, j, c) {
-    if (i >= n) {
-      return c;
-    }
-    if (db[nums1[i]] === undefined) {
-      return sel(i + 1, j, c);
-    } else {
-      let v = db[nums1[i]].filter((x) => x >= j);
+//   function sel(i, j, c) {
+//     if (i >= n) {
+//       return c;
+//     }
+//     if (db[nums1[i]] === undefined) {
+//       return sel(i + 1, j, c);
+//     } else {
+//       let v = db[nums1[i]].filter((x) => x >= j);
 
-      if (rel[`${i}-${j}`] === undefined) {
-        let a = sel(i + 1, j, c);
+//       if (rel[`${i}-${j}`] === undefined) {
+//         let a = sel(i + 1, j, c);
 
-        if (v.length > 0) {
-          let b = sel(i + 1, v[0] + 1, c + 1);
-          a = a > b ? a : b;
-        }
-        console.log(q, i, j, a, c);
-        q++;
-        c = a > c ? a : c;
-        rel[`${i}-${j}`] = c;
-      } else {
-        c = rel[`${i}-${j}`];
-      }
-    }
-    return c;
-  }
+//         if (v.length > 0) {
+//           let b = sel(i + 1, v[0] + 1, c + 1);
+//           a = a > b ? a : b;
+//         }
+//         console.log(q, i, j, a, c);
+//         q++;
+//         c = a > c ? a : c;
+//         rel[`${i}-${j}`] = c;
+//       } else {
+//         c = rel[`${i}-${j}`];
+//       }
+//     }
+//     return c;
+//   }
 
-  let ans = 0;
-  (db = cvt(nums2)), (n = nums1.length), (rel = {}), (q = 0);
+//   let ans = 0;
+//   (db = cvt(nums2)), (n = nums1.length), (rel = {}), (q = 0);
 
-  ans = sel(0, 0, 0);
-  console.log(rel);
-  return ans;
-};
+//   ans = sel(0, 0, 0);
+//   console.log(rel);
+//   return ans;
+// };
