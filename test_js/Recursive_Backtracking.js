@@ -23,6 +23,7 @@ function MkMaze(start, grid) {
   fd = { N: 1, S: 2, E: 4, W: 8 };
   let opp = { E: "W", W: "E", N: "S", S: "N" };
   function carve_passages_from(cx, cy, grid) {
+    console.log(grid);
     let direc = Rndsuffle();
     for (let d of direc) {
       let [nx, ny] = [cx + dx[d], cy + dy[d]];
@@ -30,9 +31,12 @@ function MkMaze(start, grid) {
         0 <= ny &&
         ny <= grid.length - 1 &&
         0 <= nx &&
-        nx <= grid[ny].length - 1
+        nx <= grid[ny].length - 1 &&
+        grid[ny][nx] === 0
       ) {
+        //        grid[cy][cx][d] = true;
         grid[cy][cx] |= fd[d];
+        //        grid[ny][nx][opp[d]] = true;
         grid[ny][nx] |= fd[opp[d]];
         carve_passages_from(nx, ny, grid);
       }
@@ -41,8 +45,8 @@ function MkMaze(start, grid) {
   carve_passages_from(start[0], start[1], grid);
   return grid;
 }
-let sdata = { E: false, W: false, N: false, S: false },
-  n = 2;
+let sdata = { E: false, W: false, N: false, S: false, C: 0 },
+  n = 5;
 let grid = Array(n).fill(Array(n).fill(0));
 
 console.log(MkMaze([0, 0], grid));
