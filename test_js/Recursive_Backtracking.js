@@ -71,7 +71,7 @@ for (let i = 0; i < n; i++) {
 }
 
 let ngrid = MkMaze([0, 0], grid);
-console.log(ngrid);
+//console.log(ngrid);
 function vismap(grid) {
   let n = grid.length,
     ans = "";
