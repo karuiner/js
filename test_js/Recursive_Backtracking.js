@@ -17,16 +17,30 @@ function Rndsuffle() {
   }
   return arr;
 }
+
 function MkMaze(start, grid) {
   let dx = { E: 1, W: -1, S: 0, N: 0 },
     dy = { E: 0, W: 0, S: 1, N: -1 };
-  fd = { N: 1, S: 2, E: 4, W: 8 };
+  let fd = { N: 1, S: 2, E: 4, W: 8 };
   let opp = { E: "W", W: "E", N: "S", S: "N" };
   function carve_passages_from(cx, cy, grid) {
-    console.log(grid);
     let direc = Rndsuffle();
+
     for (let d of direc) {
       let [nx, ny] = [cx + dx[d], cy + dy[d]];
+      // if (
+      //   0 <= ny &&
+      //   ny <= grid.length - 1 &&
+      //   0 <= nx &&
+      //   nx <= grid[ny].length - 1 &&
+      //   !grid[ny][nx]["visit"]
+      // ) {
+      //   grid[cy][cx][d] = true;
+      //   grid[cy][cx]["visit"] = true;
+      //   grid[ny][nx][opp[d]] = true;
+      //   carve_passages_from(nx, ny, grid);
+      // }
+
       if (
         0 <= ny &&
         ny <= grid.length - 1 &&
@@ -34,9 +48,7 @@ function MkMaze(start, grid) {
         nx <= grid[ny].length - 1 &&
         grid[ny][nx] === 0
       ) {
-        //        grid[cy][cx][d] = true;
         grid[cy][cx] |= fd[d];
-        //        grid[ny][nx][opp[d]] = true;
         grid[ny][nx] |= fd[opp[d]];
         carve_passages_from(nx, ny, grid);
       }
@@ -45,11 +57,47 @@ function MkMaze(start, grid) {
   carve_passages_from(start[0], start[1], grid);
   return grid;
 }
-let sdata = { E: false, W: false, N: false, S: false, C: 0 },
-  n = 5;
-let grid = Array(n).fill(Array(n).fill(0));
+let sdata = { E: false, W: false, N: false, S: false, visit: false },
+  n = 10;
 
-console.log(MkMaze([0, 0], grid));
+let grid = [];
+for (let i = 0; i < n; i++) {
+  let sub = [];
+  for (let j = 0; j < n; j++) {
+    //    sub.push({ ...sdata });
+    sub.push(0);
+  }
+  grid.push(sub);
+}
+
+let ngrid = MkMaze([0, 0], grid);
+console.log(ngrid);
+function vismap(grid) {
+  let n = grid.length,
+    ans = "";
+  let [N, S, E, W] = [1, 2, 4, 8];
+  ans += "  ";
+  for (let i = 0; i < 2 * n - 1; i++) {
+    ans += "_";
+  }
+  ans += "\n";
+  for (let i = 0; i < n; i++) {
+    let sub = "|";
+    for (let j = 0; j < n; j++) {
+      sub += (grid[i][j] & S) !== 0 ? " " : "_";
+      if ((grid[i][j] & E) !== 0) {
+        sub += ((grid[i][j] | grid[i][j + 1]) & S) !== 0 ? " " : "_";
+      } else {
+        sub += "|";
+      }
+    }
+    sub += "\n";
+    ans += sub;
+  }
+  console.log(ans);
+  return ans;
+}
+vismap(ngrid);
 // let c = 0;
 // while (c < 100) {
 //   console.log(Rndsuffle());
