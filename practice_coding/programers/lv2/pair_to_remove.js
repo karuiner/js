@@ -1,23 +1,63 @@
 // 짝지어 제거하기
 
-// stack 이라는 힌트를 보고 생각해본것
-// 하지만 효율성 부분에서 오래걸림.(이전 방식에 비해서는 훨씬 효율적임.)
+// 풀이방식의 문제는 아니었다. 문자열에서 배열로 수정한경우 모든 경우에서 만족스런 풀이를 보였다.
 function solution(s) {
   let n = s.length;
   if (n % 2 !== 0) {
     return 0;
   }
-  let ds = "";
+  let ds = [],
+    k = 0;
   for (let i = 0; i < n; i++) {
-    ds = s[i] + ds;
-    if (ds.length > 1) {
-      if (ds[0] === ds[1]) {
-        ds = ds.slice(2);
-      }
+    if (k === 0 || s[i] !== ds[k - 1]) {
+      ds[k] = s[i];
+      k++;
+    } else if (s[i] === ds[k - 1]) {
+      ds.pop();
+      k--;
     }
   }
-  return ds.length === 0 ? 1 : 0;
+  return k === 0 ? 1 : 0;
 }
+
+// 수정 본  미완성  하지만 일부부분에서는 정호가한것보다는 속도가 나옴 다만 완벽하지 않음.
+// 정확한 결과를 주지 못함. 해당부분을 해결 해야할것 같음.
+// 기존의 코드에서 해결이 되지 않을 경우에 대한 추가사항을 적용함. 정확한 실패 조건을 찾아야함
+// function solution(s) {
+//   let n = s.length;
+//   if (n % 2 !== 0) {
+//     return 0;
+//   }
+//   let ds = "";
+//   for (let i = 0; i < n; i++) {
+//     ds = s[i] + ds;
+//     if (ds.length > 1 && ds[0] === ds[1]) {
+//       ds = ds.substring(2);
+//     } else if (ds.length > 5 && `${ds[0]}${ds[1]}` === `${ds[2]}${ds[3]}`) {
+//       break;
+//     }
+//   }
+//   return ds.length === 0 ? 1 : 0;
+// }
+
+// stack 이라는 힌트를 보고 생각해본것
+// 하지만 효율성 부분에서 오래걸림.(이전 방식에 비해서는 훨씬 효율적임.)
+// function solution(s) {
+//   let n = s.length;
+//   if (n % 2 !== 0) {
+//     return 0;
+//   }
+//   let ds = "";
+//   for (let i = 0; i < n; i++) {
+//     ds = s[i] + ds;
+//     if (ds.length > 1) {
+//       if (ds[0] === ds[1]) {
+//         ds = ds.slice(2);
+//       }
+//     }
+//   }
+//   return ds.length === 0 ? 1 : 0;
+// }
 
 // 미완성
 // function solution(s) {
