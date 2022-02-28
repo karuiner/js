@@ -26,3 +26,10 @@ function solution(n, k) {
 
   return ans;
 }
+
+let n = 437674,
+  k = 3,
+  expected_result = 3;
+console.log(
+  `calculated_result : ${solution(n, k)}, expected_result : ${expected_result} `
+);
