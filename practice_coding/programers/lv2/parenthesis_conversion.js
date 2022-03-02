@@ -1,6 +1,5 @@
 //괄호 변환
 function solution(p) {
-  var answer = p;
   function check(s) {
     let l = 0,
       ans = true;
