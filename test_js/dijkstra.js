@@ -27,8 +27,8 @@ function dijk(graph, s) {
   }
 
   dp[s] = 0;
-  let n = dp.length,
-    cct = 0;
+  let n = dp.length;
+
   let invite = Array(n).fill(false);
   invite[s] = true;
   function redo(s) {
@@ -47,8 +47,7 @@ function dijk(graph, s) {
       }
     }
     invite[Number(s) - 1] = true;
-    if (min !== Infinity && cct < 10) {
-      cct++;
+    if (min !== Infinity) {
       redo(k);
     }
   }
