@@ -1,3 +1,4 @@
+//베스트 앨범
 function solution(genres, plays) {
   let ans = [],
     db = {},
