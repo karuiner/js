@@ -1,6 +1,6 @@
 // 보석 쇼핑
 
-// 풀이 시도 3 [정확성: 33.3, 효율성: 13.3, 합계: 46.7 / 100.0] 정확성 15/15 효율성 3/15
+// 투포인터 알고리즘 활용하기.
 function solution(gems) {
   let key = {},
     nkey = 0,
@@ -8,68 +8,141 @@ function solution(gems) {
   for (let i = 0; i < n; i++) {
     let u = gems[i];
     if (key[u] === undefined) {
-      key[u] = [i];
+      key[u] = true;
       nkey++;
-    } else {
-      key[u].push(i);
     }
   }
-  let ans = [];
-  function get(arr, k) {
-    let [a, b] = [0, arr.length - 1];
-    if (arr[a] >= k) {
-      return arr[a];
-    } else if (arr[b] < k) {
-      return -1;
-    } else {
-      let c = 0;
-      while (a < b && c < 20) {
-        let m = Math.floor((a + b) / 2);
-        if (arr[m] >= k) {
-          b = m;
-        } else {
-          a = m + 1;
-        }
-        c++;
+  let [s, e] = [0, -1],
+    k = 0,
+    ans = [1, n],
+    sub = {};
+  while (e < n) {
+    if (k === nkey) {
+      let l = ans[1] - ans[0];
+      if (e - s < l) {
+        ans = [s + 1, e + 1];
+      } else if (e - s === l && s + 1 < ans[0]) {
+        ans = [s + 1, e + 1];
       }
-      return arr[a];
-    }
-  }
-
-  if (nkey > 1) {
-    for (let i in key) {
-      key[i].sort((a, b) => a - b);
-    }
-    let l = n;
-    for (let i = 0; i < n; i++) {
-      let k = 0,
-        e = i;
-      for (let j in key) {
-        let u = get(key[j], i);
-        if (u === -1) {
-          break;
-        } else if (u > e) {
-          e = u;
-        }
-        k++;
-      }
-
-      if (k === nkey) {
-        if (e - i < l) {
-          l = e - i;
-          ans = [i + 1, e + 1];
-        } else if (e - i === l && i + 1 < ans[0]) {
-          ans = [i + 1, e + 1];
-        }
+      if (sub[gems[s]] > 1) {
+        sub[gems[s]]--;
       } else {
-        break;
+        delete sub[gems[s]];
+        k--;
       }
+      s++;
+    } else if (e < n - 1) {
+      e++;
+      if (sub[gems[e]] === undefined) {
+        sub[gems[e]] = 1;
+        k++;
+      } else {
+        sub[gems[e]]++;
+      }
+    } else {
+      break;
     }
-  } else {
-    ans = [1, 1];
   }
   return ans;
 }
+
+let values = [
+  [
+    ["DIA", "RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "DIA"],
+    [3, 7],
+  ],
+  [
+    ["AA", "AB", "AC", "AA", "AC"],
+    [1, 3],
+  ],
+  [
+    ["XYZ", "XYZ", "XYZ"],
+    [1, 1],
+  ],
+  [
+    ["ZZZ", "YYY", "NNNN", "YYY", "BBB"],
+    [1, 5],
+  ],
+];
+
+for (let [gems, expected_result] of values) {
+  console.log(
+    `calculated_result : ${solution(
+      gems
+    )}, expected_result : ${expected_result} `
+  );
+}
+
+// 풀이 시도 3 [정확성: 33.3, 효율성: 13.3, 합계: 46.7 / 100.0] 정확성 15/15 효율성 3/15
+// function solution(gems) {
+//   let key = {},
+//     nkey = 0,
+//     n = gems.length;
+//   for (let i = 0; i < n; i++) {
+//     let u = gems[i];
+//     if (key[u] === undefined) {
+//       key[u] = [i];
+//       nkey++;
+//     } else {
+//       key[u].push(i);
+//     }
+//   }
+//   let ans = [];
+//   function get(arr, k) {
+//     let [a, b] = [0, arr.length - 1];
+//     if (arr[a] >= k) {
+//       return arr[a];
+//     } else if (arr[b] < k) {
+//       return -1;
+//     } else {
+//       let c = 0;
+//       while (a < b && c < 20) {
+//         let m = Math.floor((a + b) / 2);
+//         if (arr[m] >= k) {
+//           b = m;
+//         } else {
+//           a = m + 1;
+//         }
+//         c++;
+//       }
+//       return arr[a];
+//     }
+//   }
+
+//   if (nkey > 1) {
+//     for (let i in key) {
+//       key[i].sort((a, b) => a - b);
+//     }
+//     let l = n;
+//     for (let i = 0; i < n; i++) {
+//       let k = 0,
+//         e = i;
+//       for (let j in key) {
+//         let u = get(key[j], i);
+//         if (u === -1) {
+//           break;
+//         } else if (u > e) {
+//           e = u;
+//         }
+//         k++;
+//       }
+
+//       if (k === nkey) {
+//         if (e - i < l) {
+//           l = e - i;
+//           ans = [i + 1, e + 1];
+//         } else if (e - i === l && i + 1 < ans[0]) {
+//           ans = [i + 1, e + 1];
+//         }
+//       } else {
+//         break;
+//       }
+//     }
+//   } else {
+//     ans = [1, 1];
+//   }
+//   return ans;
+// }
 
 //풀이 시도 1
 // function solution(gems) {
