@@ -1,65 +1,209 @@
 //경주로 건설
 
-// 시도 4
+// 시도 6
 function solution(board) {
-  let ans = 0,
-    m = board.length,
-    dp = Array(m * m).fill(Infinity);
+  let m = board.length,
+    n = m * m,
+    dp = {};
+  for (let i = 0; i < n; i++) {
+    let [a, b] = [Math.floor(i / m), i % m];
+    dp[i] = { pnode: -1, score: Infinity, pass: board[a][b] === 0 };
+  }
+
+  dp[0].score = 0;
+  let arr = [
+    ["A", 0],
+    ["A", 0],
+  ];
   let opp = { S: "N", N: "S", E: "W", W: "E" },
     NS = ["N", "S"],
     WE = ["W", "E"];
-  let idx = { S: [1, 0], N: [-1, 0], E: [0, 1], W: [0, -1] },
-    n = m * m;
   let corner = { S: WE, N: WE, W: NS, E: NS, A: ["B", "C"] };
+  let next = {
+    S: ["S", "E", "W"],
+    N: ["N", "E", "W"],
+    W: ["W", "N", "S"],
+    E: ["E", "N", "S"],
+    A: ["E", "S"],
+  };
 
-  function f(arr) {
-    // position, direction, sum
-    function doit(p, d, s, td) {
-      let v = 100,
-        next = [];
-      if (opp[d] !== td) {
-        let cn = corner[d];
-        if (td === cn[0] || td === cn[1]) {
-          v += 500;
-        }
-        let [i, j] = [Math.floor(p / m), p % m],
-          [ti, tj] = [i + idx[td][0], j + idx[td][1]];
-        if (ti >= 0 && ti < m && tj >= 0 && tj < m) {
-          let tp = ti * m + tj;
-          if (
-            tp >= 0 &&
-            tp < n &&
-            board[i][j] === 0 &&
-            (dp[tp] === Infinity || s + v < dp[tp])
-          ) {
-            if (tp <= n - 1) {
-              next = [tp, td, s + v];
-            }
+  function coor(p, d) {
+    let [i, j] = [Math.floor(p / m), p % m];
+    if (d === "N") {
+      i -= 1;
+    } else if (d === "S") {
+      i += 1;
+    } else if (d === "E") {
+      j += 1;
+    } else if (d === "W") {
+      j -= 1;
+    }
+    if (i >= 0 && i < m && j >= 0 && j < m) {
+      return i * m + j;
+    } else {
+      return -1;
+    }
+  }
+  function f(pd, p, s) {
+    if (p === n - 1) {
+      return s;
+    } else {
+      for (let d of next[pd]) {
+        let k = coor(p, d),
+          s = dp[p].score,
+          cr = corner[pd];
+        if (k > -1 && pd !== opp[d] && dp[k].pass) {
+          if (d !== cr[0] && d !== cr[1]) {
+            s += 100;
+          } else {
+            s += 600;
+          }
+          if (dp[k].score === Infinity || s <= dp[k].score) {
+            dp[k].pnode = p;
+            dp[k].score = s;
+            //console.log(d,p,k,s)
+            f(d, k, s);
           }
         }
       }
-      return next;
-    }
-    let next = [];
-    for (let i of arr) {
-      if (dp[i[0]] === Infinity || i[2] < dp[i[0]]) {
-        dp[i[0]] = i[2];
-      }
-      for (let j of ["N", "S", "E", "W"]) {
-        let sub = doit(...i, j);
-        if (sub.length > 0) {
-          next.push(sub);
-        }
-      }
-    }
-    if (next.length > 0) {
-      f(next);
     }
   }
-
-  f([[0, "A", 0]]);
-  return dp[n - 1];
+  f("A", 0, 0);
+  return dp[n - 1].score;
 }
+
+//시도 5
+// function solution(board) {
+//   let m = board.length,
+//     n = m * m,
+//     dp = {};
+//   for (let i = 0; i < n; i++) {
+//     let [a, b] = [Math.floor(i / m), i % m];
+//     dp[i] = { pnode: -1, score: Infinity, pass: board[a][b] === 0 };
+//   }
+
+//   dp[0].score = 0;
+//   let arr = [
+//     ["A", 0],
+//     ["A", 0],
+//   ];
+//   let opp = { S: "N", N: "S", E: "W", W: "E" },
+//     NS = ["N", "S"],
+//     WE = ["W", "E"];
+//   let corner = { S: WE, N: WE, W: NS, E: NS, A: ["B", "C"] };
+
+//   function coor(p, d) {
+//     let [i, j] = [Math.floor(p / m), p % m];
+//     if (d === "N") {
+//       i -= 1;
+//     } else if (d === "S") {
+//       i += 1;
+//     } else if (d === "E") {
+//       j += 1;
+//     } else if (d === "W") {
+//       j -= 1;
+//     }
+//     if (i >= 0 && i < m && j >= 0 && j < m) {
+//       return i * m + j;
+//     } else {
+//       return -1;
+//     }
+//   }
+
+//   while (arr.length > 0) {
+//     let narra = [],
+//       narrb = [];
+//     for (let [pd, p, pcv] of arr) {
+//       for (let d of ["N", "S", "E", "W"]) {
+//         let k = coor(p, d),
+//           s = dp[p].score,
+//           cr = corner[pd],
+//           cv = false;
+//         if (k > -1 && pd !== opp[d] && dp[k].pass) {
+//           if (d !== cr[0] && d !== cr[1]) {
+//             s += 100;
+//           } else {
+//             cv = true;
+//             s += 600;
+//           }
+//           if (dp[k].score === Infinity || s < dp[k].score) {
+//             dp[k].pnode = p;
+//             dp[k].score = s;
+//             if (cv) {
+//               narrb.push([d, k, cv]);
+//             } else {
+//               narra.push([d, k, cv]);
+//             }
+//           }
+//         }
+//       }
+//     }
+
+//     arr = [...narra, ...narrb];
+//   }
+//   return dp[n - 1].score;
+// }
+
+// 시도 4
+// function solution(board) {
+//   let ans = 0,
+//     m = board.length,
+//     dp = Array(m * m).fill(Infinity);
+//   let opp = { S: "N", N: "S", E: "W", W: "E" },
+//     NS = ["N", "S"],
+//     WE = ["W", "E"];
+//   let idx = { S: [1, 0], N: [-1, 0], E: [0, 1], W: [0, -1] },
+//     n = m * m;
+//   let corner = { S: WE, N: WE, W: NS, E: NS, A: ["B", "C"] };
+
+//   function f(arr) {
+//     // position, direction, sum
+//     function doit(p, d, s, td) {
+//       let v = 100,
+//         next = [];
+//       if (opp[d] !== td) {
+//         let cn = corner[d];
+//         if (td === cn[0] || td === cn[1]) {
+//           v += 500;
+//         }
+//         let [i, j] = [Math.floor(p / m), p % m],
+//           [ti, tj] = [i + idx[td][0], j + idx[td][1]];
+//         if (ti >= 0 && ti < m && tj >= 0 && tj < m) {
+//           let tp = ti * m + tj;
+//           if (
+//             tp >= 0 &&
+//             tp < n &&
+//             board[i][j] === 0 &&
+//             (dp[tp] === Infinity || s + v < dp[tp])
+//           ) {
+//             if (tp <= n - 1) {
+//               next = [tp, td, s + v];
+//             }
+//           }
+//         }
+//       }
+//       return next;
+//     }
+//     let next = [];
+//     for (let i of arr) {
+//       if (dp[i[0]] === Infinity || i[2] < dp[i[0]]) {
+//         dp[i[0]] = i[2];
+//       }
+//       for (let j of ["N", "S", "E", "W"]) {
+//         let sub = doit(...i, j);
+//         if (sub.length > 0) {
+//           next.push(sub);
+//         }
+//       }
+//     }
+//     if (next.length > 0) {
+//       f(next);
+//     }
+//   }
+
+//   f([[0, "A", 0]]);
+//   return dp[n - 1];
+// }
 
 // 시도 3
 // function solution(board) {
