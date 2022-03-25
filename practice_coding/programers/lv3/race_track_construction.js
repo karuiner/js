@@ -1,20 +1,16 @@
 //경주로 건설
 
-// 시도 6
+//풀이 완료
 function solution(board) {
   let m = board.length,
     n = m * m,
     dp = {};
   for (let i = 0; i < n; i++) {
     let [a, b] = [Math.floor(i / m), i % m];
-    dp[i] = { pnode: -1, score: Infinity, pass: board[a][b] === 0 };
+    dp[i] = { N: Infinity, S: Infinity, E: Infinity, W: Infinity };
   }
-
-  dp[0].score = 0;
-  let arr = [
-    ["A", 0],
-    ["A", 0],
-  ];
+  dp[0].N = 0;
+  dp[0].W = 0;
   let opp = { S: "N", N: "S", E: "W", W: "E" },
     NS = ["N", "S"],
     WE = ["W", "E"];
@@ -38,39 +34,291 @@ function solution(board) {
     } else if (d === "W") {
       j -= 1;
     }
-    if (i >= 0 && i < m && j >= 0 && j < m) {
+    if (i >= 0 && i < m && j >= 0 && j < m && board[i][j] === 0) {
       return i * m + j;
     } else {
       return -1;
     }
   }
-  function f(pd, p, s) {
-    if (p === n - 1) {
-      return s;
-    } else {
+  function f(arr) {
+    let narr = [];
+    for (let [pd, p] of arr) {
+      //            console.log(dp[p])
       for (let d of next[pd]) {
-        let k = coor(p, d),
-          s = dp[p].score,
-          cr = corner[pd];
-        if (k > -1 && pd !== opp[d] && dp[k].pass) {
-          if (d !== cr[0] && d !== cr[1]) {
-            s += 100;
-          } else {
-            s += 600;
+        let k = coor(p, d);
+
+        if (k > -1) {
+          let s = pd === "A" ? 0 : dp[p][opp[pd]],
+            cr = corner[pd];
+          s += 100;
+          if (d === cr[0] || d === cr[1]) {
+            s += 500;
           }
-          if (dp[k].score === Infinity || s <= dp[k].score) {
-            dp[k].pnode = p;
-            dp[k].score = s;
-            //console.log(d,p,k,s)
-            f(d, k, s);
+          if (dp[k][opp[d]] === Infinity || s < dp[k][opp[d]]) {
+            dp[k][opp[d]] = s;
+            narr.push([d, k]);
           }
         }
       }
     }
+    if (narr.length > 0) {
+      f(narr);
+    }
   }
-  f("A", 0, 0);
-  return dp[n - 1].score;
+
+  f([
+    ["E", 0],
+    ["S", 0],
+  ]);
+
+  let ans = Infinity;
+  for (let i in dp[n - 1]) {
+    ans = dp[n - 1][i] < ans ? dp[n - 1][i] : ans;
+  }
+  return ans;
 }
+
+//시도 8
+// function solution(board) {
+//   let m = board.length,
+//     n = m * m,
+//     dp = Infinity;
+
+//   let NS = ["N", "S"],
+//     WE = ["W", "E"];
+//   let corner = { S: WE, N: WE, W: NS, E: NS, A: ["B", "C"] };
+//   let next = {
+//     S: ["S", "E", "W"],
+//     N: ["N", "E", "W"],
+//     W: ["W", "N", "S"],
+//     E: ["E", "N", "S"],
+//     A: ["E", "S"],
+//   };
+
+//   function coor(p, d) {
+//     let [i, j] = [Math.floor(p / m), p % m];
+//     if (d === "N") {
+//       i -= 1;
+//     } else if (d === "S") {
+//       i += 1;
+//     } else if (d === "E") {
+//       j += 1;
+//     } else if (d === "W") {
+//       j -= 1;
+//     }
+//     if (i >= 0 && i < m && j >= 0 && j < m && board[i][j] === 0) {
+//       return i * m + j;
+//     } else {
+//       return -1;
+//     }
+//   }
+//   function f(pd, p, db, c) {
+//     if (p === n - 1) {
+//       db[p] = c;
+//       if (c < dp) {
+//         dp = c;
+//       }
+//     }
+
+//     if (db[p] === undefined) {
+//       db[p] = c;
+//       let sk = 0;
+//       for (let d of next[pd]) {
+//         let k = coor(p, d),
+//           cr = corner[pd];
+//         if (k !== -1) {
+//           if (d === cr[0] || d === cr[1]) {
+//             if (c + 600 < dp) {
+//               f(d, k, { ...db }, c + 600);
+//             }
+//           } else {
+//             if (c + 100 < dp) {
+//               f(d, k, { ...db }, c + 100);
+//             }
+//           }
+//         } else {
+//           sk += k;
+//         }
+//       }
+//       if (sk === -3) {
+//         let [i, j] = [Math.floor(p / m), p % m];
+//         board[i][j] = 1;
+//       }
+//     }
+//   }
+//   f("A", 0, {}, 0);
+
+//   return dp;
+// }
+//시도 7
+// function solution(board) {
+//   let m = board.length,
+//     n = m * m,
+//     dp = {};
+//   for (let i = 0; i < n; i++) {
+//     let [a, b] = [Math.floor(i / m), i % m];
+//     dp[i] = { pnode: -1, stg: Infinity, curve:Infinity,score:Infinity, pass: board[a][b] === 0 };
+//   }
+
+//   let arr = [
+//     ["A", 0],
+//     ["A", 0],
+//   ];
+//   let opp = { S: "N", N: "S", E: "W", W: "E" },
+//     NS = ["N", "S"],
+//     WE = ["W", "E"];
+//   let corner = { S: WE, N: WE, W: NS, E: NS, A: ["B", "C"] };
+//   let next = {
+//     S: ["S", "E", "W"],
+//     N: ["N", "E", "W"],
+//     W: ["W", "N", "S"],
+//     E: ["E", "N", "S"],
+//     A: ["E", "S"],
+//   };
+
+//   function coor(p, d) {
+//     let [i, j] = [Math.floor(p / m), p % m];
+//     if (d === "N") {
+//       i -= 1;
+//     } else if (d === "S") {
+//       i += 1;
+//     } else if (d === "E") {
+//       j += 1;
+//     } else if (d === "W") {
+//       j -= 1;
+//     }
+//     if (i >= 0 && i < m && j >= 0 && j < m) {
+//       return i * m + j;
+//     } else {
+//       return -1;
+//     }
+//   }
+//   function f(pd, p, s) {
+//     if (p === n - 1) {
+//       return s;
+//     } else {
+//       for (let d of next[pd]) {
+//         let k = coor(p, d),
+//           s = dp[p].score,
+//             stg =dp[p].stg,
+//           curve= dp[p].curve,
+//           cr = corner[pd];
+//         if (k > -1 && pd !== opp[d] && dp[k].pass) {
+//             s+=100
+//             stg+=1
+//           if (d === cr[0] || d === cr[1]) {
+//             s += 500;
+//             curve+=1
+//           }
+//           if (dp[k].score === Infinity || s < dp[k].score||curve <=dp[k].curve) {
+//             dp[k].pnode = p;
+//             dp[k].score = s;
+//             dp[k].curve=curve;
+//             dp[k].stg=stg
+// //            console.log(d,p,k,s)
+//             f(d, k, s);
+//           }
+//         }
+//       }
+//     }
+//   }
+//   dp[0].score = 0;
+//   dp[0].stg = 0;
+//   dp[0].curve = 0;
+
+//   f("A", 0, 0);
+//   return dp[n - 1].score;
+// }
+
+// 시도 6
+// function solution(board) {
+//   let m = board.length,
+//     n = m * m,
+//     dp = {};
+//   for (let i = 0; i < n; i++) {
+//     let [a, b] = [Math.floor(i / m), i % m];
+//     dp[i] = { pnode: -1, score: Infinity, pass: board[a][b] === 0 };
+//   }
+
+//   dp[0].score = 0;
+//   let arr = [
+//     ["A", 0],
+//     ["A", 0],
+//   ];
+//   let opp = { S: "N", N: "S", E: "W", W: "E" },
+//     NS = ["N", "S"],
+//     WE = ["W", "E"];
+//   let corner = { S: WE, N: WE, W: NS, E: NS, A: ["B", "C"] };
+//   let next = {
+//     S: ["S", "E", "W"],
+//     N: ["N", "E", "W"],
+//     W: ["W", "N", "S"],
+//     E: ["E", "N", "S"],
+//     A: ["E", "S"],
+//   };
+
+//   function coor(p, d) {
+//     let [i, j] = [Math.floor(p / m), p % m];
+//     if (d === "N") {
+//       i -= 1;
+//     } else if (d === "S") {
+//       i += 1;
+//     } else if (d === "E") {
+//       j += 1;
+//     } else if (d === "W") {
+//       j -= 1;
+//     }
+//     if (i >= 0 && i < m && j >= 0 && j < m) {
+//       return i * m + j;
+//     } else {
+//       return -1;
+//     }
+//   }
+//   function f(pd, p, s) {
+//     if (p === n - 1) {
+//       return s;
+//     } else {
+//       for (let d of next[pd]) {
+//         let k = coor(p, d),
+//           s = dp[p].score,
+//           cr = corner[pd];
+//         if (k > -1 && pd !== opp[d] && dp[k].pass) {
+//           if (d !== cr[0] && d !== cr[1]) {
+//             s += 100;
+//           } else {
+//             s += 600;
+//           }
+//           if (dp[k].score === Infinity || s < dp[k].score) {
+//             dp[k].pnode = p;
+//             dp[k].score = s;
+//             //console.log(d,p,k,s)
+//             f(d, k, s);
+//           } else if (s === dp[k].score) {
+//             f(d, k, s);
+
+//             // let route = [k],
+//             //   route2 = [p, k],
+//             //   u = k;
+//             // while (dp[u].pnode !== -1) {
+//             //   route = [dp[u].pnode, ...route];
+//             //   u = dp[u].pnode;
+//             // }
+//             // u = p;
+//             // while (dp[u].pnode !== -1) {
+//             //   route2 = [dp[u].pnode, ...route2];
+//             //   u = dp[u].pnode;
+//             // }
+
+//             // console.log("route 1", route.join(" => "), dp[k].score);
+//             // console.log("route 2", route2.join(" => "), s);
+//           }
+//         }
+//       }
+//     }
+//   }
+//   f("A", 0, 0);
+//   return dp[n - 1].score;
+// }
 
 //시도 5
 // function solution(board) {
@@ -377,6 +625,15 @@ let board = [
   [0, 0, 1, 0, 0, 0, 1, 0],
   [0, 1, 0, 0, 0, 1, 0, 0],
   [1, 0, 0, 0, 0, 0, 0, 0],
+]; //3800
+let board2 = [
+  [0, 0, 1, 0],
+  [0, 0, 0, 0],
+  [0, 1, 0, 1],
+  [1, 0, 0, 0],
 ];
 
+//2100
+
 let s = solution(board);
+console.log(s);
