@@ -1,5 +1,68 @@
 //섬 연결하기
 
+// 시도 3 - 미완성
+function solution(n, costs) {
+  let db = {};
+  for (let [i, j, c] of costs) {
+    if (db[i] === undefined) {
+      db[i] = {};
+    }
+
+    if (db[i][j] === undefined) {
+      db[i][j] = c;
+    }
+
+    if (db[j] === undefined) {
+      db[j] = {};
+    }
+
+    if (db[j][i] === undefined) {
+      db[j][i] = c;
+    }
+  }
+
+  let ans = Infinity;
+  for (let i = 0; i < n; i++) {
+    let c = 0,
+      ck = {};
+    function f(id, s, c) {
+      let ans = Infinity;
+      c++;
+      ck[id] = true;
+      if (c === n) {
+        return s;
+      }
+      let entries = Object.entries(db[id]);
+      let l = entries.length;
+      entries.sort((a, b) => a[1] - b[1]);
+      for (let i = 0; i < l; i++) {
+        let ns = s;
+        for (let j = i; j < l; j++) {
+          let [nid, nv] = entries[j];
+
+          let sub = f(nid, ns + nv);
+          ns = sub;
+          if (c === n) {
+            break;
+          }
+        }
+
+        if (ns < ans) {
+          ans = ns;
+        }
+      }
+      return ans;
+    }
+    let cc = f(i, 0);
+
+    if (cc < ans) {
+      ans = cc;
+    }
+  }
+
+  return ans;
+}
+
 // 시도 2
 function solution(n, costs) {
   let db = {};
