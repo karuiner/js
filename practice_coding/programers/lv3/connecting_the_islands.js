@@ -1,5 +1,65 @@
 //섬 연결하기
 
+// 시도 4의 일부 수정 조금 빨라짐
+function solution(n, costs) {
+  let db = {};
+  for (let [i, j, c] of costs) {
+    if (db[i] === undefined) {
+      db[i] = {};
+    }
+    if (db[j] === undefined) {
+      db[j] = {};
+    }
+    db[i][j] = c;
+    db[j][i] = c;
+  }
+
+  let dp = Array(n).fill(false),
+    rans = Infinity;
+  for (let i = 0; i < n; i++) {
+    function f(dp, s) {
+      let rt = [],
+        ans = Infinity;
+      for (let i = 0; i < n; i++) {
+        if (dp[i]) {
+          for (let j in db[i]) {
+            if (!dp[Number(j)]) {
+              rt.push([j, db[i][j]]);
+            }
+          }
+        }
+      }
+      if (rt.length === 0) {
+        if (s < rans) {
+          rans = s;
+        }
+        return s;
+      }
+      for (let [j, v] of rt) {
+        if (s + v < rans) {
+          let sub = [...dp];
+
+          sub[Number(j)] = true;
+          let rt = f(sub, s + v);
+          if (rt < ans) {
+            ans = rt;
+          }
+        }
+      }
+      return ans;
+    }
+
+    let sub = [...dp];
+    sub[Number(i)] = true;
+
+    let rst = f([...sub], 0);
+    if (rst < rans) {
+      rans = rst;
+    }
+  }
+  return rans;
+}
+
 //시도 4  모든 경우의수 따지기 - 느리다
 function solution(n, costs) {
   let db = {};
