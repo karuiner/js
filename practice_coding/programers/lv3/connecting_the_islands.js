@@ -1,118 +1,156 @@
 //섬 연결하기
 
-// 시도 4의 일부 수정 조금 빨라짐
+// 시도 5
 function solution(n, costs) {
-  let db = {};
-  for (let [i, j, c] of costs) {
-    if (db[i] === undefined) {
-      db[i] = {};
-    }
-    if (db[j] === undefined) {
-      db[j] = {};
-    }
-    db[i][j] = c;
-    db[j][i] = c;
-  }
-
-  let dp = Array(n).fill(false),
-    rans = Infinity;
+  // 크루스칼 알고리즘, 유니온 파인드 사용 해보기
+  let parent = [];
   for (let i = 0; i < n; i++) {
-    function f(dp, s) {
-      let rt = [],
-        ans = Infinity;
-      for (let i = 0; i < n; i++) {
-        if (dp[i]) {
-          for (let j in db[i]) {
-            if (!dp[Number(j)]) {
-              rt.push([j, db[i][j]]);
-            }
-          }
-        }
-      }
-      if (rt.length === 0) {
-        if (s < rans) {
-          rans = s;
-        }
-        return s;
-      }
-      for (let [j, v] of rt) {
-        if (s + v < rans) {
-          let sub = [...dp];
-
-          sub[Number(j)] = true;
-          let rt = f(sub, s + v);
-          if (rt < ans) {
-            ans = rt;
-          }
-        }
-      }
-      return ans;
-    }
-
-    let sub = [...dp];
-    sub[Number(i)] = true;
-
-    let rst = f([...sub], 0);
-    if (rst < rans) {
-      rans = rst;
+    parent.push(i);
+  }
+  function getP(arr, x) {
+    if (arr[x] === x) {
+      return x;
+    } else {
+      return getP(arr, arr[x]);
     }
   }
-  return rans;
-}
-
-//시도 4  모든 경우의수 따지기 - 느리다
-function solution(n, costs) {
-  let db = {};
-  for (let [i, j, c] of costs) {
-    if (db[i] === undefined) {
-      db[i] = {};
+  function unionP(arr, a, b) {
+    [a, b] = [getP(arr, a), getP(arr, b)];
+    if (a < b) {
+      arr[b] = a;
+    } else {
+      arr[a] = b;
     }
-    if (db[j] === undefined) {
-      db[j] = {};
-    }
-    db[i][j] = c;
-    db[j][i] = c;
   }
-  function f(dp, s) {
-    let rt = [],
-      ans = Infinity;
-    for (let i = 0; i < n; i++) {
-      if (dp[i]) {
-        for (let j in db[i]) {
-          if (!dp[Number(j)]) {
-            rt.push([j, db[i][j]]);
-          }
-        }
-      }
-    }
-    if (rt.length === 0) {
-      return s;
-    }
-    for (let [j, v] of rt) {
-      let sub = [...dp];
-
-      sub[Number(j)] = true;
-      let rt = f(sub, s + v);
-      if (rt < ans) {
-        ans = rt;
-      }
-    }
-    return ans;
+  function findP(arr, a, b) {
+    [a, b] = [getP(arr, a), getP(arr, b)];
+    return a === b ? true : false;
   }
-  let dp = Array(n).fill(false),
-    ans = Infinity;
-  for (let i = 0; i < n; i++) {
-    let sub = [...dp];
-    sub[Number(i)] = true;
-
-    let rst = f([...sub], 0);
-    if (rst < ans) {
-      ans = rst;
+  costs.sort((a, b) => a[2] - b[2]);
+  let ans = 0;
+  for (let [i, j, v] of costs) {
+    if (!findP(parent, i, j)) {
+      unionP(parent, i, j);
+      ans += v;
     }
   }
 
   return ans;
 }
+
+// 시도 4의 일부 수정 조금 빨라짐
+// function solution(n, costs) {
+//   let db = {};
+//   for (let [i, j, c] of costs) {
+//     if (db[i] === undefined) {
+//       db[i] = {};
+//     }
+//     if (db[j] === undefined) {
+//       db[j] = {};
+//     }
+//     db[i][j] = c;
+//     db[j][i] = c;
+//   }
+
+//   let dp = Array(n).fill(false),
+//     rans = Infinity;
+//   for (let i = 0; i < n; i++) {
+//     function f(dp, s) {
+//       let rt = [],
+//         ans = Infinity;
+//       for (let i = 0; i < n; i++) {
+//         if (dp[i]) {
+//           for (let j in db[i]) {
+//             if (!dp[Number(j)]) {
+//               rt.push([j, db[i][j]]);
+//             }
+//           }
+//         }
+//       }
+//       if (rt.length === 0) {
+//         if (s < rans) {
+//           rans = s;
+//         }
+//         return s;
+//       }
+//       for (let [j, v] of rt) {
+//         if (s + v < rans) {
+//           let sub = [...dp];
+
+//           sub[Number(j)] = true;
+//           let rt = f(sub, s + v);
+//           if (rt < ans) {
+//             ans = rt;
+//           }
+//         }
+//       }
+//       return ans;
+//     }
+
+//     let sub = [...dp];
+//     sub[Number(i)] = true;
+
+//     let rst = f([...sub], 0);
+//     if (rst < rans) {
+//       rans = rst;
+//     }
+//   }
+//   return rans;
+// }
+
+//시도 4  모든 경우의수 따지기 - 느리다
+// function solution(n, costs) {
+//   let db = {};
+//   for (let [i, j, c] of costs) {
+//     if (db[i] === undefined) {
+//       db[i] = {};
+//     }
+//     if (db[j] === undefined) {
+//       db[j] = {};
+//     }
+//     db[i][j] = c;
+//     db[j][i] = c;
+//   }
+//   function f(dp, s) {
+//     let rt = [],
+//       ans = Infinity;
+//     for (let i = 0; i < n; i++) {
+//       if (dp[i]) {
+//         for (let j in db[i]) {
+//           if (!dp[Number(j)]) {
+//             rt.push([j, db[i][j]]);
+//           }
+//         }
+//       }
+//     }
+//     if (rt.length === 0) {
+//       return s;
+//     }
+//     for (let [j, v] of rt) {
+//       let sub = [...dp];
+
+//       sub[Number(j)] = true;
+//       let rt = f(sub, s + v);
+//       if (rt < ans) {
+//         ans = rt;
+//       }
+//     }
+//     return ans;
+//   }
+//   let dp = Array(n).fill(false),
+//     ans = Infinity;
+//   for (let i = 0; i < n; i++) {
+//     let sub = [...dp];
+//     sub[Number(i)] = true;
+
+//     let rst = f([...sub], 0);
+//     if (rst < ans) {
+//       ans = rst;
+//     }
+//   }
+
+//   return ans;
+// }
 
 // 시도 3 - 미완성
 // function solution(n, costs) {
