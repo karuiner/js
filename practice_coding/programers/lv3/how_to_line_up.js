@@ -14,7 +14,7 @@ function solution(n, k) {
   function f(n, k, ns) {
     let ans = [];
     let a = fact[n - 1],
-      [b, c] = [Math.floor((k - 1) / a), (k - 1) % a];
+      b = Math.floor((k - 1) / a);
     let q = ns[b],
       sub = [...ns.slice(0, b), ...ns.slice(b + 1)];
     ans.push(q);
