@@ -1,5 +1,97 @@
 //표 편집
 
+// 시도 1보다는 좋은 정확성을 보이나 효율성은 더 나빠진 코드
+function solution(n, k, cmd) {
+  let ans = Array(n).fill("O"),
+    r = [];
+
+  function leng(a) {
+    let b = k;
+    if (a > k) {
+      [a, b] = [k, a];
+    }
+    let l = b - a,
+      c = 0;
+    for (let i of r) {
+      if (i >= a && i < b) {
+        c--;
+      }
+    }
+    return l + c;
+  }
+
+  function up(x) {
+    let [a, b] = [0, k];
+    while (a < b) {
+      let m = Math.floor((a + b) / 2);
+      let u = leng(m);
+      if (u > x) {
+        a = m + 1;
+      } else if (u < x) {
+        b = m;
+      } else {
+        a = m;
+        b = m;
+      }
+    }
+
+    return a;
+  }
+
+  function down(x) {
+    let [a, b] = [k, n - 1];
+    while (a < b) {
+      let m = Math.floor((a + b) / 2);
+      let u = leng(m);
+      if (u > x) {
+        b = m;
+      } else if (u < x) {
+        a = m + 1;
+      } else {
+        a = m;
+        b = m;
+      }
+    }
+    return a;
+  }
+
+  for (let i of cmd) {
+    if (i.length > 1) {
+      let [cmd, x] = i.split(" ");
+      if (cmd === "U") {
+        k = up(Number(x));
+      } else {
+        k = down(Number(x));
+      }
+    } else {
+      if (i === "C") {
+        ans[k] = "X";
+        r.push(k);
+        let nk = -1;
+        for (let j = k + 1; j < n; j++) {
+          if (ans[j] == "O") {
+            nk = j;
+            break;
+          }
+        }
+        if (nk === -1) {
+          for (let j = k - 1; j >= 0; j--) {
+            if (ans[j] == "O") {
+              nk = j;
+              break;
+            }
+          }
+        }
+        k = nk;
+      } else {
+        let j = r.pop();
+        ans[j] = "O";
+      }
+    }
+  }
+  return ans.join("");
+}
+
 //시도 2 더 좋지 못한 결과를 가짐
 // function solution(n, k, cmd) {
 //     let ans=Array(n).fill('O'),dp=[], r=[],min=0,max=n-1
@@ -69,7 +161,7 @@
 //     return ans.join("")
 // }
 
-// 시도 1
+// 시도 1 조금의 정확성을 통과하고 상당수의 효율성을 통과한 코드
 // function solution(n, k, cmd) {
 //     let ans = Array(n).fill('O'),d=[];
 //     function f(k,cmd,x){
