@@ -1,16 +1,21 @@
 //표 편집
-
-// 정확도 풀이 완료 효율성 전반 풀이 시도 1보다 속도는 느려짐
+// 시도 6 풀이 완료
 function solution(n, k, cmd) {
   let ans = Array(n).fill("O"),
-    r = [];
+    dp = [],
+    r = [],
+    min = 0,
+    max = n - 1;
+  for (let i = 0; i < n; i++) {
+    dp.push([i === 0 ? 0 : i - 1, i === n - 1 ? n - 1 : i + 1]);
+  }
   function up(x) {
     let a = k;
-
-    while (a > 0 && x > 0) {
-      a--;
-      if (ans[a] === "O") {
-        x--;
+    for (let i = 0; i < x; i++) {
+      if (a === dp[a][0]) {
+        break;
+      } else {
+        a = dp[a][0];
       }
     }
     return a;
@@ -18,11 +23,11 @@ function solution(n, k, cmd) {
 
   function down(x) {
     let a = k;
-
-    while (a < n - 1 && x > 0) {
-      a++;
-      if (ans[a] === "O") {
-        x--;
+    for (let i = 0; i < x; i++) {
+      if (a === dp[a][1]) {
+        break;
+      } else {
+        a = dp[a][1];
       }
     }
     return a;
@@ -39,33 +44,208 @@ function solution(n, k, cmd) {
     } else {
       if (i === "C") {
         ans[k] = "X";
-        r.push(k);
-        let nk = -1;
-        for (let j = k + 1; j < n; j++) {
-          if (ans[j] == "O") {
-            nk = j;
-            break;
-          }
+        r.push([k, ...dp[k]]);
+        if (k === min) {
+          min = dp[k][1];
+          dp[min][0] = min;
+          k = min;
+        } else if (k === max) {
+          max = dp[k][0];
+          dp[max][1] = max;
+          k = max;
+        } else {
+          let [a, b] = dp[k];
+          dp[a][1] = b;
+          dp[b][0] = a;
+          k = b;
         }
-        if (nk === -1) {
-          for (let j = k - 1; j >= 0; j--) {
-            if (ans[j] == "O") {
-              nk = j;
-              break;
-            }
-          }
-        }
-        k = nk;
       } else {
-        let j = r.pop();
+        let [j, a, b] = r.pop();
+        if (j < min) {
+          dp[j] = [j, min];
+          dp[min][0] = j;
+          min = j;
+        } else if (j > max) {
+          dp[j] = [max, j];
+          dp[max][1] = j;
+          max = j;
+        } else {
+          dp[a][1] = j;
+          dp[b][0] = j;
+        }
         ans[j] = "O";
       }
     }
   }
   return ans.join("");
 }
+let values = [
+  [8, 2, ["D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z"], "OOOOXOOO"],
+  [
+    8,
+    2,
+    ["D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z", "U 1", "C"],
+    "OOXOXOOO",
+  ],
+];
+for (let [n, k, cmd, expected_result] of values) {
+  console.log(
+    `calculated_result : ${solution(
+      n,
+      k,
+      cmd
+    )}, expected_result : ${expected_result} `
+  );
+}
 
-// 시도 1보다는 좋은 정확성을 보이나 효율성은 더 나빠진 코드
+//시도 5 : min, max 지정으로 약간의 속도 향상
+// function solution(n, k, cmd) {
+//   let ans = Array(n).fill("O"),
+//     r = [],
+//     min = 0,
+//     max = n - 1;
+//   function up(x) {
+//     let a = k;
+//     if (a - x < min) {
+//       return min;
+//     }
+//     while (a > 0 && x > 0) {
+//       a--;
+//       if (ans[a] === "O") {
+//         x--;
+//       }
+//     }
+//     return a;
+//   }
+
+//   function down(x) {
+//     let a = k;
+//     if (x + a > max) {
+//       return max;
+//     }
+//     while (a < n - 1 && x > 0) {
+//       a++;
+//       if (ans[a] === "O") {
+//         x--;
+//       }
+//     }
+//     return a;
+//   }
+
+//   for (let i of cmd) {
+//     if (i.length > 1) {
+//       let [cmd, x] = i.split(" ");
+//       if (cmd === "U") {
+//         k = up(Number(x));
+//       } else {
+//         k = down(Number(x));
+//       }
+//     } else {
+//       if (i === "C") {
+//         ans[k] = "X";
+//         r.push(k);
+//         let nk = -1;
+//         for (let j = k + 1; j < n; j++) {
+//           if (ans[j] == "O") {
+//             nk = j;
+//             break;
+//           }
+//         }
+//         if (nk === -1) {
+//           for (let j = k - 1; j >= 0; j--) {
+//             if (ans[j] == "O") {
+//               nk = j;
+//               break;
+//             }
+//           }
+//         }
+
+//         if (k === min) {
+//           min = nk;
+//         } else if (k === max) {
+//           max = nk;
+//         }
+//         k = nk;
+//       } else {
+//         let j = r.pop();
+//         if (j < min) {
+//           min = j;
+//         } else if (j > max) {
+//           max = j;
+//         }
+//         ans[j] = "O";
+//       }
+//     }
+//   }
+//   return ans.join("");
+// }
+
+// 시도 4 : 정확도 풀이 완료 효율성 전반 풀이 시도 1보다 속도는 느려짐
+// function solution(n, k, cmd) {
+//   let ans = Array(n).fill("O"),
+//     r = [];
+//   function up(x) {
+//     let a = k;
+
+//     while (a > 0 && x > 0) {
+//       a--;
+//       if (ans[a] === "O") {
+//         x--;
+//       }
+//     }
+//     return a;
+//   }
+
+//   function down(x) {
+//     let a = k;
+
+//     while (a < n - 1 && x > 0) {
+//       a++;
+//       if (ans[a] === "O") {
+//         x--;
+//       }
+//     }
+//     return a;
+//   }
+
+//   for (let i of cmd) {
+//     if (i.length > 1) {
+//       let [cmd, x] = i.split(" ");
+//       if (cmd === "U") {
+//         k = up(Number(x));
+//       } else {
+//         k = down(Number(x));
+//       }
+//     } else {
+//       if (i === "C") {
+//         ans[k] = "X";
+//         r.push(k);
+//         let nk = -1;
+//         for (let j = k + 1; j < n; j++) {
+//           if (ans[j] == "O") {
+//             nk = j;
+//             break;
+//           }
+//         }
+//         if (nk === -1) {
+//           for (let j = k - 1; j >= 0; j--) {
+//             if (ans[j] == "O") {
+//               nk = j;
+//               break;
+//             }
+//           }
+//         }
+//         k = nk;
+//       } else {
+//         let j = r.pop();
+//         ans[j] = "O";
+//       }
+//     }
+//   }
+//   return ans.join("");
+// }
+
+// 시도 3 : 시도 1보다는 좋은 정확성을 보이나 효율성은 더 나빠진 코드
 // function solution(n, k, cmd) {
 //   let ans = Array(n).fill("O"),
 //     r = [];
