@@ -1,5 +1,87 @@
 //110 옮기기
 
+// 시도 4
+// 110 보다 작은것들을 생각 하자 111 보다는 앞서게 111보다 뒤에있는 110은 앞으로
+function solution4(s) {
+  let ans = [];
+
+  function count(s) {
+    let k = 0,
+      c = 0,
+      n = s.length;
+    while (k < n) {
+      if (s.slice(k, k + 3) === "110") {
+        s = s.slice(0, k) + s.slice(k + 3);
+        c++;
+        n -= 3;
+        k -= 2;
+      } else if (k === n - 3 && s.slice(k, k + 3) !== "110") {
+        k = n;
+      } else {
+        k++;
+      }
+    }
+    return [s, c];
+  }
+  function count2(s) {
+    let k = 0,
+      c = 0,
+      n = s.length;
+    while (k < n) {
+      if (s[k] === "0" && s[k - 1] === "1" && s[k - 2] === "1") {
+        s = s.slice(0, k - 2) + s.slice(k + 1);
+        c++;
+        n -= 3;
+        k -= 3;
+      } else {
+        k++;
+      }
+    }
+    return [s, c];
+  }
+  function count3(s) {
+    let k = 0,
+      c = 0,
+      n = s.length,
+      arr = [],
+      z = 0,
+      ns = [];
+    for (let i = 0; i < n; i++) {
+      if (s[i] === "0") {
+        arr.push(i);
+      }
+    }
+    for (let i of arr) {
+      let idx = i - z;
+      if (idx >= 2 && s[idx - 1] === "1" && s[idx - 2] === "1") {
+        s = s.slice(0, idx - 2) + s.slice(idx + 1);
+        z += 3;
+        ns[c] = "110";
+        c++;
+      }
+    }
+
+    return [s, ns.join("")];
+  }
+
+  function recon(s, ns) {
+    let k = s.lastIndexOf("0");
+    // let ns='110'.repeat(c)
+    if (k >= 0) {
+      return s.slice(0, k + 1) + ns + s.slice(k + 1);
+    } else {
+      return ns + s;
+    }
+  }
+
+  for (let i of s) {
+    let [ns, nns] = count3(i);
+    ans.push(recon(ns, nns));
+  }
+
+  return ans;
+}
+
 // 시도 3
 function solution3(s) {
   let ans = [];
