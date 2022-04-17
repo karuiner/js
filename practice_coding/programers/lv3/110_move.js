@@ -1,5 +1,54 @@
 //110 옮기기
 
+// 풀이완료
+function solution5(s) {
+  let ans = [];
+
+  function ncount(s) {
+    let k = 0,
+      c = 0,
+      n = s.length,
+      ns = [],
+      sub = "";
+    for (let i = 0; i < n; i++) {
+      if (k > 1 && s[i] === "0" && ns[k - 1] === "1" && ns[k - 2] === "1") {
+        ns.pop();
+        ns.pop();
+        k -= 2;
+        sub += "110";
+      } else {
+        ns[k] = s[i];
+        k++;
+      }
+    }
+
+    return [ns.join(""), sub];
+  }
+
+  function recon(s, ns) {
+    let k = s.lastIndexOf("0");
+    if (k >= 0) {
+      return s.slice(0, k + 1) + ns + s.slice(k + 1);
+    } else {
+      return ns + s;
+    }
+  }
+
+  for (let i of s) {
+    let [ns, nns] = ncount(i);
+    ans.push(recon(ns, nns));
+  }
+
+  return ans;
+}
+
+let s = ["1110", "100111100", "0111111010"],
+  expected_result = ["1101", "100110110", "0110110111"];
+
+console.log(
+  `calculated_result : ${solution(s)}, expected_result : ${expected_result} `
+);
+
 // 시도 4
 // 110 보다 작은것들을 생각 하자 111 보다는 앞서게 111보다 뒤에있는 110은 앞으로
 function solution4(s) {
@@ -269,12 +318,12 @@ function solution(s) {
 
   return ans;
 }
-let n = 300,
-  s = "";
-for (let i = 0; i < n; i++) {
-  let k = Math.random();
-  s += k > 0.7 ? "0" : "1";
-}
-console.log([s]);
-console.log(solution([s]));
-console.log(solution2([s]));
+// let n = 300,
+//   s = "";
+// for (let i = 0; i < n; i++) {
+//   let k = Math.random();
+//   s += k > 0.7 ? "0" : "1";
+// }
+// console.log([s]);
+// console.log(solution([s]));
+// console.log(solution2([s]));
