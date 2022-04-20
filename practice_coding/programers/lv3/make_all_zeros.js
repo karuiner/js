@@ -1,59 +1,145 @@
 //모두 0으로 만들기
 
-// 시도 2 (시도 1의 하위호환)
+// 시도 3
 function solution(a, edges) {
   let ans = 0,
     p = 0,
     m = 0,
-    dp = [];
-  for (let i = 0; i < a.length; i++) {
+    dp = [],
+    n = a.length;
+  for (let i = 0; i < n; i++) {
     if (a[i] < 0) {
       m += a[i];
     } else {
       p += a[i];
     }
-    dp[i] = { num: i, val: a[i], visit: false, edges: [] };
+    dp[i] = { num: i, val: a[i], visit: false, edges: {}, count: 0 };
   }
   if (m + p !== 0) {
     ans = -1;
   } else if (m < 0) {
+    let max = 0;
     for (let [i, j] of edges) {
-      dp[i].edges.push(j);
-      dp[j].edges.push(i);
+      dp[i].edges[j] = true;
+      dp[j].edges[i] = true;
+      dp[i].count++;
+      dp[j].count++;
+      max = dp[i].count > max ? dp[i].count : max;
+      max = dp[j].count > max ? dp[j].count : max;
     }
-    function recon(k, db) {
-      let edges = dp[k].edges;
-      db[k] = true;
-      dp[k].edges = [];
-      if (edges.length > 1) {
-        for (let i of edges) {
-          if (db[i] === undefined) {
-            dp[k].edges.push(i);
-            recon(i, db);
+    let count = {};
+    for (let i in dp) {
+      let k = dp[i].count;
+      if (count[k] === undefined) {
+        count[k] = {};
+      }
+      count[k][i] = true;
+    }
+    let target = Object.keys(count[1]);
+    let k = 0;
+    while (target.length > 0) {
+      for (let i of target) {
+        k += Math.abs(dp[i].val);
+        for (let j in dp[i].edges) {
+          dp[j].val += dp[i].val;
+          dp[i].val = 0;
+          let c = dp[j].count;
+          dp[j].count--;
+          delete count[c][j];
+          if (c > 1) {
+            count[c - 1][j] = true;
           }
+          delete dp[j].edges[i];
         }
+        delete count[1][i];
       }
+      target = Object.keys(count[1]);
     }
+    ans = k;
 
-    function f(k) {
-      let ans = 0;
-      let edges = dp[k].edges;
-      for (let i of dp[k].edges) {
-        if (dp[i].edges.length > 1) {
-          ans += f(i);
-        }
-        ans += Math.abs(dp[i].val);
-        dp[k].val += dp[i].val;
-        dp[i].val = 0;
-      }
-      return ans;
-    }
-    recon(0, {});
-    ans = f(0);
+    //     function f( k) {
+
+    //         let target=Object.keys(count[1])
+    //         if (target.length === 0) {
+    //             return k;
+    //         }
+    //         for (let i of target) {
+    //             k+=Math.abs(dp[i].val)
+    //             for (let j in dp[i].edges){
+    //                 dp[j].val+=dp[i].val
+    //                 dp[i].val=0
+    //                 let c=dp[j].count
+    //                 dp[j].count--
+    //                 delete count[c][j]
+    //                 if (c >1){
+    //                     count[c-1][j]=true
+    //                 }
+    //                 delete dp[j].edges[i]
+    //             }
+    //             delete count[1][i]
+    //         }
+    //         return f( k);
+    //     }
+    //     ans = f( 0);
   }
 
   return ans;
 }
+
+// 시도 2 (시도 1의 하위호환)
+// function solution(a, edges) {
+//   let ans = 0,
+//     p = 0,
+//     m = 0,
+//     dp = [];
+//   for (let i = 0; i < a.length; i++) {
+//     if (a[i] < 0) {
+//       m += a[i];
+//     } else {
+//       p += a[i];
+//     }
+//     dp[i] = { num: i, val: a[i], visit: false, edges: [] };
+//   }
+//   if (m + p !== 0) {
+//     ans = -1;
+//   } else if (m < 0) {
+//     for (let [i, j] of edges) {
+//       dp[i].edges.push(j);
+//       dp[j].edges.push(i);
+//     }
+//     function recon(k, db) {
+//       let edges = dp[k].edges;
+//       db[k] = true;
+//       dp[k].edges = [];
+//       if (edges.length > 1) {
+//         for (let i of edges) {
+//           if (db[i] === undefined) {
+//             dp[k].edges.push(i);
+//             recon(i, db);
+//           }
+//         }
+//       }
+//     }
+
+//     function f(k) {
+//       let ans = 0;
+//       let edges = dp[k].edges;
+//       for (let i of dp[k].edges) {
+//         if (dp[i].edges.length > 1) {
+//           ans += f(i);
+//         }
+//         ans += Math.abs(dp[i].val);
+//         dp[k].val += dp[i].val;
+//         dp[i].val = 0;
+//       }
+//       return ans;
+//     }
+//     recon(0, {});
+//     ans = f(0);
+//   }
+
+//   return ans;
+// }
 
 //시도 1 (7, 8, 13, 14, 16, 17, 18 실패 )
 // function solution(a, edges) {
