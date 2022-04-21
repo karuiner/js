@@ -1,90 +1,145 @@
 //모두 0으로 만들기
 
-// 시도 3
+// 시도 4  => 풀이실패 :  8 , 시간 초과 : 13, 14, 18
 function solution(a, edges) {
   let ans = 0,
     p = 0,
     m = 0,
     dp = [],
-    n = a.length;
+    n = a.length,
+    nf = [];
   for (let i = 0; i < n; i++) {
     if (a[i] < 0) {
       m += a[i];
     } else {
       p += a[i];
     }
-    dp[i] = { num: i, val: a[i], visit: false, edges: {}, count: 0 };
+    dp[i] = { val: a[i], edges: [] };
+
+    nf[i] = i;
   }
   if (m + p !== 0) {
     ans = -1;
   } else if (m < 0) {
     let max = 0;
     for (let [i, j] of edges) {
-      dp[i].edges[j] = true;
-      dp[j].edges[i] = true;
-      dp[i].count++;
-      dp[j].count++;
-      max = dp[i].count > max ? dp[i].count : max;
-      max = dp[j].count > max ? dp[j].count : max;
+      dp[i].edges.push(j);
+      dp[j].edges.push(i);
     }
-    let count = {};
-    for (let i in dp) {
-      let k = dp[i].count;
-      if (count[k] === undefined) {
-        count[k] = {};
+    let target = [];
+    for (let i = 0; i < n; i++) {
+      if (dp[i].edges.length === 1) {
+        target.push(i);
       }
-      count[k][i] = true;
     }
-    let target = Object.keys(count[1]);
-    let k = 0;
     while (target.length > 0) {
+      let ntarget = [];
       for (let i of target) {
-        k += Math.abs(dp[i].val);
-        for (let j in dp[i].edges) {
-          dp[j].val += dp[i].val;
-          dp[i].val = 0;
-          let c = dp[j].count;
-          dp[j].count--;
-          delete count[c][j];
-          if (c > 1) {
-            count[c - 1][j] = true;
+        if (dp[i].edges.length > 0) {
+          let k = dp[i].edges[0];
+          if (nf[k] === k) {
+            nf[i] = k;
+            ans += Math.abs(dp[i].val);
+            dp[k].val += dp[i].val;
+            dp[k].edges = dp[k].edges.filter((x) => x !== i);
           }
-          delete dp[j].edges[i];
+          if (dp[k].edges.length === 1) {
+            ntarget.push(k);
+          }
         }
-        delete count[1][i];
       }
-      target = Object.keys(count[1]);
+      target = [...ntarget];
     }
-    ans = k;
-
-    //     function f( k) {
-
-    //         let target=Object.keys(count[1])
-    //         if (target.length === 0) {
-    //             return k;
-    //         }
-    //         for (let i of target) {
-    //             k+=Math.abs(dp[i].val)
-    //             for (let j in dp[i].edges){
-    //                 dp[j].val+=dp[i].val
-    //                 dp[i].val=0
-    //                 let c=dp[j].count
-    //                 dp[j].count--
-    //                 delete count[c][j]
-    //                 if (c >1){
-    //                     count[c-1][j]=true
-    //                 }
-    //                 delete dp[j].edges[i]
-    //             }
-    //             delete count[1][i]
-    //         }
-    //         return f( k);
-    //     }
-    //     ans = f( 0);
   }
 
   return ans;
 }
+
+// 시도 3
+// function solution(a, edges) {
+//   let ans = 0,
+//     p = 0,
+//     m = 0,
+//     dp = [],
+//     n = a.length;
+//   for (let i = 0; i < n; i++) {
+//     if (a[i] < 0) {
+//       m += a[i];
+//     } else {
+//       p += a[i];
+//     }
+//     dp[i] = { num: i, val: a[i], visit: false, edges: {}, count: 0 };
+//   }
+//   if (m + p !== 0) {
+//     ans = -1;
+//   } else if (m < 0) {
+//     let max = 0;
+//     for (let [i, j] of edges) {
+//       dp[i].edges[j] = true;
+//       dp[j].edges[i] = true;
+//       dp[i].count++;
+//       dp[j].count++;
+//       max = dp[i].count > max ? dp[i].count : max;
+//       max = dp[j].count > max ? dp[j].count : max;
+//     }
+//     let count = {};
+//     for (let i in dp) {
+//       let k = dp[i].count;
+//       if (count[k] === undefined) {
+//         count[k] = {};
+//       }
+//       count[k][i] = true;
+//     }
+//     let target = Object.keys(count[1]);
+//     let k = 0;
+//     while (target.length > 0) {
+//       for (let i of target) {
+//         k += Math.abs(dp[i].val);
+//         for (let j in dp[i].edges) {
+//           dp[j].val += dp[i].val;
+//           dp[i].val = 0;
+//           let c = dp[j].count;
+//           dp[j].count--;
+//           delete count[c][j];
+//           if (c > 1) {
+//             count[c - 1][j] = true;
+//           }
+//           delete dp[j].edges[i];
+//         }
+//         delete count[1][i];
+//       }
+//       target = Object.keys(count[1]);
+//     }
+//     ans = k;
+
+//     //     function f( k) {
+
+//     //         let target=Object.keys(count[1])
+//     //         if (target.length === 0) {
+//     //             return k;
+//     //         }
+//     //         for (let i of target) {
+//     //             k+=Math.abs(dp[i].val)
+//     //             for (let j in dp[i].edges){
+//     //                 dp[j].val+=dp[i].val
+//     //                 dp[i].val=0
+//     //                 let c=dp[j].count
+//     //                 dp[j].count--
+//     //                 delete count[c][j]
+//     //                 if (c >1){
+//     //                     count[c-1][j]=true
+//     //                 }
+//     //                 delete dp[j].edges[i]
+//     //             }
+//     //             delete count[1][i]
+//     //         }
+//     //         return f( k);
+//     //     }
+//     //     ans = f( 0);
+//   }
+
+//   return ans;
+// }
 
 // 시도 2 (시도 1의 하위호환)
 // function solution(a, edges) {
