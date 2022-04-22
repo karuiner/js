@@ -1,59 +1,94 @@
 //모두 0으로 만들기
 
-// 시도 4  => 풀이실패 :  8 , 시간 초과 : 13, 14, 18
+// 시도 5 stack overflow : 7, 8, 16, 17
 function solution(a, edges) {
-  let ans = 0,
-    p = 0,
-    m = 0,
+  let s = 0,
     dp = [],
     n = a.length,
-    nf = [];
+    line = [];
   for (let i = 0; i < n; i++) {
-    if (a[i] < 0) {
-      m += a[i];
-    } else {
-      p += a[i];
-    }
-    dp[i] = { val: a[i], edges: [] };
-
-    nf[i] = i;
+    s += a[i];
+    dp[i] = i;
+    line[i] = [];
   }
-  if (m + p !== 0) {
-    ans = -1;
-  } else if (m < 0) {
-    let max = 0;
-    for (let [i, j] of edges) {
-      dp[i].edges.push(j);
-      dp[j].edges.push(i);
-    }
-    let target = [];
-    for (let i = 0; i < n; i++) {
-      if (dp[i].edges.length === 1) {
-        target.push(i);
-      }
-    }
-    while (target.length > 0) {
-      let ntarget = [];
-      for (let i of target) {
-        if (dp[i].edges.length > 0) {
-          let k = dp[i].edges[0];
-          if (nf[k] === k) {
-            nf[i] = k;
-            ans += Math.abs(dp[i].val);
-            dp[k].val += dp[i].val;
-            dp[k].edges = dp[k].edges.filter((x) => x !== i);
-          }
-          if (dp[k].edges.length === 1) {
-            ntarget.push(k);
-          }
-        }
-      }
-      target = [...ntarget];
-    }
+  if (s !== 0) {
+    return -1;
+  }
+  for (let [i, j] of edges) {
+    line[i].push(j);
+    line[j].push(i);
   }
 
-  return ans;
+  function f(p, x) {
+    let ans = 0;
+    for (let j of line[x]) {
+      let k = Number(j);
+      if (k !== p) {
+        let sub = f(x, k);
+        ans += sub;
+        a[x] += a[k];
+        a[k] = 0;
+      }
+    }
+    return ans + Math.abs(a[x]);
+  }
+  return f(-1, 0);
 }
+
+// 시도 4  => 풀이실패 :  8 , 시간 초과 : 13, 14, 18
+// function solution(a, edges) {
+//   let ans = 0,
+//     p = 0,
+//     m = 0,
+//     dp = [],
+//     n = a.length,
+//     nf = [];
+//   for (let i = 0; i < n; i++) {
+//     if (a[i] < 0) {
+//       m += a[i];
+//     } else {
+//       p += a[i];
+//     }
+//     dp[i] = { val: a[i], edges: [] };
+
+//     nf[i] = i;
+//   }
+//   if (m + p !== 0) {
+//     ans = -1;
+//   } else if (m < 0) {
+//     let max = 0;
+//     for (let [i, j] of edges) {
+//       dp[i].edges.push(j);
+//       dp[j].edges.push(i);
+//     }
+//     let target = [];
+//     for (let i = 0; i < n; i++) {
+//       if (dp[i].edges.length === 1) {
+//         target.push(i);
+//       }
+//     }
+//     while (target.length > 0) {
+//       let ntarget = [];
+//       for (let i of target) {
+//         if (dp[i].edges.length > 0) {
+//           let k = dp[i].edges[0];
+//           if (nf[k] === k) {
+//             nf[i] = k;
+//             ans += Math.abs(dp[i].val);
+//             dp[k].val += dp[i].val;
+//             dp[k].edges = dp[k].edges.filter((x) => x !== i);
+//           }
+//           if (dp[k].edges.length === 1) {
+//             ntarget.push(k);
+//           }
+//         }
+//       }
+//       target = [...ntarget];
+//     }
+//   }
+
+//   return ans;
+// }
 
 // 시도 3
 // function solution(a, edges) {
