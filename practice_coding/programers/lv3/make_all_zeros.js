@@ -1,5 +1,66 @@
 //모두 0으로 만들기
 
+// 시도 6 도로백
+function solution(a, edges) {
+  let s = 0,
+    dp = [],
+    n = a.length,
+    line = [];
+  for (let i = 0; i < n; i++) {
+    s += a[i];
+    dp[i] = i;
+    line[i] = [];
+  }
+  if (s !== 0) {
+    return -1;
+  }
+  for (let [i, j] of edges) {
+    line[i].push(j);
+    line[j].push(i);
+  }
+
+  //     function f(p,x){
+  //         let ans=0
+  //         for (let j of line[x]){
+  //             let k=Number(j)
+  //             if (k !==p){
+  //                 let sub=f(x,k)
+  //                 ans+=sub
+  //                 a[x]+=a[k]
+  //                 a[k]=0
+  //             }
+
+  //         }
+  //         return ans+Math.abs(a[x])
+  //     }
+  //   return f(-1,0);
+
+  let ans = 0,
+    stack = [0],
+    sample = [[-1, 0]];
+  while (sample.length > 0) {
+    let sub = [];
+    for (let [p, i] of sample) {
+      for (let j of line[i]) {
+        if (j !== p) {
+          sub.push([i, j]);
+          stack.unshift(j);
+          dp[j] = i;
+        }
+      }
+    }
+    sample = [...sub];
+  }
+
+  for (let i of stack) {
+    let k = dp[i];
+    ans += Math.abs(a[i]);
+    a[k] += a[i];
+  }
+
+  return ans;
+}
+
 // 시도 5 stack overflow : 7, 8, 16, 17
 function solution(a, edges) {
   let s = 0,
