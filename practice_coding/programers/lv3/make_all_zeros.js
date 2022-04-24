@@ -1,5 +1,68 @@
 //모두 0으로 만들기
 
+// 시도 7
+// function solution(a, edges) {
+//   let p=0,m=0, dp = [],n=a.length, line=[],count=[],visit=[]
+// ;
+//   for (let i =0; i <n;i++){
+//       if (a[i]<0){
+//           m+=a[i]
+//       }else{
+//           p+=a[i]
+//       }
+//       dp[i]=i
+//       line[i]=[]
+//       count[i]=0
+//       visit[i]=false
+//   }
+//   if (m+p!==0){
+//       return -1
+//   }else if (m===0){
+//       return 0
+//   }
+//   for (let [i,j] of edges){
+//       line[i].push(j)
+//       line[j].push(i)
+//       count[i]++
+//       count[j]++
+
+//   }
+//   let sub=[]
+//   let ans=0,stack=[],sample=[[-1,0]]
+//   if (count[0]===1){
+//       stack.push(0)
+//   }
+//   while (sample.length >0){
+//       let sub=[]
+//       for(let [p,i] of sample){
+//           for ( let j of line[i]){
+//               if (j !== p){
+//                   sub.push([i,j])
+//                   if (count[j]===1){
+//                       stack.push(j)
+//                   }
+//                   dp[j]=i
+//               }
+//           }
+//       }
+//       sample=[...sub]
+//   }
+
+//   while (stack.length>0){
+//       let sub=[]
+//       for (let i of stack){
+//           let k=dp[i]
+//           ans+=Math.abs(a[i])
+//           a[k]+=a[i]
+//           if (k!== 0&&sub.indexOf(k)===-1){
+//               sub.push(k)
+//           }
+//       }
+//       stack=[...sub]
+//   }
+//   return ans
+// }
+
 // 시도 6 도로백
 function solution(a, edges) {
   let s = 0,
