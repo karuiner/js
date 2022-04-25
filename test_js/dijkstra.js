@@ -55,6 +55,61 @@ function dijk(graph, s) {
   console.log(dp, db, invite);
 }
 
+// A* 적용 해볼것
+//http://www.gisdeveloper.co.kr/?p=3897
+function dijk2(graph, s) {
+  let dp = [],
+    db = {};
+  for (let [i, j, v] of graph) {
+    if (dp[i - 1] === undefined) {
+      dp[i - 1] = Infinity;
+    }
+
+    if (dp[j - 1] === undefined) {
+      dp[j - 1] = Infinity;
+    }
+    if (db[i] === undefined) {
+      db[i] = {};
+    }
+    if (db[i][j] === undefined) {
+      db[i][j] = v;
+    }
+    if (db[j] === undefined) {
+      db[j] = {};
+    }
+    if (db[j][i] === undefined) {
+      db[j][i] = v;
+    }
+  }
+
+  dp[s] = 0;
+  let n = dp.length;
+
+  let invite = Array(n).fill(false);
+  invite[s] = true;
+  function redo(s) {
+    let min = Infinity,
+      k = 0,
+      q = dp[s - 1];
+
+    for (let i in db[s]) {
+      let y = db[s][i] + q;
+      if (db[s][i] < min && !invite[Number(i) - 1]) {
+        min = db[s][i];
+        k = i;
+      }
+      if (y < dp[Number(i) - 1]) {
+        dp[Number(i) - 1] = y;
+      }
+    }
+    invite[Number(s) - 1] = true;
+    if (min !== Infinity) {
+      redo(k);
+    }
+  }
+  redo(s + 1);
+  console.log(dp, db, invite);
+}
 // let graph = [
 //   [1, 2, 2],
 //   [1, 4, 1],
