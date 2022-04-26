@@ -1,17 +1,53 @@
 // 스티커 수집
-// 고리형 배열로 시작과 긑이 연결됨.
-// 특정 인덱스 의 스티커를 선택시 앞뒤 스티커 사용 불가능
-// * 생각하고 있는 구현 방법
-// 시작 점을 0, 1, 2 로 정의
-// 선택된 시작점을 기준으로 2칸 3칸 의 값중 하나를 선택.
-// 사용가능 한 모든 스티커를 선택한 결과 값을 비교. 가장 큰값을 돌려준다.
-// 재귀형식 사용하기에는 크기가 불안하기에 반복문을 사용해야 할듯하다.
 
+// 시도 2 중복되는 구간 스킵
 function solution(sticker) {
-  var answer = 0;
+  let n = sticker.length,
+    db = {};
+  //dp문제 뽑느냐 마느냐
 
-  // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
-  console.log("Hello Javascript");
+  function f(s, e, k) {
+    if (s > e) {
+      return k;
+    }
+    if (db[`${s}-${e}`] === undefined) {
+      let ans = f(s + 2, e, k + sticker[s]);
+      let sub = f(s + 1, e, k);
+      ans = ans > sub ? ans : sub;
+      db[`${s}-${e}`] = ans - k;
+      return ans;
+    } else {
+      return k + db[`${s}-${e}`];
+    }
+  }
+  if (n === 1) {
+    return sticker[0];
+  }
+  let ans = f(0, n - 2, 0);
+  let sub = f(1, n - 1, 0);
 
-  return answer;
+  return ans > sub ? ans : sub;
 }
+
+// 시도 1 재귀 함수를 사용한 풀이.
+// function solution(sticker) {
+//     let n=sticker.length;
+//     //dp문제 뽑느냐 마느냐
+
+//     function f(s,e,k){
+//         if (s >e){
+//             return k
+//         }
+//         let ans=f(s+2,e,k+sticker[s])
+//         let sub=f(s+1,e,k)
+
+//         return ans>sub?ans:sub
+//     }
+//     if (n===1){
+//         return sticker[0]
+//     }
+//     let ans=f(0,n-2,0)
+//     let sub=f(1,n-1,0)
+
+//     return ans>sub?ans:sub
+// }
