@@ -1,10 +1,10 @@
 // 순위
 
-// 풀이시도 4 오나벽하지는 않으나 처음으로 완성된 코드 풀이방법.
-// 10개의 예제중  6개 풀이 완료
+// 풀이시도 5
 function solution(n, results) {
   let ans = 0,
-    dp = [];
+    dp = [],
+    check = [];
   for (let i = 0; i < n; i++) {
     let sub = [];
     for (let j = 0; j < n; j++) {
@@ -17,16 +17,16 @@ function solution(n, results) {
     let ob = { w: [], d: [], c: 0 };
     sub.push(ob);
     dp.push(sub);
+    check.push(-1);
   }
-  for (let [i, j] of results) {
-    i--;
-    j--;
+  function f(i, j) {
     if (dp[i][j] === null) {
       dp[i][j] = "W";
       dp[i][n].c++;
       dp[i][n].d.push(j);
       if (dp[i][n].c === n - 1) {
         ans++;
+        check[dp[i][n].w.length] = i;
       }
     }
     if (dp[j][i] === null) {
@@ -35,53 +35,127 @@ function solution(n, results) {
       dp[j][n].w.push(i);
       if (dp[j][n].c === n - 1) {
         ans++;
+        check[dp[j][n].w.length] = j;
       }
     }
+  }
 
+  for (let [i, j] of results) {
+    i--;
+    j--;
+    f(i, j);
     if (dp[j][n].d.length > 0) {
       for (let k of dp[j][n].d) {
-        if (dp[i][k] === null) {
-          dp[i][k] = "W";
-          dp[i][n].d.push(k);
-          dp[i][n].c++;
-          if (dp[i][n].c === n - 1) {
-            ans++;
-          }
-        }
-        if (dp[k][i] === null) {
-          dp[k][i] = "D";
-          dp[k][n].w.push(i);
-          dp[k][n].c++;
-          if (dp[k][n].c === n - 1) {
-            ans++;
-          }
-        }
+        f(i, k);
       }
     }
     if (dp[i][n].w.length > 0) {
       for (let k of dp[i][n].w) {
-        if (dp[k][j] === null) {
-          dp[k][j] = "W";
-          dp[k][n].d.push(j);
-          dp[k][n].c++;
-          if (dp[k][n].c === n - 1) {
-            ans++;
-          }
-        }
-        if (dp[j][k] === null) {
-          dp[j][k] = "D";
-          dp[j][n].w.push(k);
-          dp[j][n].c++;
-          if (dp[j][n].c === n - 1) {
-            ans++;
+        f(k, j);
+      }
+    }
+  }
+  for (let i = 0; i < n; i++) {
+    if (dp[i][n].c < n - 1) {
+      for (let j = 0; j < n; j++) {
+        let k = check[j];
+        if (k !== -1 && i !== k) {
+          let s = dp[i][k];
+          console.log(i, k, s);
+          if (s === "W") {
+            f(i, k);
+          } else {
+            f(k, i);
           }
         }
       }
     }
   }
-
   return ans;
 }
+
+// 풀이시도 4 완벽하지는 않으나 처음으로 완성된 코드 풀이방법.
+// 10개의 예제중  6개 풀이 완료
+// function solution(n, results) {
+//   let ans = 0,
+//     dp = [];
+//   for (let i = 0; i < n; i++) {
+//     let sub = [];
+//     for (let j = 0; j < n; j++) {
+//       if (i === j) {
+//         sub.push(-1);
+//       } else {
+//         sub.push(null);
+//       }
+//     }
+//     let ob = { w: [], d: [], c: 0 };
+//     sub.push(ob);
+//     dp.push(sub);
+//   }
+//   for (let [i, j] of results) {
+//     i--;
+//     j--;
+//     if (dp[i][j] === null) {
+//       dp[i][j] = "W";
+//       dp[i][n].c++;
+//       dp[i][n].d.push(j);
+//       if (dp[i][n].c === n - 1) {
+//         ans++;
+//       }
+//     }
+//     if (dp[j][i] === null) {
+//       dp[j][i] = "D";
+//       dp[j][n].c++;
+//       dp[j][n].w.push(i);
+//       if (dp[j][n].c === n - 1) {
+//         ans++;
+//       }
+//     }
+
+//     if (dp[j][n].d.length > 0) {
+//       for (let k of dp[j][n].d) {
+//         if (dp[i][k] === null) {
+//           dp[i][k] = "W";
+//           dp[i][n].d.push(k);
+//           dp[i][n].c++;
+//           if (dp[i][n].c === n - 1) {
+//             ans++;
+//           }
+//         }
+//         if (dp[k][i] === null) {
+//           dp[k][i] = "D";
+//           dp[k][n].w.push(i);
+//           dp[k][n].c++;
+//           if (dp[k][n].c === n - 1) {
+//             ans++;
+//           }
+//         }
+//       }
+//     }
+//     if (dp[i][n].w.length > 0) {
+//       for (let k of dp[i][n].w) {
+//         if (dp[k][j] === null) {
+//           dp[k][j] = "W";
+//           dp[k][n].d.push(j);
+//           dp[k][n].c++;
+//           if (dp[k][n].c === n - 1) {
+//             ans++;
+//           }
+//         }
+//         if (dp[j][k] === null) {
+//           dp[j][k] = "D";
+//           dp[j][n].w.push(k);
+//           dp[j][n].c++;
+//           if (dp[j][n].c === n - 1) {
+//             ans++;
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   return ans;
+// }
 
 // 풀이시도 3 풀이법에대한 고민중. 확정된 풀이법 구상이 안됨
 // function solution(n, results) {
