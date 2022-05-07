@@ -1,6 +1,6 @@
 // 순위
 
-// 풀이시도  6
+// 풀이시도 7 - 2번 문항을 제외한 모든 문제 풀이
 function solution(n, results) {
   let ans = 0,
     dp = [],
@@ -55,17 +55,87 @@ function solution(n, results) {
       }
     }
   }
-  console.log(dp);
-  console.log(check);
   for (let i = 0; i < n; i++) {
     if (dp[i][n].c < n - 1) {
       let k = n - 1 - dp[i][n].c,
-        w = dp[i][n].w.length;
-      console.log(k, w);
+        w = dp[i][n].w.length,
+        j = dp[i].indexOf(null);
+      if (check[w] > 0) {
+        f(j, i);
+      } else if (check[w + 1] > 0) {
+        f(i, j);
+      }
     }
   }
   return ans;
 }
+
+// 풀이시도  6
+// function solution(n, results) {
+//   let ans = 0,
+//     dp = [],
+//     check = [];
+//   for (let i = 0; i < n; i++) {
+//     let sub = [];
+//     for (let j = 0; j < n; j++) {
+//       if (i === j) {
+//         sub.push(-1);
+//       } else {
+//         sub.push(null);
+//       }
+//     }
+//     let ob = { w: [], d: [], c: 0 };
+//     sub.push(ob);
+//     dp.push(sub);
+//     check.push(-1);
+//   }
+//   function f(i, j) {
+//     if (dp[i][j] === null) {
+//       dp[i][j] = "W";
+//       dp[i][n].c++;
+//       dp[i][n].d.push(j);
+//       if (dp[i][n].c === n - 1) {
+//         ans++;
+//         check[dp[i][n].w.length] = i;
+//       }
+//     }
+//     if (dp[j][i] === null) {
+//       dp[j][i] = "D";
+//       dp[j][n].c++;
+//       dp[j][n].w.push(i);
+//       if (dp[j][n].c === n - 1) {
+//         ans++;
+//         check[dp[j][n].w.length] = j;
+//       }
+//     }
+//   }
+
+//   for (let [i, j] of results) {
+//     i--;
+//     j--;
+//     f(i, j);
+//     if (dp[j][n].d.length > 0) {
+//       for (let k of dp[j][n].d) {
+//         f(i, k);
+//       }
+//     }
+//     if (dp[i][n].w.length > 0) {
+//       for (let k of dp[i][n].w) {
+//         f(k, j);
+//       }
+//     }
+//   }
+//   console.log(dp);
+//   console.log(check);
+//   for (let i = 0; i < n; i++) {
+//     if (dp[i][n].c < n - 1) {
+//       let k = n - 1 - dp[i][n].c,
+//         w = dp[i][n].w.length;
+//       console.log(k, w);
+//     }
+//   }
+//   return ans;
+// }
 
 // 풀이시도 5
 // function solution(n, results) {
