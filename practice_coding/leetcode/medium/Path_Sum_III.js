@@ -14,37 +14,73 @@
  * @return {number}
  */
 
-// 시도 3
+// 풀이완료
 var pathSum = function (root, targetSum) {
   let ans = 0,
     arr = [],
-    td = [],
-    l = 0,
-    lmx = 0;
+    pn = [],
+    idx = 0;
 
-  function find(root, idx, l) {
+  function find(root, pidx) {
     if (root !== null) {
-      lmx = l > lmx ? l : lmx;
       arr[idx] = root.val;
+      pn[idx] = pidx;
+      let k = idx;
+      idx++;
       if (root.left !== null) {
-        find(root.left, 2 * idx + 1, l + 1);
+        find(root.left, k);
       }
       if (root.right !== null) {
-        find(root.right, 2 * idx + 2, l + 1);
+        find(root.right, k);
       }
-      let k = 0;
-      for (let i = idx; i >= 0; i = Math.floor((i - 1) / 2)) {
-        k += arr[i];
-        if (k === targetSum) {
+      let s = 0;
+      while (k >= 0) {
+        s += arr[k];
+        if (s === targetSum) {
           ans++;
         }
+        k = pn[k];
       }
     }
   }
-  find(root, 0, l);
-  console.log(lmx);
+  find(root, -1);
   return ans;
 };
+
+// Runtime: 125 ms, faster than 65.52% of JavaScript online submissions for Path Sum III.
+// Memory Usage: 50.9 MB, less than 32.36% of JavaScript online submissions for Path Sum III.
+
+// 시도 3
+// var pathSum = function (root, targetSum) {
+//   let ans = 0,
+//     arr = [],
+//     td = [],
+//     l = 0,
+//     lmx = 0;
+
+//   function find(root, idx, l) {
+//     if (root !== null) {
+//       lmx = l > lmx ? l : lmx;
+//       arr[idx] = root.val;
+//       if (root.left !== null) {
+//         find(root.left, 2 * idx + 1, l + 1);
+//       }
+//       if (root.right !== null) {
+//         find(root.right, 2 * idx + 2, l + 1);
+//       }
+//       let k = 0;
+//       for (let i = idx; i >= 0; i = Math.floor((i - 1) / 2)) {
+//         k += arr[i];
+//         if (k === targetSum) {
+//           ans++;
+//         }
+//       }
+//     }
+//   }
+//   find(root, 0, l);
+//   console.log(lmx);
+//   return ans;
+// };
 
 // 시도 2
 // var pathSum = function (root, targetSum) {
