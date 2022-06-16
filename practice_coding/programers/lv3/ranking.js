@@ -1,6 +1,6 @@
 // 순위
 
-// 재시도
+// 풀이 성공
 function solution(n, results) {
   let data = [],
     ans = 0;
@@ -22,28 +22,18 @@ function solution(n, results) {
       data[d][n].c++;
     }
 
-    if (data[w][n].c < n) {
-      for (let i of data[w][n].w) {
-        if (data[i][w] === false) {
-          f(i, w);
-        }
-      }
-      for (let i of data[w][n].d) {
-        if (data[w][i] === false) {
-          f(w, i);
+    for (let i of data[w][n].w) {
+      for (let j of data[w][n].d) {
+        if (data[i][j] === false) {
+          f(i, j);
         }
       }
     }
 
-    if (data[d][n].c < n) {
-      for (let i of data[d][n].w) {
-        if (data[i][d] === false) {
-          f(i, d);
-        }
-      }
-      for (let i of data[d][n].d) {
-        if (data[d][i] === false) {
-          f(d, i);
+    for (let i of data[d][n].w) {
+      for (let j of data[d][n].d) {
+        if (data[i][j] === false) {
+          f(i, j);
         }
       }
     }
@@ -52,9 +42,69 @@ function solution(n, results) {
   for (let [w, d] of results) {
     f(w - 1, d - 1);
   }
-
+  for (let i = 0; i < n; i++) {
+    if (data[i][n].c === n - 1) {
+      ans++;
+    }
+  }
   return ans;
 }
+
+// 재시도
+// function solution(n, results) {
+//   let data = [],
+//     ans = 0;
+//   for (let i = 0; i < n; i++) {
+//     let sub = [];
+//     for (let j = 0; j < n; j++) {
+//       sub[j] = false;
+//     }
+//     sub.push({ w: [], d: [], c: 0 });
+//     data[i] = sub;
+//   }
+//   function f(w, d) {
+//     if (data[w][d] === false) {
+//       data[w][d] = "W";
+//       data[w][n].d.push(d);
+//       data[w][n].c++;
+//       data[d][w] = "D";
+//       data[d][n].w.push(w);
+//       data[d][n].c++;
+//     }
+
+//     if (data[w][n].c < n) {
+//       for (let i of data[w][n].w) {
+//         if (data[i][w] === false) {
+//           f(i, w);
+//         }
+//       }
+//       for (let i of data[w][n].d) {
+//         if (data[w][i] === false) {
+//           f(w, i);
+//         }
+//       }
+//     }
+
+//     if (data[d][n].c < n) {
+//       for (let i of data[d][n].w) {
+//         if (data[i][d] === false) {
+//           f(i, d);
+//         }
+//       }
+//       for (let i of data[d][n].d) {
+//         if (data[d][i] === false) {
+//           f(d, i);
+//         }
+//       }
+//     }
+//   }
+
+//   for (let [w, d] of results) {
+//     f(w - 1, d - 1);
+//   }
+
+//   return ans;
+// }
 
 // 풀이시도 7 - 2번 문항을 제외한 모든 문제 풀이
 // function solution(n, results) {
