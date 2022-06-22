@@ -29,6 +29,63 @@ function solution(matrix_sizes) {
 
   return f(matrix_sizes, 0);
 }
+// 모든 경우의 수를 탐색
+
+function solutiont(matrix_sizes) {
+  let ans = 0;
+  function f(mat, s) {
+    if (mat.length === 1 && (ans === 0 || s < ans)) {
+      ans = s;
+    }
+    for (let i = 0; i < mat.length - 1; i++) {
+      let a = mat[i],
+        b = mat[i + 1],
+        value = a[0] * a[1] * b[1];
+
+      f([...mat.slice(0, i), [a[0], b[1]], ...mat.slice(i + 2)], s + value);
+    }
+  }
+  f(matrix_sizes, 0);
+
+  return ans;
+}
+
+function mf(l, mx = 200) {
+  let arr = [],
+    n = 0,
+    c = -1;
+  function rd(mx) {
+    mx = mx > 200 ? 200 : mx;
+    mx = mx < 3 ? 3 : mx;
+    let k = Math.floor(Math.random() * (mx - 1)) + 1;
+    return k > mx ? mx : k;
+  }
+
+  while (n < l) {
+    if (n === 0) {
+      let a = rd(mx),
+        b = rd(mx);
+      arr.push([a, b]);
+      c = b;
+      n++;
+    } else {
+      let a = rd(mx);
+      arr.push([c, a]);
+      c = a;
+      n++;
+    }
+  }
+
+  return arr;
+}
+let ccc = 0;
+while (ccc < 10) {
+  let arr = mf(4, 10);
+  let a = solution(arr),
+    b = solutiont(arr);
+  console.log(arr, a, b);
+  ccc++;
+}
 
 // 시도  1
 // function solution(matrix_sizes) {
