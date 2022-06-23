@@ -1,5 +1,7 @@
 //최적의 행렬 곱셈
 
+// 시도 4 반례 보완
+
 // 시도 2
 function solution(matrix_sizes) {
   function f(mat, s) {
@@ -50,6 +52,7 @@ function solutiont(matrix_sizes) {
   return ans;
 }
 
+// 시도3 반례 찾기
 function mf(l, mx = 200) {
   let arr = [],
     n = 0,
