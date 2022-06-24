@@ -1,7 +1,34 @@
 //최적의 행렬 곱셈
 
 // 시도 4 반례 보완
+function solution(matrix_sizes) {
+  function f(mat, s) {
+    if (mat.length === 1) {
+      return s;
+    }
 
+    let k = -1,
+      size = 0,
+      m = 0,
+      arr = [],
+      value = 0;
+    for (let i = 0; i < mat.length - 1; i++) {
+      let a = mat[i],
+        b = mat[i + 1];
+      if (k < 0 || (a[0] <= a[1] && b[1] <= b[0])) {
+        k = i;
+        m = a[1];
+        size = a[0] * b[1];
+        arr = [a[0], b[1]];
+        value = a[0] * a[1] * b[1];
+      }
+    }
+
+    return f([...mat.slice(0, k), arr, ...mat.slice(k + 2)], s + value);
+  }
+
+  return f(matrix_sizes, 0);
+}
 // 시도 2
 function solution(matrix_sizes) {
   function f(mat, s) {
