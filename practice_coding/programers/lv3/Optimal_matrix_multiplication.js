@@ -1,26 +1,44 @@
 //최적의 행렬 곱셈
 
-// 시도 4 반례 보완
+//시도 5  예제 하나 통과
 function solution(matrix_sizes) {
+  let db = {};
   function f(mat, s) {
     if (mat.length === 1) {
       return s;
+    } else if (mat.length === 2) {
+      let a = mat[0],
+        b = mat[1];
+      if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
+        s += a[0] * a[1] * b[1];
+      } else {
+        s += db[`${a[0]}-${a[1]}-${b[1]}`];
+      }
+      return s;
     }
-
     let k = -1,
       size = 0,
       m = 0,
       arr = [],
       value = 0;
+
     for (let i = 0; i < mat.length - 1; i++) {
       let a = mat[i],
-        b = mat[i + 1];
-      if (k < 0 || (a[0] <= a[1] && b[1] <= b[0])) {
+        b = mat[i + 1],
+        mna = Math.min(a[0], b[0]),
+        mnb = Math.min(a[1], b[1]);
+
+      if (k < 0 || (a[0] <= mna && b[1] <= mnb) || a[0] * b[1] < size) {
         k = i;
         m = a[1];
         size = a[0] * b[1];
         arr = [a[0], b[1]];
-        value = a[0] * a[1] * b[1];
+        if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
+          value = a[0] * a[1] * b[1];
+          db[`${a[0]}-${a[1]}-${b[1]}`] = value;
+        } else {
+          value = db[`${a[0]}-${a[1]}-${b[1]}`];
+        }
       }
     }
 
@@ -29,6 +47,36 @@ function solution(matrix_sizes) {
 
   return f(matrix_sizes, 0);
 }
+
+// 시도 4 반례 보완
+// function solution(matrix_sizes) {
+//   function f(mat, s) {
+//     if (mat.length === 1) {
+//       return s;
+//     }
+
+//     let k = -1,
+//       size = 0,
+//       m = 0,
+//       arr = [],
+//       value = 0;
+//     for (let i = 0; i < mat.length - 1; i++) {
+//       let a = mat[i],
+//         b = mat[i + 1];
+//       if (k < 0 || (a[0] <= a[1] && b[1] <= b[0])) {
+//         k = i;
+//         m = a[1];
+//         size = a[0] * b[1];
+//         arr = [a[0], b[1]];
+//         value = a[0] * a[1] * b[1];
+//       }
+//     }
+
+//     return f([...mat.slice(0, k), arr, ...mat.slice(k + 2)], s + value);
+//   }
+
+//   return f(matrix_sizes, 0);
+// }
 // 시도 2
 function solution(matrix_sizes) {
   function f(mat, s) {
