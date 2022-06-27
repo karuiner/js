@@ -1,5 +1,45 @@
 //최적의 행렬 곱셈
 
+// 시도 6 예제 하나 통과
+// function solution(matrix_sizes) {
+//   let ans = 0,db={};
+//   function f(mat, s) {
+//     if (mat.length === 2 ) {
+//         let a = mat[0],
+//         b = mat[1],value=0;
+
+//         if (db[`${a[0]}-${a[1]}-${b[1]}`]===undefined){
+//             value = a[0] * a[1] * b[1];
+//             db[`${a[0]}-${a[1]}-${b[1]}`]=value
+//         }else{
+//             value = db[`${a[0]}-${a[1]}-${b[1]}`]
+//         }
+//         s+=value
+//         if (s <ans||ans===0){
+//             ans=s
+//         }
+//     }else{
+//         for (let i = 0; i < mat.length - 1; i++) {
+//             let a = mat[i],
+//             b = mat[i + 1],value=0;
+
+//             if (db[`${a[0]}-${a[1]}-${b[1]}`]===undefined){
+//                 value = a[0] * a[1] * b[1];
+//                 db[`${a[0]}-${a[1]}-${b[1]}`]=value
+//             }else{
+//                 value = db[`${a[0]}-${a[1]}-${b[1]}`]
+//             }
+
+//             f([...mat.slice(0, i), [a[0], b[1]], ...mat.slice(i + 2)], s + value);
+//         }
+//     }
+
+//   }
+//   f(matrix_sizes, 0);
+
+//   return ans;
+// }
+
 //시도 5  예제 하나 통과
 function solution(matrix_sizes) {
   let db = {};
