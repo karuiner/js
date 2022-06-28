@@ -1,6 +1,6 @@
 //최적의 행렬 곱셈
 
-// 시도 7
+// 시도 7 - min 값이 아니라 변곡점을 기반으로 분류할것
 function solution(matrix_sizes) {
   let ans = 0,
     arr = [],
@@ -44,19 +44,29 @@ function solution(matrix_sizes) {
     return [[arr[0][0], arr[n - 1][1]], ans];
   }
   console.log(arr);
-  let cal = [];
+  let cal = [],
+    c = 0;
   for (let [i, j] of arr) {
     let sub = matrix_sizes.slice(i, j);
     if (sub.length < 2) {
       cal.push(sub[0]);
+      c++;
     } else {
       let [rst, s] = f(sub);
       console.log(rst, s);
+      ans += s;
       cal.push(rst);
+      c++;
     }
   }
-
-  console.log(cal);
+  if (c > 2) {
+    ans +=
+      cal[0][0] * cal[0][1] * cal[c - 1][1] +
+      (c - 3) +
+      Math.min(cal[0][0], cal[c - 1][1]);
+  } else if (c === 2) {
+    ans += cal[0][0] * cal[0][1] * cal[1][1];
+  }
 
   return ans;
 }
