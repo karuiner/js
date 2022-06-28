@@ -1,39 +1,102 @@
 //최적의 행렬 곱셈
 
+// 시도 7
+function solution(matrix_sizes) {
+  let ans = 0,
+    arr = [],
+    n = matrix_sizes.length,
+    mn = 200,
+    l = 0;
+  for (let i = 0; i < n; i++) {
+    let [a, b] = matrix_sizes[i];
+    if (a < mn || b < mn) {
+      mn = Math.min(a, b);
+      arr = [];
+      l = 0;
+    }
+    if (a === mn) {
+      l = i;
+    }
+    if (b === mn) {
+      arr.push([l, i + 1]);
+      l = i;
+    }
+  }
+  if (l < n - 1) {
+    arr.push([l, n]);
+  }
+  function f(arr) {
+    let n = arr.length,
+      ans = 0;
+    if (arr[n - 1][1] === mn) {
+      let k = arr[n - 1][1];
+      for (let i = n - 2; i >= 0; i--) {
+        let m1 = arr[i];
+        ans += m1[0] * m1[1] * k;
+      }
+    } else {
+      let k = arr[0][0];
+      for (let i = 1; i < n; i++) {
+        let m1 = arr[i];
+        ans += k * m1[0] * m1[1];
+      }
+    }
+    return [[arr[0][0], arr[n - 1][1]], ans];
+  }
+  console.log(arr);
+  let cal = [];
+  for (let [i, j] of arr) {
+    let sub = matrix_sizes.slice(i, j);
+    if (sub.length < 2) {
+      cal.push(sub[0]);
+    } else {
+      let [rst, s] = f(sub);
+      console.log(rst, s);
+      cal.push(rst);
+    }
+  }
+
+  console.log(cal);
+
+  return ans;
+}
+
 // 시도 6 예제 하나 통과
 // function solution(matrix_sizes) {
-//   let ans = 0,db={};
+//   let ans = 0,
+//     db = {};
 //   function f(mat, s) {
-//     if (mat.length === 2 ) {
-//         let a = mat[0],
-//         b = mat[1],value=0;
+//     if (mat.length === 2) {
+//       let a = mat[0],
+//         b = mat[1],
+//         value = 0;
 
-//         if (db[`${a[0]}-${a[1]}-${b[1]}`]===undefined){
-//             value = a[0] * a[1] * b[1];
-//             db[`${a[0]}-${a[1]}-${b[1]}`]=value
-//         }else{
-//             value = db[`${a[0]}-${a[1]}-${b[1]}`]
-//         }
-//         s+=value
-//         if (s <ans||ans===0){
-//             ans=s
-//         }
-//     }else{
-//         for (let i = 0; i < mat.length - 1; i++) {
-//             let a = mat[i],
-//             b = mat[i + 1],value=0;
+//       if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
+//         value = a[0] * a[1] * b[1];
+//         db[`${a[0]}-${a[1]}-${b[1]}`] = value;
+//       } else {
+//         value = db[`${a[0]}-${a[1]}-${b[1]}`];
+//       }
+//       s += value;
+//       if (s < ans || ans === 0) {
+//         ans = s;
+//       }
+//     } else {
+//       for (let i = 0; i < mat.length - 1; i++) {
+//         let a = mat[i],
+//           b = mat[i + 1],
+//           value = 0;
 
-//             if (db[`${a[0]}-${a[1]}-${b[1]}`]===undefined){
-//                 value = a[0] * a[1] * b[1];
-//                 db[`${a[0]}-${a[1]}-${b[1]}`]=value
-//             }else{
-//                 value = db[`${a[0]}-${a[1]}-${b[1]}`]
-//             }
-
-//             f([...mat.slice(0, i), [a[0], b[1]], ...mat.slice(i + 2)], s + value);
+//         if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
+//           value = a[0] * a[1] * b[1];
+//           db[`${a[0]}-${a[1]}-${b[1]}`] = value;
+//         } else {
+//           value = db[`${a[0]}-${a[1]}-${b[1]}`];
 //         }
+
+//         f([...mat.slice(0, i), [a[0], b[1]], ...mat.slice(i + 2)], s + value);
+//       }
 //     }
-
 //   }
 //   f(matrix_sizes, 0);
 
@@ -198,7 +261,7 @@ function mf(l, mx = 200) {
 }
 let ccc = 0;
 while (ccc < 10) {
-  let arr = mf(4, 10);
+  let arr = mf(10, 10);
   let a = solution(arr),
     b = solutiont(arr);
   if (a !== b) {
