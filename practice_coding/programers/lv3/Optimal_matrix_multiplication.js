@@ -1,6 +1,7 @@
 //최적의 행렬 곱셈
 
-// 시도 7 - min 값이 아니라 변곡점을 기반으로 분류할것
+// 시도 8 잘못된 계산을 진행하는 부분 수정
+
 function solution(matrix_sizes) {
   let ans = 0,
     arr = [],
@@ -19,10 +20,10 @@ function solution(matrix_sizes) {
     }
     if (b === mn) {
       arr.push([l, i + 1]);
-      l = i;
+      l = i < n - 1 ? i : i + 1;
     }
   }
-  if (l < n - 1) {
+  if (l < n) {
     arr.push([l, n]);
   }
   function f(arr) {
@@ -43,7 +44,6 @@ function solution(matrix_sizes) {
     }
     return [[arr[0][0], arr[n - 1][1]], ans];
   }
-  console.log(arr);
   let cal = [],
     c = 0;
   for (let [i, j] of arr) {
@@ -53,23 +53,94 @@ function solution(matrix_sizes) {
       c++;
     } else {
       let [rst, s] = f(sub);
-      console.log(rst, s);
+      // console.log(rst, s);
       ans += s;
       cal.push(rst);
       c++;
     }
   }
+  // console.log(cal);
   if (c > 2) {
     ans +=
       cal[0][0] * cal[0][1] * cal[c - 1][1] +
-      (c - 3) +
-      Math.min(cal[0][0], cal[c - 1][1]);
+      (c - 3) * (mn * mn * mn) +
+      Math.min(cal[0][0], cal[c - 1][1]) * mn * mn;
   } else if (c === 2) {
     ans += cal[0][0] * cal[0][1] * cal[1][1];
   }
 
   return ans;
 }
+
+// 시도 7 - min 값이 아니라 변곡점을 기반으로 분류할것
+// function solution(matrix_sizes) {
+//   let ans = 0,
+//     arr = [],
+//     n = matrix_sizes.length,
+//     mn = 200,
+//     l = 0;
+//   for (let i = 0; i < n; i++) {
+//     let [a, b] = matrix_sizes[i];
+//     if (a < mn || b < mn) {
+//       mn = Math.min(a, b);
+//       arr = [];
+//       l = 0;
+//     }
+//     if (a === mn) {
+//       l = i;
+//     }
+//     if (b === mn) {
+//       arr.push([l, i + 1]);
+//       l = i;
+//     }
+//   }
+//   if (l < n - 1) {
+//     arr.push([l, n]);
+//   }
+//   function f(arr) {
+//     let n = arr.length,
+//       ans = 0;
+//     if (arr[n - 1][1] === mn) {
+//       let k = arr[n - 1][1];
+//       for (let i = n - 2; i >= 0; i--) {
+//         let m1 = arr[i];
+//         ans += m1[0] * m1[1] * k;
+//       }
+//     } else {
+//       let k = arr[0][0];
+//       for (let i = 1; i < n; i++) {
+//         let m1 = arr[i];
+//         ans += k * m1[0] * m1[1];
+//       }
+//     }
+//     return [[arr[0][0], arr[n - 1][1]], ans];
+//   }
+//   let cal = [],
+//     c = 0;
+//   for (let [i, j] of arr) {
+//     let sub = matrix_sizes.slice(i, j);
+//     if (sub.length < 2) {
+//       cal.push(sub[0]);
+//       c++;
+//     } else {
+//       let [rst, s] = f(sub);
+
+//       ans += s;
+//       cal.push(rst);
+//       c++;
+//     }
+//   }
+//   if (c > 2) {
+//     ans +=
+//       cal[0][0] * cal[0][1] * cal[c - 1][1] +
+//       (c - 3) +
+//       Math.min(cal[0][0], cal[c - 1][1]);
+//   } else if (c === 2) {
+//     ans += cal[0][0] * cal[0][1] * cal[1][1];
+//   }
+
+//   return ans;
+// }
 
 // 시도 6 예제 하나 통과
 // function solution(matrix_sizes) {
@@ -114,52 +185,52 @@ function solution(matrix_sizes) {
 // }
 
 //시도 5  예제 하나 통과
-function solution(matrix_sizes) {
-  let db = {};
-  function f(mat, s) {
-    if (mat.length === 1) {
-      return s;
-    } else if (mat.length === 2) {
-      let a = mat[0],
-        b = mat[1];
-      if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
-        s += a[0] * a[1] * b[1];
-      } else {
-        s += db[`${a[0]}-${a[1]}-${b[1]}`];
-      }
-      return s;
-    }
-    let k = -1,
-      size = 0,
-      m = 0,
-      arr = [],
-      value = 0;
+// function solution(matrix_sizes) {
+//   let db = {};
+//   function f(mat, s) {
+//     if (mat.length === 1) {
+//       return s;
+//     } else if (mat.length === 2) {
+//       let a = mat[0],
+//         b = mat[1];
+//       if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
+//         s += a[0] * a[1] * b[1];
+//       } else {
+//         s += db[`${a[0]}-${a[1]}-${b[1]}`];
+//       }
+//       return s;
+//     }
+//     let k = -1,
+//       size = 0,
+//       m = 0,
+//       arr = [],
+//       value = 0;
 
-    for (let i = 0; i < mat.length - 1; i++) {
-      let a = mat[i],
-        b = mat[i + 1],
-        mna = Math.min(a[0], b[0]),
-        mnb = Math.min(a[1], b[1]);
+//     for (let i = 0; i < mat.length - 1; i++) {
+//       let a = mat[i],
+//         b = mat[i + 1],
+//         mna = Math.min(a[0], b[0]),
+//         mnb = Math.min(a[1], b[1]);
 
-      if (k < 0 || (a[0] <= mna && b[1] <= mnb) || a[0] * b[1] < size) {
-        k = i;
-        m = a[1];
-        size = a[0] * b[1];
-        arr = [a[0], b[1]];
-        if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
-          value = a[0] * a[1] * b[1];
-          db[`${a[0]}-${a[1]}-${b[1]}`] = value;
-        } else {
-          value = db[`${a[0]}-${a[1]}-${b[1]}`];
-        }
-      }
-    }
+//       if (k < 0 || (a[0] <= mna && b[1] <= mnb) || a[0] * b[1] < size) {
+//         k = i;
+//         m = a[1];
+//         size = a[0] * b[1];
+//         arr = [a[0], b[1]];
+//         if (db[`${a[0]}-${a[1]}-${b[1]}`] === undefined) {
+//           value = a[0] * a[1] * b[1];
+//           db[`${a[0]}-${a[1]}-${b[1]}`] = value;
+//         } else {
+//           value = db[`${a[0]}-${a[1]}-${b[1]}`];
+//         }
+//       }
+//     }
 
-    return f([...mat.slice(0, k), arr, ...mat.slice(k + 2)], s + value);
-  }
+//     return f([...mat.slice(0, k), arr, ...mat.slice(k + 2)], s + value);
+//   }
 
-  return f(matrix_sizes, 0);
-}
+//   return f(matrix_sizes, 0);
+// }
 
 // 시도 4 반례 보완
 // function solution(matrix_sizes) {
