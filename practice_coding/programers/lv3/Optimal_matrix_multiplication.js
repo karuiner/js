@@ -1,5 +1,70 @@
 //최적의 행렬 곱셈
 
+// 시도 9 방법 고민중
+function solution(matrix_sizes) {
+  let ans = 0,
+    arr = [],
+    n = matrix_sizes.length,
+    mn = 200,
+    l = 0;
+
+  for (let i = 0; i < n; i++) {
+    if (i < n - 1) {
+      let a = matrix_sizes[i],
+        b = matrix_sizes[i + 1];
+      if (a[0] > a[1] && b[0] < b[1]) {
+        arr.push([l, i + 1]);
+        l = i + 1;
+      }
+    } else {
+      arr.push([l, i + 1]);
+    }
+  }
+  console.log(arr);
+  function f(arr) {
+    let n = arr.length,
+      ans = 0;
+    let k = arr[n - 1][1];
+    for (let i = n - 2; i >= 0; i--) {
+      let m1 = arr[i];
+      ans += m1[0] * m1[1] * k;
+    }
+    let sub = 0;
+    k = arr[0][0];
+    for (let i = 1; i < n; i++) {
+      let m1 = arr[i];
+      sub += k * m1[0] * m1[1];
+    }
+    ans = sub < ans ? sub : ans;
+
+    return [[arr[0][0], arr[n - 1][1]], ans];
+  }
+  let cal = [],
+    c = 0;
+  console.log(arr);
+  for (let [i, j] of arr) {
+    let sub = matrix_sizes.slice(i, j);
+    if (sub.length < 2) {
+      cal.push(sub[0]);
+      c++;
+    } else {
+      let [rst, s] = f(sub);
+      console.log(rst, s);
+      ans += s;
+      cal.push(rst);
+      c++;
+    }
+  }
+  console.log(cal);
+  if (c > 2) {
+    console.log(cal);
+  } else if (c === 2) {
+    ans += cal[0][0] * cal[0][1] * cal[1][1];
+  }
+
+  return ans;
+}
+
 // 시도 8 잘못된 계산을 진행하는 부분 수정
 
 function solution(matrix_sizes) {
