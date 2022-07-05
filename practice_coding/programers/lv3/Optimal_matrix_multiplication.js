@@ -1,6 +1,8 @@
 //최적의 행렬 곱셈
 
-// 시도 9 방법 고민중
+// 시도 10
+// 순차적 계산을 수행하는 방식을 생각 해보았지만 부족함점이 많음 좀더 고민해볼것
+
 function solution(matrix_sizes) {
   let ans = 0,
     arr = [],
@@ -8,134 +10,164 @@ function solution(matrix_sizes) {
     mn = 200,
     l = 0;
 
-  for (let i = 0; i < n; i++) {
-    if (i < n - 1) {
-      let a = matrix_sizes[i],
-        b = matrix_sizes[i + 1];
-      if (a[0] > a[1] && b[0] < b[1]) {
-        arr.push([l, i + 1]);
-        l = i + 1;
-      }
-    } else {
-      arr.push([l, i + 1]);
+  function f(i, s) {
+    let a = matrix_sizes[i],
+      b = matrix_sizes[i + 1];
+    while (i < n - 2 && a[0] <= a[1] && a[0] <= b[1]) {
+      s += a[0] * a[1] * b[1];
+      a = [a[0], b[1]];
+      i++;
+      b = matrix_sizes[i + 1];
+      console.log(a, s);
     }
-  }
-  console.log(arr);
-  function f(arr) {
-    let n = arr.length,
-      ans = 0;
-    let k = arr[n - 1][1];
-    for (let i = n - 2; i >= 0; i--) {
-      let m1 = arr[i];
-      ans += m1[0] * m1[1] * k;
+    arr.push(a);
+    if (i < n - 2) {
+      s = f(i + 1, s);
     }
-    let sub = 0;
-    k = arr[0][0];
-    for (let i = 1; i < n; i++) {
-      let m1 = arr[i];
-      sub += k * m1[0] * m1[1];
-    }
-    ans = sub < ans ? sub : ans;
-
-    return [[arr[0][0], arr[n - 1][1]], ans];
+    return s;
   }
-  let cal = [],
-    c = 0;
-  console.log(arr);
-  for (let [i, j] of arr) {
-    let sub = matrix_sizes.slice(i, j);
-    if (sub.length < 2) {
-      cal.push(sub[0]);
-      c++;
-    } else {
-      let [rst, s] = f(sub);
-      console.log(rst, s);
-      ans += s;
-      cal.push(rst);
-      c++;
-    }
-  }
-  console.log(cal);
-  if (c > 2) {
-    console.log(cal);
-  } else if (c === 2) {
-    ans += cal[0][0] * cal[0][1] * cal[1][1];
-  }
+  let s = f(0, 0);
+  console.log(arr, s);
 
   return ans;
 }
+
+// 시도 9 방법 고민중
+// function solution(matrix_sizes) {
+//   let ans = 0,
+//     arr = [],
+//     n = matrix_sizes.length,
+//     mn = 200,
+//     l = 0;
+
+//   for (let i = 0; i < n; i++) {
+//     if (i < n - 1) {
+//       let a = matrix_sizes[i],
+//         b = matrix_sizes[i + 1];
+//       if (a[0] > a[1] && b[0] < b[1]) {
+//         arr.push([l, i + 1]);
+//         l = i + 1;
+//       }
+//     } else {
+//       arr.push([l, i + 1]);
+//     }
+//   }
+//   console.log(arr);
+//   function f(arr) {
+//     let n = arr.length,
+//       ans = 0;
+//     let k = arr[n - 1][1];
+//     for (let i = n - 2; i >= 0; i--) {
+//       let m1 = arr[i];
+//       ans += m1[0] * m1[1] * k;
+//     }
+//     let sub = 0;
+//     k = arr[0][0];
+//     for (let i = 1; i < n; i++) {
+//       let m1 = arr[i];
+//       sub += k * m1[0] * m1[1];
+//     }
+//     ans = sub < ans ? sub : ans;
+
+//     return [[arr[0][0], arr[n - 1][1]], ans];
+//   }
+//   let cal = [],
+//     c = 0;
+//   console.log(arr);
+//   for (let [i, j] of arr) {
+//     let sub = matrix_sizes.slice(i, j);
+//     if (sub.length < 2) {
+//       cal.push(sub[0]);
+//       c++;
+//     } else {
+//       let [rst, s] = f(sub);
+//       console.log(rst, s);
+//       ans += s;
+//       cal.push(rst);
+//       c++;
+//     }
+//   }
+//   console.log(cal);
+//   if (c > 2) {
+//     console.log(cal);
+//   } else if (c === 2) {
+//     ans += cal[0][0] * cal[0][1] * cal[1][1];
+//   }
+
+//   return ans;
+// }
 
 // 시도 8 잘못된 계산을 진행하는 부분 수정
 
-function solution(matrix_sizes) {
-  let ans = 0,
-    arr = [],
-    n = matrix_sizes.length,
-    mn = 200,
-    l = 0;
-  for (let i = 0; i < n; i++) {
-    let [a, b] = matrix_sizes[i];
-    if (a < mn || b < mn) {
-      mn = Math.min(a, b);
-      arr = [];
-      l = 0;
-    }
-    if (a === mn) {
-      l = i;
-    }
-    if (b === mn) {
-      arr.push([l, i + 1]);
-      l = i < n - 1 ? i : i + 1;
-    }
-  }
-  if (l < n) {
-    arr.push([l, n]);
-  }
-  function f(arr) {
-    let n = arr.length,
-      ans = 0;
-    if (arr[n - 1][1] === mn) {
-      let k = arr[n - 1][1];
-      for (let i = n - 2; i >= 0; i--) {
-        let m1 = arr[i];
-        ans += m1[0] * m1[1] * k;
-      }
-    } else {
-      let k = arr[0][0];
-      for (let i = 1; i < n; i++) {
-        let m1 = arr[i];
-        ans += k * m1[0] * m1[1];
-      }
-    }
-    return [[arr[0][0], arr[n - 1][1]], ans];
-  }
-  let cal = [],
-    c = 0;
-  for (let [i, j] of arr) {
-    let sub = matrix_sizes.slice(i, j);
-    if (sub.length < 2) {
-      cal.push(sub[0]);
-      c++;
-    } else {
-      let [rst, s] = f(sub);
-      // console.log(rst, s);
-      ans += s;
-      cal.push(rst);
-      c++;
-    }
-  }
-  // console.log(cal);
-  if (c > 2) {
-    ans +=
-      cal[0][0] * cal[0][1] * cal[c - 1][1] +
-      (c - 3) * (mn * mn * mn) +
-      Math.min(cal[0][0], cal[c - 1][1]) * mn * mn;
-  } else if (c === 2) {
-    ans += cal[0][0] * cal[0][1] * cal[1][1];
-  }
+// function solution(matrix_sizes) {
+//   let ans = 0,
+//     arr = [],
+//     n = matrix_sizes.length,
+//     mn = 200,
+//     l = 0;
+//   for (let i = 0; i < n; i++) {
+//     let [a, b] = matrix_sizes[i];
+//     if (a < mn || b < mn) {
+//       mn = Math.min(a, b);
+//       arr = [];
+//       l = 0;
+//     }
+//     if (a === mn) {
+//       l = i;
+//     }
+//     if (b === mn) {
+//       arr.push([l, i + 1]);
+//       l = i < n - 1 ? i : i + 1;
+//     }
+//   }
+//   if (l < n) {
+//     arr.push([l, n]);
+//   }
+//   function f(arr) {
+//     let n = arr.length,
+//       ans = 0;
+//     if (arr[n - 1][1] === mn) {
+//       let k = arr[n - 1][1];
+//       for (let i = n - 2; i >= 0; i--) {
+//         let m1 = arr[i];
+//         ans += m1[0] * m1[1] * k;
+//       }
+//     } else {
+//       let k = arr[0][0];
+//       for (let i = 1; i < n; i++) {
+//         let m1 = arr[i];
+//         ans += k * m1[0] * m1[1];
+//       }
+//     }
+//     return [[arr[0][0], arr[n - 1][1]], ans];
+//   }
+//   let cal = [],
+//     c = 0;
+//   for (let [i, j] of arr) {
+//     let sub = matrix_sizes.slice(i, j);
+//     if (sub.length < 2) {
+//       cal.push(sub[0]);
+//       c++;
+//     } else {
+//       let [rst, s] = f(sub);
+//       // console.log(rst, s);
+//       ans += s;
+//       cal.push(rst);
+//       c++;
+//     }
+//   }
+//   // console.log(cal);
+//   if (c > 2) {
+//     ans +=
+//       cal[0][0] * cal[0][1] * cal[c - 1][1] +
+//       (c - 3) * (mn * mn * mn) +
+//       Math.min(cal[0][0], cal[c - 1][1]) * mn * mn;
+//   } else if (c === 2) {
+//     ans += cal[0][0] * cal[0][1] * cal[1][1];
+//   }
 
-  return ans;
-}
+//   return ans;
+// }
 
 // 시도 7 - min 값이 아니라 변곡점을 기반으로 분류할것
 // function solution(matrix_sizes) {
