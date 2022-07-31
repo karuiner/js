@@ -5,6 +5,64 @@
  * @return {number[][]}
  */
 
+// 시간 초과
+var fourSum = function (nums, target) {
+  let db = {},
+    n = nums.length,
+    check = {};
+  if (n < 4) {
+    return [];
+  }
+  let arr = [];
+  for (let i of nums) {
+    if (check[i] === undefined) {
+      check[i] = 0;
+    }
+    check[i]++;
+    if (check[i] <= 4) {
+      arr.push(i);
+    }
+  }
+
+  arr.sort((a, b) => a - b);
+  function mks(s, v) {
+    if (s.length === 0) {
+      return `${v}`;
+    } else {
+      return `${s}_${v}`;
+    }
+  }
+
+  function f(nums, c, s, p) {
+    let ans = [];
+    if (c > 0) {
+      for (let i = 0; i < nums.length - c + 1; i++) {
+        let sub = f(
+          [...nums.slice(i + 1)],
+          c - 1,
+          mks(s, nums[i]),
+          p + nums[i]
+        );
+        ans = ans.concat(sub);
+      }
+    } else {
+      let arr = s.split("_").map(Number);
+
+      if (db[s] === undefined) {
+        if (p === target) {
+          db[s] = true;
+          ans.push(arr);
+        } else {
+          db[s] = false;
+        }
+      }
+    }
+    return ans;
+  }
+
+  return f(arr, 4, "", 0);
+};
+
 // 풀이시도 1 - 시간초과
 var fourSum = function (nums, target) {
   let db = {},
