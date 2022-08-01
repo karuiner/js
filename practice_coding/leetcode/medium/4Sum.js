@@ -4,7 +4,59 @@
  * @param {number} target
  * @return {number[][]}
  */
+//시도 3- 시간초과
 
+var fourSum = function (nums, target) {
+  let db = {},
+    n = nums.length,
+    check = {};
+  if (n < 4) {
+    return [];
+  }
+  let arr = [];
+  for (let i of nums) {
+    if (check[i] === undefined) {
+      check[i] = 0;
+    }
+    check[i]++;
+    if (check[i] <= 4) {
+      arr.push(i);
+    }
+  }
+  arr.sort((a, b) => a - b);
+  n = arr.length;
+  function mks(s, v) {
+    if (s.length === 0) {
+      return `${v}`;
+    } else {
+      return `${s}_${v}`;
+    }
+  }
+  function f(i, c, s, ss) {
+    let ans = [];
+    db[c] = {};
+    if (c > 0) {
+      for (let j = i; j < n - c + 1; j++) {
+        let sub = f(j + 1, c - 1, mks(s, arr[j]), ss + arr[j]);
+        ans = ans.concat(sub);
+      }
+    } else {
+      let arr = s.split("_").map(Number);
+      if (db[s] === undefined) {
+        if (ss === target) {
+          db[s] = true;
+          ans.push(arr);
+        } else {
+          db[s] = false;
+        }
+      }
+    }
+
+    return ans;
+  }
+
+  return f(0, 4, "", 0);
+};
 // 시간 초과
 var fourSum = function (nums, target) {
   let db = {},
