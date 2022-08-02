@@ -4,7 +4,7 @@
  * @param {number} target
  * @return {number[][]}
  */
-// 시도 4 - 시간 초가 282/291
+// 시도 3 - 시간 초가 282/291
 var fourSum = function (nums, target) {
   let db = {},
     n = nums.length,
@@ -34,7 +34,7 @@ var fourSum = function (nums, target) {
   return f(0, target, 4, []);
 };
 
-//시도 3- 시간초과
+//시도 2- 시간초과
 
 var fourSum = function (nums, target) {
   let db = {},
