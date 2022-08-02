@@ -4,6 +4,36 @@
  * @param {number} target
  * @return {number[][]}
  */
+// 시도 4 - 시간 초가 282/291
+var fourSum = function (nums, target) {
+  let db = {},
+    n = nums.length,
+    check = {};
+  if (n < 4) {
+    return [];
+  }
+  nums.sort((a, b) => a - b);
+  function f(idx, t, c, s) {
+    let ans = [];
+    if (c > 0) {
+      for (let i = idx; i < n - c + 1; i++) {
+        let sub = f(i + 1, t - nums[i], c - 1, [...s, nums[i]]);
+        ans = ans.concat(sub);
+      }
+    } else {
+      if (t === 0) {
+        if (db[s] === undefined) {
+          db[s] = true;
+          ans.push(s);
+        }
+      }
+    }
+    return ans;
+  }
+
+  return f(0, target, 4, []);
+};
+
 //시도 3- 시간초과
 
 var fourSum = function (nums, target) {
