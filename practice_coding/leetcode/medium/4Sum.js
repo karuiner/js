@@ -4,6 +4,54 @@
  * @param {number} target
  * @return {number[][]}
  */
+
+//풀이 완료
+
+var fourSum = function (nums, target) {
+  let db = {},
+    check = {};
+
+  nums = nums.filter((x) => {
+    if (check[x] === undefined) {
+      check[x] = 1;
+    } else {
+      check[x]++;
+    }
+
+    return check[x] <= 4;
+  });
+  let n = nums.length;
+  if (n < 4) {
+    return [];
+  }
+  nums.sort((a, b) => a - b);
+  function f(idx, t, c, s) {
+    let ans = [];
+
+    if (c > 0 && t <= nums[n - 1] * c) {
+      for (let i = idx; i < n - c + 1; i++) {
+        if (nums[idx] <= t / c) {
+          let sub = f(i + 1, t - nums[i], c - 1, [...s, nums[i]]);
+          ans = ans.concat(sub);
+        }
+      }
+    } else {
+      if (t === 0) {
+        if (db[s] === undefined) {
+          db[s] = true;
+          ans.push(s);
+        }
+      }
+    }
+
+    return ans;
+  }
+
+  return f(0, target, 4, []);
+};
+
+// Runtime: 956 ms, faster than 9.58% of JavaScript online submissions for 4Sum.
+// Memory Usage: 49.4 MB, less than 11.17% of JavaScript online submissions for 4Sum.
 // 시도 4 실패
 
 var fourSum = function (nums, target) {
