@@ -4,6 +4,47 @@
  * @param {number} target
  * @return {number}
  */
+//풀이시도 3 (128/160)
+var threeSumClosest = function (nums, target) {
+  let ans = 10000,
+    n = nums.length;
+  if (target > 0) {
+    ans *= -1;
+  }
+  nums.sort((a, b) => a - b);
+
+  function f(idx, t, c) {
+    let k = Math.abs(ans - target),
+      check = true;
+    if (ans < target) {
+      if (t + nums[idx] * c < ans) {
+        check = false;
+      }
+    } else if (ans > target) {
+      if (t + nums[n - 1] * c > ans) {
+        check = false;
+      }
+    } else {
+      ans = target;
+      check = false;
+    }
+    if (check) {
+      if (c > 0) {
+        for (let i = idx; i < n - c + 1; i++) {
+          f(i + 1, t + nums[i], c - 1);
+        }
+      } else {
+        if (k > Math.abs(t - target)) {
+          ans = t;
+        }
+      }
+    }
+  }
+  f(0, 0, 3);
+
+  return ans;
+};
+
 // 풀이시도 2
 var threeSumClosest = function (nums, target) {
   let ans = 1000000,
