@@ -4,6 +4,60 @@
  * @param {number} target
  * @return {number}
  */
+// 풀이시도 4
+var threeSumClosest = function (nums, target) {
+  let ans = 10000,
+    n = nums.length,
+    get = false;
+  if (target > 0) {
+    ans *= -1;
+  }
+  function len(s) {
+    return Math.abs(s - target);
+  }
+
+  nums.sort((a, b) => a - b);
+  for (let i = 0; i < n - 2; i++) {
+    for (let j = i + 1; j < n - 1; j++) {
+      let s = nums[i] + nums[j];
+
+      let [a, b] = [j + 1, n - 1];
+      if (len(s + nums[a]) === 0 || len(s + nums[b]) === 0) {
+        get = true;
+        ans = len(s + nums[a]) === 0 ? s + nums[a] : s + nums[b];
+        break;
+      }
+
+      if (len(ans) > len(s + nums[a])) {
+        ans = s + nums[a];
+      }
+      if (len(ans) > len(s + nums[b])) {
+        ans = s + nums[b];
+      }
+      while (a < b) {
+        let m = Math.floor((a + b) / 2);
+        if (len(s + nums[a]) <= len(s + nums[m])) {
+          b = m - 1;
+        } else if (len(s + nums[b]) < len(s + nums[m])) {
+          a = m + 1;
+        } else if (len(s + nums[m]) === 0) {
+          get = true;
+          ans = s + nums[m];
+          break;
+        }
+      }
+      if (get) {
+        break;
+      }
+    }
+    if (get) {
+      break;
+    }
+  }
+
+  return ans;
+};
+
 //풀이시도 3 (128/160)
 var threeSumClosest = function (nums, target) {
   let ans = 10000,
