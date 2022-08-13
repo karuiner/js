@@ -4,6 +4,75 @@
  * @param {number} target
  * @return {number}
  */
+// 풀이시도 5
+var threeSumClosest = function (nums, target) {
+  let ans = 10000,
+    n = nums.length,
+    get = false;
+  if (target > 0) {
+    ans *= -1;
+  }
+  function len(s) {
+    return s - target;
+  }
+  function len2(s) {
+    return Math.abs(s - target);
+  }
+
+  nums.sort((a, b) => a - b);
+  for (let i = 0; i < n - 2; i++) {
+    for (let j = i + 1; j < n - 1; j++) {
+      let s = nums[i] + nums[j];
+
+      let [a, b] = [j + 1, n - 1];
+
+      if (len(s + nums[b]) < 0 && len2(ans) > len2(s + nums[b])) {
+        ans = s + nums[b];
+      } else if (len(s + nums[a]) > 0 && len2(ans) > len2(s + nums[a])) {
+        ans = s + nums[a];
+      } else {
+        if (len(s + nums[a]) === 0 || len(s + nums[b]) === 0) {
+          get = true;
+          ans = len(s + nums[a]) === 0 ? s + nums[a] : s + nums[b];
+          break;
+        } else if (s + nums[a] - target < 0 && s + nums[b] - target > 0) {
+          while (a < b) {
+            let m = Math.floor((a + b) / 2);
+            if (len(s + nums[m]) < 0) {
+              a = m + 1;
+            } else if (len(s + nums[m]) > 0) {
+              b = m;
+            } else if (len(s + nums[m]) === 0) {
+              get = true;
+              ans = s + nums[m];
+              break;
+            }
+          }
+
+          if (!get) {
+            if (Math.abs(len(s + nums[a])) <= Math.abs(len(s + nums[b]))) {
+              ans = s + nums[a];
+            } else {
+              ans = s + nums[b];
+            }
+          }
+        }
+        if (get) {
+          break;
+        }
+      }
+    }
+    if (get) {
+      break;
+    }
+  }
+
+  return ans;
+};
+
+// Runtime: 381 ms, faster than 20.34% of JavaScript online submissions for 3Sum Closest.
+// Memory Usage: 45.9 MB, less than 11.23% of JavaScript online submissions for 3Sum Closest.
+
 // 풀이시도 4 - 2 (159/161)
 var threeSumClosest = function (nums, target) {
   let ans = 10000,
