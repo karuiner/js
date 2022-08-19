@@ -4,6 +4,53 @@
  * @param {number[][]} pairs
  * @return {string}
  */
+// 시도 7 (34/36)
+var smallestStringWithSwaps = function (s, pairs) {
+  let l = s.length,
+    arr = [],
+    db = {};
+
+  function f(x) {
+    while (arr[x] !== x) {
+      x = arr[x];
+    }
+    return x;
+  }
+
+  for (let i = 0; i < l; i++) {
+    arr[i] = i;
+  }
+  for (let [i, j] of pairs) {
+    if (i !== j) {
+      let k = f(j);
+      let u = f(i);
+      if (u < k) {
+        arr[k] = u;
+      } else {
+        arr[u] = k;
+      }
+    }
+  }
+  for (let i = 0; i < l; i++) {
+    let x = f(i);
+    if (db[x] === undefined) {
+      db[x] = [];
+    }
+    db[x].push(s[i]);
+  }
+  for (let key in db) {
+    db[key].sort();
+  }
+  let ans = "";
+  for (let i = 0; i < l; i++) {
+    let x = f(i);
+    ans += db[x][0];
+    db[x] = db[x].slice(1);
+  }
+
+  return ans;
+};
+
 // 시도 6
 var smallestStringWithSwaps = function (s, pairs) {
   let db = {},
