@@ -4,6 +4,96 @@
  * @param {number[][]} pairs
  * @return {string}
  */
+// 시도 8 (34/36)
+
+var smallestStringWithSwaps = function (s, pairs) {
+  let l = s.length,
+    arr = [],
+    db = {};
+
+  for (let i = 0; i < l; i++) {
+    arr[i] = i;
+    db[i] = { arr: [i], s: s[i] };
+  }
+  function find(s, k) {
+    let [a, b] = [0, s.length - 1];
+    while (a < b) {
+      let m = Math.floor((a + b) / 2);
+      if (s[m] < k) {
+        a = m + 1;
+      } else {
+        b = m;
+      }
+    }
+    return a;
+  }
+
+  function add(s1, s2) {
+    [s1, s2] = s1[0] < s2[0] ? [s1, s2] : [s2, s1];
+    let l1 = s1.length,
+      l2 = s2.length;
+    if (s1[l - 1] <= s2[0]) {
+      return s1 + s2;
+    } else {
+      let k = find(s1, s2[0]),
+        q = 0,
+        ns = s1.slice(0, k);
+      while (k < l1 && q < l2) {
+        if (s2[q] < s1[k]) {
+          ns += s2[q];
+          q++;
+        } else {
+          ns += s1[k];
+          k++;
+        }
+      }
+      if (k < l1) {
+        ns += s1.slice(k);
+      }
+      if (q < l2) {
+        ns += s2.slice(q);
+      }
+      return ns;
+    }
+  }
+
+  for (let [i, j] of pairs) {
+    if (i !== j) {
+      let k = arr[j];
+      let u = arr[i];
+      if (k !== u) {
+        if (u < k) {
+          for (let i of db[k].arr) {
+            arr[i] = u;
+          }
+          db[u].arr.push(...db[k].arr);
+          db[u].arr.sort((a, b) => a - b);
+          db[u].s = add(db[u].s, db[k].s);
+          delete db[k];
+        } else {
+          for (let i of db[u].arr) {
+            arr[i] = k;
+          }
+          db[k].arr.push(...db[u].arr);
+          db[k].arr.sort((a, b) => a - b);
+          db[k].s = add(db[k].s, db[u].s);
+          delete db[u];
+        }
+      }
+    }
+  }
+  let ans = [];
+  for (let key in db) {
+    let k = db[key].arr.length;
+    for (let i = 0; i < k; i++) {
+      let j = db[key].arr[i];
+      ans[j] = db[key].s[i];
+    }
+  }
+
+  return ans.join("");
+};
+
 // 시도 7 (34/36)
 var smallestStringWithSwaps = function (s, pairs) {
   let l = s.length,
