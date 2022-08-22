@@ -4,6 +4,45 @@
  * @param {number[][]} pairs
  * @return {string}
  */
+// 페어 그룹 나누기 고민중
+var smallestStringWithSwaps = function (s, pairs) {
+  let l = s.length,
+    arr = [],
+    db = {},
+    c = 0;
+  pairs.sort((a, b) => {
+    let ai = a[0] < a[1] ? a[0] : a[1],
+      bi = b[0] < b[1] ? b[0] : b[1];
+
+    return ai - bi;
+  });
+  console.log(pairs);
+
+  pairs.forEach(([a, b]) => {
+    [a, b] = a < b ? [a, b] : [b, a];
+    if (db[a] === undefined) {
+      db[a] = {};
+    }
+
+    if (a !== b && db[a][b] === undefined) {
+      db[a][b] = true;
+      let check = [b];
+      while (check.length > 0) {
+        let ncheck = [];
+        for (let i of check) {
+          if (db[i] !== undefined && db[a][i] === undefined) {
+            ncheck = ncheck.concat(Object.keys(db[i]));
+            db[a][i] = true;
+            delete db[i];
+          }
+        }
+      }
+    }
+  });
+
+  console.log(db);
+};
+
 // 시도 8 (34/36)
 
 var smallestStringWithSwaps = function (s, pairs) {
