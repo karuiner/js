@@ -4,6 +4,73 @@
  * @param {number[][]} pairs
  * @return {string}
  */
+// 풀이 완료
+var smallestStringWithSwaps = function (s, pairs) {
+  let l = s.length,
+    arr = [],
+    db = {},
+    c = 0;
+
+  function f(a, b) {
+    db[b].pnode = db[a].pnode;
+    if (db[a].children[b] === undefined) {
+      db[a].children[b] = true;
+      db[a].s += s[b];
+      // db[a].s=add(db[a].s,s[b])
+    }
+    for (let k in db[b].children) {
+      f(a, k);
+    }
+    db[b].children = {};
+    db[b].s = s[b];
+  }
+
+  pairs.forEach(([a, b]) => {
+    [a, b] = a < b ? [a, b] : [b, a];
+    if (db[a] === undefined) {
+      db[a] = { pnode: a, children: {}, s: s[a], c: 0 };
+    }
+    if (db[b] === undefined) {
+      db[b] = { pnode: b, children: {}, s: s[b], c: 0 };
+    }
+    if (a !== b && db[a].pnode !== db[b].pnode) {
+      let [pa, pb] = [db[a].pnode, db[b].pnode];
+      let [k, x] = pa < pb ? [pa, pb] : [pb, pa];
+
+      if (pa < pb) {
+        f(pa, pb);
+        if (pb !== b) {
+          f(pa, b);
+        }
+      } else {
+        f(pb, pa);
+        if (pa !== a) {
+          f(pb, a);
+        }
+      }
+    }
+  });
+  for (let i in db) {
+    if (db[i].s.length > 1) {
+      db[i].s = db[i].s.split("").sort().join("");
+    }
+  }
+  let ans = "";
+  for (let i = 0; i < l; i++) {
+    if (db[i]) {
+      let pnode = db[i].pnode;
+      ans += db[pnode].s[db[pnode].c];
+      db[pnode].c++;
+    } else {
+      ans += s[i];
+    }
+  }
+  return ans;
+};
+
+// Runtime: 791 ms, faster than 19.48% of JavaScript online submissions for Smallest String With Swaps.
+// Memory Usage: 94.4 MB, less than 31.58% of JavaScript online submissions for Smallest String With Swaps.
+
 // 문제 예문 그룹나누기 성공
 var smallestStringWithSwaps = function (s, pairs) {
   let l = s.length,
