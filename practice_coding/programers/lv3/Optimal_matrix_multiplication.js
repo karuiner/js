@@ -1,5 +1,53 @@
 //최적의 행렬 곱셈
 
+// 시도 11
+function solution(matrix_sizes) {
+  let ans = 0,
+    l = matrix_sizes.length - 1;
+
+  function divide(mat) {
+    let l = mat.length - 1,
+      arr = [],
+      sub = [];
+    for (let i = 0; i < l; i++) {
+      let a = matrix_sizes[i],
+        b = matrix_sizes[i + 1];
+      if (a[0] >= a[1] && b[0] <= b[1]) {
+        sub.push(a);
+        arr.push(sub);
+        sub = [];
+      } else {
+        sub.push(a);
+      }
+      if (i == l - 1) {
+        sub.push(b);
+        arr.push(sub);
+        sub = [];
+      }
+    }
+    return arr;
+  }
+
+  function cal(mat) {
+    let x = mat.length;
+    for (let i = 0; i < x - 1; i++) {
+      let a = mat[i],
+        b = mat[i + 1];
+    }
+  }
+  let sub = divide(matrix_sizes);
+  // while (sub.length > 2){
+  //     let arr=[]
+  //     for (let i of sub){
+  //         let psub=cal(i)
+  //         arr.push(psub)
+  //     }
+  //     sub=divide(arr)
+  // }
+
+  return 0;
+}
+
 // 시도 10
 // 순차적 계산을 수행하는 방식을 생각 해보았지만 부족함점이 많음 좀더 고민해볼것
 
