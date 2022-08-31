@@ -52,8 +52,124 @@
 // 4. 나뉜 영역의 크기에 따라 1-3을 반복한다.
 // 5. 구분된 영역에서 연산을 수행한다.
 // 6. 최소값을 찾는다.
-
 // 시도 11
+function solution(matrix_sizes) {
+  function cal(arr) {
+    let n = arr.length;
+    let s1 = 0,
+      s2 = 0,
+      fs = arr[0],
+      bs = arr[n - 1];
+    for (let i = 1; i < n; i++) {
+      let a = arr[i],
+        b = arr[n - 1 - i];
+      s1 += fs[0] * fs[1] * a[1];
+      fs = [fs[0], a[1]];
+      s2 += bs[1] * bs[0] * b[0];
+      bs = [b[0], bs[1]];
+    }
+    if (s1 < s2) {
+      return [fs, s1];
+    } else {
+      return [bs, s2];
+    }
+  }
+
+  function f(arr, s) {
+    let n = arr.length;
+    if (n > 2) {
+      let min = 200;
+      for (let i = 1; i < n - 1; i++) {
+        let [a, b] = arr[i];
+        min = Math.min(a, b, min);
+      }
+      if (arr[0][0] < min || arr[n - 1][1] < min) {
+        let sub = cal(arr);
+        arr = sub[0];
+        s += sub[1];
+      } else {
+        let narr = [],
+          sub = [];
+        for (let i of arr) {
+          if (i[1] === min) {
+            sub.push(i);
+            narr.push(sub);
+            sub = [];
+          } else {
+            sub.push(i);
+          }
+        }
+        if (sub.length > 0) {
+          narr.push(sub);
+          sub = [];
+        }
+
+        if (narr.length > 1) {
+          let sub = [],
+            c = 0;
+          for (let i of narr) {
+            let x = f(i, 0);
+            sub.push(x[0]);
+            c += x[1];
+          }
+          console.log(sub, c);
+          let nsub = [],
+            idx = 0,
+            p = sub.length,
+            xx = 0;
+          while (idx < p) {
+            let [a, b] = sub[idx];
+            if (a === b && a === min) {
+              let c1 = undefined,
+                c2 = undefined;
+              if (idx > 0) {
+                c1 = cal([nsub[nsub.length - 1], sub[idx]]);
+              }
+              if (idx < p) {
+                c2 = cal([sub[idx], sub[idx + 1]]);
+              }
+              if (c1 === undefined || c2[1] < c1[1]) {
+                nsub.push(c2[0]);
+                idx++;
+                xx += c2[1];
+              } else {
+                nsub = [...nsub.slice(0, -1), c1[0]];
+                xx += c1[1];
+              }
+            } else {
+              nsub.push([a, b]);
+            }
+            idx++;
+          }
+
+          sub = f(nsub, 0);
+          arr = sub[0];
+          s += sub[1] + c + xx;
+          console.log(sub[0], s);
+        } else {
+          narr = narr[0];
+          let sub = cal(narr);
+          arr = sub[0];
+          s += sub[1];
+        }
+      }
+
+      return [arr, s];
+    } else {
+      if (n === 1) {
+        return [arr[0], s];
+      } else {
+        let [a, b] = arr;
+        return [[a[0], b[1]], s + a[0] * a[1] * b[1]];
+      }
+    }
+  }
+  let ans = f(matrix_sizes, 0);
+
+  return ans[1];
+}
+
+// 시도 11 고민중
 function solution(matrix_sizes) {
   let ans = 0,
     l = matrix_sizes.length - 1;
