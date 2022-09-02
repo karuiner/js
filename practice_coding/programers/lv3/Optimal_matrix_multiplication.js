@@ -53,6 +53,36 @@
 // 5. 구분된 영역에서 연산을 수행한다.
 // 6. 최소값을 찾는다.
 
+// 시도 13 - 고민중
+function solution(matrix_sizes) {
+  function divide(arr) {
+    let ans = [],
+      n = arr.length - 1,
+      sub = [];
+    for (let i = 0; i < n; i++) {
+      let a = arr[i],
+        b = arr[i + 1];
+      if (a[0] >= a[1] && b[0] <= b[1]) {
+        sub.push(a);
+        ans.push(sub);
+        sub = [];
+        if (i === n - 1) {
+          ans.push([b]);
+        }
+      } else {
+        sub.push(a);
+        if (i === n - 1) {
+          sub.push(b);
+          ans.push(sub);
+        }
+      }
+    }
+    return ans;
+  }
+  console.log(divide(matrix_sizes));
+
+  return 0;
+}
 // 시도 12
 function solution(matrix_sizes) {
   function cal(arr) {
