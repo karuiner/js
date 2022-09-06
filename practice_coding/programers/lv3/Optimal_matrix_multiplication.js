@@ -51,6 +51,94 @@
 // 계산된 결과 배열을 다음 재귀함수에 전달.
 // 최종적인 결과를 얻을때까지 반복 수행.
 // 얻어진 모든 결과를 결정된 결과값과 비교하여 최소값을 결과로 돌려줌
+// 시도 14
+function solution(matrix_sizes) {
+  let min = 200,
+    idxes = [];
+  matrix_sizes.forEach(([a, b]) => {
+    if (a < min) {
+      min = a;
+    }
+    if (b < min) {
+      min = b;
+    }
+  });
+  matrix_sizes.forEach(([a, b], i) => {
+    if (a === min || b === min) {
+      idxes.push(i);
+    }
+  });
+  function f(arr, s, idxes) {
+    let n = arr.length;
+    if (n <= 2) {
+      let [a, b] = arr;
+      return s + a[0] * a[1] * b[1];
+    } else {
+      let ans = Infinity;
+      // for (let i =0; i < n ; i++){
+      for (let j = 0; j < idxes.length; j++) {
+        let i = idxes[j],
+          nidxes = [];
+        let [a, b] = arr[i];
+        if (a === min || b === min) {
+          if (a === min && i < n - 1) {
+            let k = a * b * arr[i + 1][1];
+            if (i + 1 === idxes[j + 1]) {
+              nidxes = [
+                ...idxes.slice(0, j),
+                i,
+                ...idxes.slice(j + 2).map((x) => x - 1),
+              ];
+            } else {
+              nidxes = [
+                ...idxes.slice(0, j),
+                i,
+                ...idxes.slice(j + 1).map((x) => x - 1),
+              ];
+            }
+            let sub = f(
+              [...arr.slice(0, i), [a, arr[i + 1][1]], ...arr.slice(i + 2)],
+              s + k,
+              nidxes
+            );
+            if (sub < ans) {
+              ans = sub;
+            }
+          }
+
+          if (b === min && i > 0) {
+            let k = a * b * arr[i - 1][0];
+            if (i - 1 === idxes[j - 1]) {
+              nidxes = [
+                ...idxes.slice(0, j - 1),
+                i - 1,
+                ...idxes.slice(j + 1).map((x) => x - 1),
+              ];
+            } else {
+              nidxes = [
+                ...idxes.slice(0, j),
+                i - 1,
+                ...idxes.slice(j + 1).map((x) => x - 1),
+              ];
+            }
+            let sub = f(
+              [...arr.slice(0, i - 1), [arr[i - 1][0], b], ...arr.slice(i + 1)],
+              s + k,
+              nidxes
+            );
+            if (sub < ans) {
+              ans = sub;
+            }
+          }
+        }
+      }
+      return ans;
+    }
+  }
+
+  return f(matrix_sizes, 0, idxes);
+}
+
 // 시도 13
 function solution(matrix_sizes) {
   let min = 200,
