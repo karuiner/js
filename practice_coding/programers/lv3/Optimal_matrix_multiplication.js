@@ -51,6 +51,50 @@
 // 계산된 결과 배열을 다음 재귀함수에 전달.
 // 최종적인 결과를 얻을때까지 반복 수행.
 // 얻어진 모든 결과를 결정된 결과값과 비교하여 최소값을 결과로 돌려줌
+
+//시도 15 - 준비중
+function solution(matrix_sizes) {
+  let darr = [],
+    n = matrix_sizes.length,
+    sub = [],
+    min = 200;
+  matrix_sizes.forEach(([a, b]) => {
+    min = Math.min(a, b, min);
+  });
+  let xmin = -1;
+
+  for (let i = 0; i < n - 1; i++) {
+    let a = matrix_sizes[i],
+      b = matrix_sizes[i + 1];
+    if (xmin === -1) {
+      xmin = Math.min(...a);
+    } else {
+      xmin = Math.min(...a, xmin);
+    }
+    if (a[0] >= a[1] && b[0] <= b[1]) {
+      sub.push(a);
+      darr.push([sub, xmin]);
+      sub = [];
+      xmin = -1;
+    } else {
+      sub.push(a);
+    }
+    if (i === n - 2) {
+      if (xmin === -1) {
+        xmin = Math.min(...b);
+      } else {
+        xmin = Math.min(...b, xmin);
+      }
+      sub.push(b);
+      darr.push([sub, xmin]);
+      sub = [];
+    }
+  }
+  console.log(darr);
+
+  return 0;
+}
+
 // 시도 14
 function solution(matrix_sizes) {
   let min = 200,
