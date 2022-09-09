@@ -51,6 +51,183 @@
 //  각구간을 계산
 // 계산후 완성된 배열에대해 최소값만으로 이루어지는 배열의 값을 우선 계산하되 좌우 배열과의 계산값을 비교하여 최소값으로 완성한다.
 
+// 시도 15 - 테스트 - 알고리즘 문제 발견
+function solution(matrix_sizes) {
+  let min = 200;
+  matrix_sizes.forEach(([a, b]) => {
+    min = Math.min(a, b, min);
+  });
+  console.log(min);
+
+  function cal(arr) {
+    let n = arr.length;
+    let s1 = 0,
+      s2 = 0,
+      fs = arr[0],
+      bs = arr[n - 1];
+    for (let i = 1; i < n; i++) {
+      let a = arr[i],
+        b = arr[n - 1 - i];
+      s1 += fs[0] * fs[1] * a[1];
+      fs = [fs[0], a[1]];
+      s2 += bs[1] * bs[0] * b[0];
+      bs = [b[0], bs[1]];
+    }
+    if (s1 < s2) {
+      return [fs, s1];
+    } else {
+      return [bs, s2];
+    }
+  }
+  function divide(arr) {
+    let ans = [],
+      n = arr.length - 1,
+      sub = [],
+      min = 200;
+    for (let i = 0; i < n; i++) {
+      let a = arr[i],
+        b = arr[i + 1];
+      if (a[0] >= a[1] && b[0] <= b[1]) {
+        sub.push(a);
+        min = Math.min(...a, min);
+        ans.push([sub, min]);
+        sub = [];
+        min = 200;
+        if (i === n - 1) {
+          min = Math.min(...b, min);
+          ans.push([[b], min]);
+        }
+      } else {
+        sub.push(a);
+        min = Math.min(...a, min);
+        if (i === n - 1) {
+          sub.push(b);
+          min = Math.min(...b, min);
+          ans.push([sub, min]);
+        }
+      }
+    }
+    return ans;
+  }
+  let arr = divide(matrix_sizes);
+  let narr = [],
+    s = 0;
+  for (let [sub, xmin] of arr) {
+    if (min === xmin) {
+      let sub2 = cal(sub);
+      narr.push(sub2[0]);
+      s += sub2[1];
+    } else {
+      narr.push(...sub);
+    }
+  }
+  function solution2(matrix_sizes) {
+    let min = 200,
+      idxes = [];
+    matrix_sizes.forEach(([a, b]) => {
+      if (a < min) {
+        min = a;
+      }
+      if (b < min) {
+        min = b;
+      }
+    });
+    matrix_sizes.forEach(([a, b], i) => {
+      if (a === min || b === min) {
+        idxes.push(i);
+      }
+    });
+    function f(arr, s, idxes) {
+      let n = arr.length;
+      if (n <= 2) {
+        let [a, b] = arr;
+        return s + a[0] * a[1] * b[1];
+      } else {
+        let ans = Infinity;
+        // for (let i =0; i < n ; i++){
+        for (let j = 0; j < idxes.length; j++) {
+          let i = idxes[j],
+            nidxes = [];
+          let [a, b] = arr[i];
+          if (a === min || b === min) {
+            if (a === min && i < n - 1) {
+              let k = a * b * arr[i + 1][1];
+              if (i + 1 === idxes[j + 1]) {
+                nidxes = [
+                  ...idxes.slice(0, j),
+                  i,
+                  ...idxes.slice(j + 2).map((x) => x - 1),
+                ];
+              } else {
+                nidxes = [
+                  ...idxes.slice(0, j),
+                  i,
+                  ...idxes.slice(j + 1).map((x) => x - 1),
+                ];
+              }
+              let sub = f(
+                [...arr.slice(0, i), [a, arr[i + 1][1]], ...arr.slice(i + 2)],
+                s + k,
+                nidxes
+              );
+              if (sub < ans) {
+                ans = sub;
+              }
+            }
+
+            if (b === min && i > 0) {
+              let k = a * b * arr[i - 1][0];
+              if (i - 1 === idxes[j - 1]) {
+                nidxes = [
+                  ...idxes.slice(0, j - 1),
+                  i - 1,
+                  ...idxes.slice(j + 1).map((x) => x - 1),
+                ];
+              } else {
+                nidxes = [
+                  ...idxes.slice(0, j),
+                  i - 1,
+                  ...idxes.slice(j + 1).map((x) => x - 1),
+                ];
+              }
+              let sub = f(
+                [
+                  ...arr.slice(0, i - 1),
+                  [arr[i - 1][0], b],
+                  ...arr.slice(i + 1),
+                ],
+                s + k,
+                nidxes
+              );
+              if (sub < ans) {
+                ans = sub;
+              }
+            }
+          }
+        }
+        return ans;
+      }
+    }
+
+    return f(matrix_sizes, 0, idxes);
+  }
+  console.log(narr, s);
+  console.log(solution2(narr) + s);
+  arr = divide(narr);
+  narr = [];
+  for (let [sub, xmin] of arr) {
+    if (min === xmin) {
+      let sub2 = cal(sub);
+      narr.push(sub2[0]);
+      s += sub2[1];
+    } else {
+      narr.push(...sub);
+    }
+  }
+  console.log(narr, s);
+  function lastCal(arr) {}
+}
+
 //시도 15 - 준비중
 function solution(matrix_sizes) {
   let darr = [],
