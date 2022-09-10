@@ -51,6 +51,48 @@
 //  각구간을 계산
 // 계산후 완성된 배열에대해 최소값만으로 이루어지는 배열의 값을 우선 계산하되 좌우 배열과의 계산값을 비교하여 최소값으로 완성한다.
 
+// 시도 16
+function solution(matrix_sizes) {
+  function f(arr, s) {
+    console.log(arr);
+    let n = arr.length,
+      check = false,
+      q = -1;
+    if (n < 3) {
+      let a = arr[n - 2],
+        b = arr[n - 1];
+      s += b[1] * b[0] * a[0];
+      return s;
+    }
+    for (let i = 0; i < n - 2; i++) {
+      let a = arr[i],
+        b = arr[i + 1],
+        c = arr[i + 2];
+      let k = a[0] * b[1],
+        l = b[0] * c[1];
+      if (k < l) {
+        q = i;
+        // check=true
+        break;
+      }
+    }
+
+    if (!check) {
+      let a = arr[n - 2],
+        b = arr[n - 1];
+      s += b[1] * b[0] * a[0];
+      s = f([...arr.slice(0, n - 2), [a[0], b[1]]], s);
+    } else {
+      let a = arr[q],
+        b = arr[q + 1];
+      s += b[1] * b[0] * a[0];
+      s = f([...arr.slice(0, q), [a[0], b[1]], ...arr.slice(q + 2)], s);
+    }
+    return s;
+  }
+  return f(matrix_sizes, 0);
+}
+
 // 시도 15 - 테스트 - 알고리즘 문제 발견
 function solution(matrix_sizes) {
   let min = 200;
