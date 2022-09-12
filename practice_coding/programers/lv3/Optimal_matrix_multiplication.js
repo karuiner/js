@@ -51,6 +51,36 @@
 //  각구간을 계산
 // 계산후 완성된 배열에대해 최소값만으로 이루어지는 배열의 값을 우선 계산하되 좌우 배열과의 계산값을 비교하여 최소값으로 완성한다.
 
+// 시도 18
+
+function solution(matrix_sizes) {
+  let db = {};
+  function f(l, r, s) {
+    if (r === l) {
+      return 0;
+    } else {
+      if (db[`${l}-${r}`] === undefined) {
+        let a = matrix_sizes[l],
+          b = matrix_sizes[r];
+        let ans = Infinity;
+        for (let i = l; i < r; i++) {
+          let c = matrix_sizes[i];
+          let sub = s + a[0] * c[1] * b[1] + f(l, i, 0) + f(i + 1, r, 0);
+          if (sub < ans) {
+            ans = sub;
+          }
+        }
+        db[`${l}-${r}`] = ans;
+        return ans;
+      } else {
+        return db[`${l}-${r}`];
+      }
+    }
+  }
+  let n = matrix_sizes.length;
+  return f(0, n - 1, 0);
+}
+
 // 시도 17
 function solution(matrix_sizes) {
   function f(l, r, s) {
