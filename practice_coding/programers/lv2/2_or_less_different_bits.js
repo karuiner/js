@@ -1,5 +1,42 @@
 //2개 이하로 다른 비트
 
+// 풀이 완료
+function solution(numbers) {
+  let ans = [];
+
+  function cvt(l) {
+    if (l === 1) {
+      return "1";
+    }
+    return "10".padEnd(l, "1");
+  }
+
+  function f(x) {
+    let n = x.length,
+      idx = -1;
+    for (let i = n - 1; i >= 0; i--) {
+      if (x[i] === "0") {
+        idx = i;
+        break;
+      }
+    }
+
+    let k = n - idx;
+    if (idx < 0) {
+      return cvt(k);
+    } else {
+      return x.slice(0, idx) + cvt(k);
+    }
+  }
+  for (let i of numbers) {
+    let a = i.toString(2);
+    let b = f(a);
+    ans.push(parseInt(b, 2));
+  }
+
+  return ans;
+}
+
 // 풀이시도 1
 function solution(numbers) {
   let ans = [];
