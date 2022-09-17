@@ -1,0 +1,75 @@
+//후보키
+
+//풀이시도 1
+function solution(relation) {
+  let n = relation.length,
+    m = relation[0].length;
+  function key(arr) {
+    let c = 0,
+      db = {};
+    for (let i = 0; i < n; i++) {
+      let keyname = "";
+      for (let j of arr) {
+        keyname += "-" + relation[i][j];
+      }
+      if (db[keyname] === undefined) {
+        db[keyname] = c;
+        c++;
+      }
+    }
+    return n === c;
+  }
+  function combi(arr, sub, l) {
+    let ans = [];
+    if (l > 1) {
+      for (let i = 0; i < arr.length; i++) {
+        let sans = combi([...arr.slice(i + 1)], [...sub, arr[i]], l - 1);
+        ans = [...ans, ...sans];
+      }
+    } else {
+      for (let i = 0; i < arr.length; i++) {
+        ans.push([...sub, arr[i]]);
+      }
+    }
+    return ans;
+  }
+
+  let ans = 0,
+    use = Array(m).fill(true),
+    q = m,
+    i = 1;
+
+  while (i <= q) {
+    let arr = use.reduce((acc, x, i) => {
+      if (x) {
+        acc.push(i);
+      }
+      return acc;
+    }, []);
+    let tarr = combi(arr, [], i);
+    tarr = tarr.filter((x) => key(x));
+
+    for (let i of tarr) {
+      let check = true;
+
+      if (key(i)) {
+        for (let j of i) {
+          if (!use[j]) {
+            check = false;
+          }
+        }
+        if (check) {
+          for (let j of i) {
+            use[j] = false;
+          }
+          q -= i.length;
+          ans++;
+        }
+      }
+    }
+
+    i++;
+  }
+
+  return ans;
+}
