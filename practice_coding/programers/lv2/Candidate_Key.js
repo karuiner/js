@@ -1,6 +1,45 @@
 //후보키
 
-//풀이시도 1
+//풀이 시도 2 (42.9/100)
+function solution(relation) {
+  let n = relation.length,
+    m = relation[0].length,
+    db = {};
+  function check(key) {
+    let subdb = {},
+      ans = 0;
+    for (let i of relation) {
+      let skey = "";
+      for (let j of key) {
+        skey += i[j];
+      }
+      if (subdb[skey] === undefined) {
+        subdb[skey] = 1;
+        ans++;
+      }
+    }
+    return ans === n;
+  }
+  function f(key, k) {
+    let ans = 0;
+    if (k >= n) {
+      return ans;
+    }
+    for (let i = k; i < m; i++) {
+      if (check([...key, i])) {
+        ans++;
+      } else {
+        let sub = f([...key, i], i + 1);
+        ans += sub;
+      }
+    }
+
+    return ans;
+  }
+  return f([], 0);
+}
+
+//풀이시도 1 (46.4 / 100.0)
 function solution(relation) {
   let n = relation.length,
     m = relation[0].length;
