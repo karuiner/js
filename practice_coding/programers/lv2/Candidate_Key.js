@@ -1,4 +1,54 @@
 //후보키
+// 풀이시도 3 (50/100)
+function solution(relation) {
+  let n = relation.length,
+    m = relation[0].length,
+    db = {},
+    used = Array(m).fill(false);
+
+  function check(key) {
+    let subdb = {},
+      ans = 0;
+    for (let i of relation) {
+      let skey = "";
+      for (let j of key) {
+        if (skey.length === 0) {
+          skey += i[j];
+        } else {
+          skey += "-" + i[j];
+        }
+      }
+      if (subdb[skey] === undefined) {
+        subdb[skey] = 1;
+        ans++;
+      }
+    }
+    return ans === n;
+  }
+  function f(key, k) {
+    let ans = 0;
+    if (k >= n) {
+      return ans;
+    }
+
+    for (let i = k; i < m; i++) {
+      if (check([...key, i]) && !used[i]) {
+        for (let j of key) {
+          if (!used[j]) {
+            used[j] = true;
+          }
+        }
+        used[i] = true;
+        ans++;
+      } else {
+        let sub = f([...key, i], i + 1);
+        ans += sub;
+      }
+    }
+    return ans;
+  }
+  return f([], 0);
+}
 
 //풀이 시도 2 (42.9/100)
 function solution(relation) {
