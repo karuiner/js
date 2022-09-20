@@ -1,4 +1,71 @@
 //후보키
+//풀이 완료
+function solution(relation) {
+  let n = relation.length,
+    m = relation[0].length,
+    db = {},
+    used = Array(m).fill(false);
+  let col = [],
+    count = 0;
+  for (let i = 0; i < m; i++) {
+    col.push(i);
+  }
+  function check(key) {
+    let subdb = {},
+      ans = 0;
+    for (let i of relation) {
+      let skey = "";
+      for (let j of key) {
+        if (skey.length === 0) {
+          skey += i[j];
+        } else {
+          skey += "-" + i[j];
+        }
+      }
+      if (subdb[skey] === undefined) {
+        subdb[skey] = 1;
+        ans++;
+      }
+    }
+    return ans === n;
+  }
+
+  function f(cols) {
+    let ans = false,
+      n = cols.length;
+    let key = cols.join("-");
+    if (db[key] === undefined) {
+      if (n > 1) {
+        let subs = [];
+        for (let i = 0; i < n; i++) {
+          let sub = [...cols.slice(0, i), ...cols.slice(i + 1)];
+          let sans = f(sub);
+          subs.push([sub, sans]);
+          ans = ans || sans;
+        }
+
+        if (!ans) {
+          db[key] = check(cols);
+          ans = ans || db[key];
+          count = db[key] ? count + 1 : count;
+        } else {
+          db[key] = true;
+        }
+      } else {
+        db[key] = check(cols);
+
+        ans = ans || db[key];
+        count = ans ? count + 1 : count;
+      }
+    } else {
+      ans = ans || db[key];
+    }
+    return ans;
+  }
+  f(col);
+  return count;
+}
+
 // 풀이시도 3 (50/100)
 function solution(relation) {
   let n = relation.length,
