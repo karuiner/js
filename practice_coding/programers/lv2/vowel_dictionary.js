@@ -19,6 +19,7 @@ function solution(word) {
             ns = next[s[i]] + ns;
           } else if (up) {
             ns = next[s[i]] + ns;
+            up = false;
           } else {
             ns = s[i] + ns;
           }
