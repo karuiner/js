@@ -1,5 +1,33 @@
 //모음 사전
 
+//풀이 완료
+function solution(word) {
+  let ans = 1,
+    s = "A",
+    next = { A: "E", E: "I", I: "O", O: "U", U: "" };
+
+  function f(s) {
+    if (s.length < 5) {
+      s += "A";
+    } else {
+      let up = false,
+        idx = 4;
+
+      while (s[idx] === "U") {
+        idx--;
+      }
+      s = s.slice(0, idx) + next[s[idx]];
+    }
+    return s;
+  }
+  while (s !== word) {
+    s = f(s);
+    ans++;
+  }
+
+  return ans;
+}
+
 //풀이 시도 1 -  완전 탐색을 구현해봄.
 function solution(word) {
   let ans = 1,
