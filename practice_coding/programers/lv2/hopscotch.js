@@ -1,4 +1,29 @@
 //땅따먹기
+// 풀이 완료
+function solution(land) {
+  let n = land.length,
+    m = land[0].length,
+    sub = [],
+    idx = 0;
+
+  while (idx < n - 1) {
+    for (let i = 0; i < 4; i++) {
+      let max = 0;
+      for (let j = 0; j < 4; j++) {
+        if (i !== j) {
+          let k = land[idx][j] + land[idx + 1][i];
+          if (k > max) {
+            max = k;
+          }
+        }
+      }
+      land[idx + 1][i] = max;
+    }
+    idx++;
+  }
+
+  return Math.max(...land[idx]);
+}
 
 // 풀이 시도 2 - 고민중
 function solution(land) {
