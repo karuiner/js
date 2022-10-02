@@ -1,5 +1,54 @@
 // 큰 수 만들기 - 다시 시작
 
+//풀이 시도 3
+function solution(number, k) {
+  let idx = 0,
+    c = 0,
+    n = number.length,
+    p = 0;
+  let arr = [],
+    check = [],
+    z1 = 0,
+    z2 = 1;
+  for (let i = 0; i < n; i++) {
+    let p = Number(number[i]);
+    if (arr[p] === undefined) {
+      arr[p] = [];
+    }
+    arr[p].push(i);
+    check[i] = true;
+  }
+  let q = arr.reduce((acc, x) => acc.concat(x), []);
+  function f(check) {
+    return check.reduce((acc, x, i) => (x ? acc + number[i] : acc), "");
+  }
+  while (c < k) {
+    let a = [...check],
+      b = [...check];
+    a[z1] = false;
+    b[z2] = false;
+    let u = f(a),
+      l = f(b);
+    if (u < l) {
+      check = [...b];
+      z1;
+      z2 = z2 + 1;
+      c++;
+    } else if (u > l) {
+      check = [...a];
+      z1 = z2;
+      z2 = z2 + 1;
+      c++;
+    } else {
+      z1++;
+      z2++;
+    }
+    //  console.log(c,k,z1,z2,f(check),u,l)
+  }
+
+  return f(check);
+}
+
 //풀이시도 2
 function solution(number, k) {
   let idx = 0,
