@@ -1,4 +1,25 @@
 // 큰 수 만들기 - 다시 시작
+//풀이시도 4
+function solution(number, k) {
+  let idx = 0,
+    n = number.length;
+  let ans = "";
+  while (k > 0 && idx < n) {
+    let max = ["0", -1];
+    for (let i = idx; i <= idx + k; i++) {
+      if (number[i] > max[0]) {
+        max = [number[i], i];
+      }
+    }
+    ans += max[0];
+    k -= max[1] - idx;
+    idx = max[1] + 1;
+  }
+  if (k > 0) {
+    ans = number.slice(0, n - k);
+  }
+  return ans;
+}
 
 //풀이 시도 3
 function solution(number, k) {
