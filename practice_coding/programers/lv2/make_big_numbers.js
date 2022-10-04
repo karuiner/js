@@ -1,4 +1,23 @@
 // 큰 수 만들기 - 다시 시작
+// 풀이 시도 5
+function solution(number, k) {
+  let idx = 0,
+    n = number.length;
+  let ans = "";
+  while (k > 0 && idx < n) {
+    if (idx > 0 && number[idx - 1] < number[idx]) {
+      number = number.slice(0, idx - 1) + number.slice(idx);
+      idx--;
+      n--;
+      k--;
+    } else {
+      idx++;
+    }
+  }
+  ans = number.slice(0, n - k);
+  return ans;
+}
+
 //풀이시도 4
 function solution(number, k) {
   let idx = 0,
