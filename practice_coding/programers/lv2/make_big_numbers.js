@@ -1,4 +1,37 @@
 // 큰 수 만들기 - 다시 시작
+// 풀이 시도 6
+function solution(number, k) {
+  let idx = 0,
+    n = number.length,
+    i = 0,
+    j = 0,
+    check = [],
+    u = 0;
+  let ans = "";
+  for (let i = 0; i < n; i++) {
+    check[i] = true;
+  }
+  while (k > 0 && i < n && u < 2 * n) {
+    if (i === j) {
+      j++;
+    } else if (i < idx) {
+      idx = j;
+      i = j;
+      j++;
+    } else if (number[i] < number[j]) {
+      check[i] = false;
+      i--;
+      k--;
+    } else {
+      i++;
+      j++;
+    }
+    u++;
+  }
+
+  return number.split("").reduce((acc, x, i) => (check[i] ? acc + x : acc), "");
+}
+
 // 풀이 시도 5
 function solution(number, k) {
   let idx = 0,
