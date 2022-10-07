@@ -1,4 +1,47 @@
 // 큰 수 만들기 - 다시 시작
+// 풀이시도 8
+function solution(number, k) {
+  let idx = 0,
+    n = number.length;
+  let ans = "",
+    key = [],
+    count = [],
+    u = "";
+  for (let i of number) {
+    if (u === "") {
+      u = i;
+      key[idx] = i;
+      count[idx] = 1;
+    } else if (i === u) {
+      count[idx]++;
+    } else {
+      idx++;
+      key[idx] = i;
+      count[idx] = 1;
+      u = i;
+    }
+  }
+  n = idx + 1;
+  idx = 0;
+  while (k > 0 && idx < n) {
+    if (idx > 0 && key[idx - 1] < key[idx] && count[idx - 1] > 0) {
+      if (count[idx - 1] >= k) {
+        count[idx - 1] -= k;
+        k = 0;
+      } else {
+        k -= count[idx - 1];
+        count[idx - 1] = 0;
+      }
+    } else {
+      idx++;
+    }
+  }
+  for (let i = 0; i < n; i++) {
+    ans = ans.padEnd(ans.length + count[i], key[i]);
+  }
+  return ans.slice(0, number.length - k);
+}
+
 //풀이시도 7
 function solution(number, k) {
   let idx = 0,
