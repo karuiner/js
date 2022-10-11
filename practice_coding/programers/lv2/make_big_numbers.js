@@ -1,4 +1,28 @@
 // 큰 수 만들기 - 다시 시작
+// 풀이시도 10
+function solution(number, k) {
+  let idx = 0,
+    n = number.length;
+  let ans = "";
+  while (k > 0 && idx < n) {
+    if (idx > 0 && number[idx - 1] < number[idx]) {
+      let q = idx;
+      while (k > 0 && q - 1 >= 0 && number[q - 1] < number[idx]) {
+        q--;
+        n--;
+        k--;
+      }
+
+      number = number.slice(0, q) + number.slice(idx);
+      idx = q;
+    } else {
+      idx++;
+    }
+  }
+  ans = number.slice(0, n - k);
+  return ans;
+}
+
 // 풀이시도 9
 function solution(number, k) {
   let idx = 0,
