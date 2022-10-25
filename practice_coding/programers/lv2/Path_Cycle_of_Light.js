@@ -1,5 +1,79 @@
 // 빛의 경로 사이클
 
+// 풀이 완료
+
+function solution(grid) {
+  let n = grid.length,
+    m = grid[0].length,
+    check = [];
+  for (let i = 0; i < n; i++) {
+    check[i] = [];
+    for (let j = 0; j < m; j++) {
+      check[i][j] = { N: true, S: true, W: true, E: true };
+    }
+  }
+
+  function move(i, j, d, s) {
+    if (!check[i][j][d]) {
+      return [i, j, d, s];
+    } else {
+      check[i][j][d] = false;
+    }
+
+    function nextPosition(d) {
+      let [x, y] = [i, j];
+      if (d === "N") {
+        x = i > 0 ? x - 1 : n - 1;
+      }
+      if (d === "S") {
+        x = i < n - 1 ? x + 1 : 0;
+      }
+      if (d === "E") {
+        y = j > 0 ? y - 1 : m - 1;
+      }
+      if (d === "W") {
+        y = j < m - 1 ? y + 1 : 0;
+      }
+      return [x, y];
+    }
+
+    let [ni, nj] = nextPosition(d);
+    function nextDirection(d, sd) {
+      let db = {
+        N: { S: "N", L: "W", R: "E" },
+        S: { S: "S", L: "E", R: "W" },
+        E: { S: "E", L: "N", R: "S" },
+        W: { S: "W", L: "S", R: "N" },
+      };
+      return db[d][sd];
+    }
+
+    let nd = nextDirection(d, grid[ni][nj]);
+    return [ni, nj, nd, s + 1];
+  }
+
+  let ans = [];
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      for (let d of ["S", "N", "W", "E"]) {
+        if (check[i][j][d]) {
+          let s = 0,
+            ns = 0;
+          while (s === 0 || s !== ns) {
+            s = ns;
+            [i, j, d, ns] = move(i, j, d, s);
+          }
+          ans.push(s);
+        }
+      }
+    }
+  }
+  ans.sort((a, b) => a - b);
+
+  return ans;
+}
+
 // 풀이 시도 1
 function solution(grid) {
   let n = grid.length,
