@@ -1,5 +1,51 @@
 //억억단을 외우자
 
+// 풀이 시도 3
+function solution(e, starts) {
+  let ans = [],
+    max = 0,
+    target,
+    db = {},
+    min = Infinity;
+
+  function f(x) {
+    let h = Math.floor(Math.sqrt(x)),
+      ans = 0;
+    for (let i = 1; i <= h; i++) {
+      if (x % i === 0) {
+        if (i === x / i) {
+          ans++;
+        } else {
+          ans += 2;
+        }
+      }
+    }
+    return ans;
+  }
+
+  starts.map((x, i) => {
+    db[x] = i;
+    if (x < min) {
+      min = x;
+    }
+  });
+
+  for (let i = e; i >= min; i--) {
+    let idx = db[i],
+      k = f(i);
+    if (k > max) {
+      max = k;
+      target = i;
+    } else if (k === max) {
+      target = i;
+    }
+    if (idx !== undefined) {
+      ans[idx] = target;
+    }
+  }
+  return ans;
+}
+
 // 풀이 시도 2
 function solution(e, starts) {
   let ans = [],
