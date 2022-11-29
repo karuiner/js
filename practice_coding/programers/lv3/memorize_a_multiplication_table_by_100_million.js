@@ -1,6 +1,78 @@
 //억억단을 외우자
 
-// 풀이시도 4
+// 풀이 시도 5
+function solution(e, starts) {
+  let ans = [],
+    max = 0,
+    target,
+    db = {},
+    min = Infinity,
+    ldb = { 2: { 2: 1 }, 3: { 3: 1 } };
+
+  function f(x) {
+    let ans = 1;
+    if (x === 1) {
+      return x;
+    }
+    if (ldb[x] !== undefined) {
+      for (let i in ldb[x]) {
+        ans *= ldb[x][i] + 1;
+      }
+    } else {
+      let h = Math.floor(Math.sqrt(x));
+      if (h <= 2) {
+        h = 2;
+      }
+      for (let i = 2; i <= h; i++) {
+        if (x % i === 0) {
+          let [a, b] = [i, x / i];
+          if (ldb[b] === undefined) {
+            f(b);
+          }
+          ldb[x] = { ...ldb[b] };
+          if (ldb[x][a] === undefined) {
+            ldb[x][a] = 0;
+          }
+          ldb[x][a]++;
+          for (let i in ldb[x]) {
+            ans *= ldb[x][i] + 1;
+          }
+
+          break;
+        }
+      }
+    }
+
+    return ans;
+  }
+
+  starts.map((x, i) => {
+    db[x] = i;
+    if (x < min) {
+      min = x;
+    }
+  });
+
+  for (let i = e; i >= min; i--) {
+    let idx = db[i],
+      k = f(i);
+
+    if (k > max) {
+      max = k;
+      target = i;
+    } else if (k === max) {
+      target = i;
+    }
+
+    if (idx !== undefined) {
+      ans[idx] = target;
+    }
+  }
+
+  return ans;
+}
+
+// 풀이 시도 4
 function solution(e, starts) {
   let ans = [],
     max = 0,
