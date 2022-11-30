@@ -1,5 +1,48 @@
 //억억단을 외우자
 
+// 풀이완료
+function solution(e, starts) {
+  let ans = [],
+    max = 0,
+    target,
+    db = {},
+    min = e,
+    check = { 1: 1 };
+
+  let arr = Array(e + 1).fill(0);
+  for (let i = 2; i < e + 1; i++) {
+    let k = Math.min(Math.floor(e / i) + 1, i);
+    for (let j = 1; j < k; j++) {
+      arr[i * j] += 2;
+    }
+  }
+  let h = Math.floor(Math.sqrt(e)) + 1;
+  for (let i = 1; i < h; i++) {
+    arr[i ** 2]++;
+  }
+
+  starts.forEach((x, i) => {
+    db[x] = i;
+    if (x < min) {
+      min = x;
+    }
+  });
+
+  for (let i = e; i >= min; i--) {
+    let k = arr[i];
+    if (max < k) {
+      max = k;
+      target = i;
+    } else if (k === max) {
+      target = i;
+    }
+    if (db[i] !== undefined) {
+      ans[db[i]] = target;
+    }
+  }
+
+  return ans;
+}
 // 풀이 시도 5
 function solution(e, starts) {
   let ans = [],
