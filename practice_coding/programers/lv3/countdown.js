@@ -1,4 +1,34 @@
 //카운트 다운
+// 풀이시도
+// function solution(target) {
+//   let arr = Array(target + 1).fill(-1),
+//     arr1 = [],
+//     arr2 = [];
+//   for (let i = 21; i < 40; i++) {
+//     if (i % 2 === 0 || i % 3 === 0) {
+//       arr1.push(i);
+//     }
+//   }
+
+//   function f(x) {
+//     for (let i = 1; i <= 20; i++) {
+//       if (i >= x) {
+//         break;
+//       } else if (arr[x + i] < 0) {
+//         let [a, b] = arr[i];
+//         arr[x + i] = [a + 1, b + 1];
+//       } else if (arr[x + i]) {
+//       } else if (arr[x + i][0] - 1 === arr[x][0]) {
+//       }
+//     }
+
+//     for (let i of arr1) {
+//       if (i >= x) {
+//         break;
+//       }
+//     }
+//   }
+// }
 
 // 풀이시도 중
 function solution(target) {
