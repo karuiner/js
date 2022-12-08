@@ -1,5 +1,48 @@
 //양과 늑대
 
+// 풀이 완료
+function solution(info, edges) {
+  let ans = 0,
+    wolf = 0,
+    arr = [0],
+    db = {},
+    sheep = [];
+  for (let [i, j] of edges) {
+    if (db[i] === undefined) {
+      db[i] = [];
+    }
+    arr[j] = i;
+    db[i].push(j);
+  }
+  function f(arr, sheep, wolf) {
+    let ans = sheep;
+    for (let idx = 0; idx < arr.length; idx++) {
+      let u = arr[idx],
+        [a, b] = [sheep, wolf],
+        x = [];
+      if (db[u]) {
+        x = db[u];
+      }
+      let subarr = [...x, ...arr.slice(0, idx), ...arr.slice(idx + 1)];
+      let k = sheep - wolf;
+      if (info[u]) {
+        b++;
+      } else {
+        a++;
+      }
+      if (a - b > 0) {
+        let sub = f(subarr, a, b);
+        if (sub > ans) {
+          ans = sub;
+        }
+      }
+    }
+    return ans;
+  }
+  ans = f([0], 0, 0);
+  return ans;
+}
+
 // 풀이 시도 1
 function solution(info, edges) {
   let ans = 0,
