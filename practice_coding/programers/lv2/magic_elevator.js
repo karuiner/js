@@ -1,5 +1,43 @@
 // 마법의 엘레베이터
 
+// 풀이 시도 3
+function solution(storey) {
+  // 646
+  // 1000 - 354
+  // 300 + 54 9
+  // 100 - 46
+  // 40
+  // 10 + 4
+
+  function f(n) {
+    let s = `${n}`,
+      l = s.length,
+      k = Number(s[0]),
+      check = true,
+      p = 0;
+
+    if (l > 1) {
+      let p = 10 ** (l - 1),
+        h = 5 * p;
+      if (n < h) {
+        let x = Math.floor(n / p);
+        return x + f(n - x * p);
+      } else {
+        return 1 + f(2 * h - n);
+      }
+    } else {
+      let h = 5;
+      if (n > 5) {
+        return 1 + (10 - n);
+      } else {
+        return n;
+      }
+    }
+  }
+
+  return f(storey);
+}
+
 // 풀이 시도 2
 function solution(storey) {
   function f(n) {
