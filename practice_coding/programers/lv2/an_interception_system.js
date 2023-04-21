@@ -1,4 +1,44 @@
 //요격 시스템
+// 4차 시도 실패
+// 방향을 잘못 잡음
+function solution(targets) {
+  let ans = 0,
+    n = targets.length,
+    max = 0,
+    db = {},
+    q = 0;
+  targets.sort((a, b) => a[1] - b[1]);
+  let b = [...targets];
+  b.sort((a, b) => a[0] - b[0]);
+
+  function get([a, b], arr) {
+    let k = 0;
+    for (let i = 0; i < arr.length; i++) {
+      let [x, y] = arr[i];
+      if (x < b) {
+        k++;
+      } else {
+        break;
+      }
+    }
+    return arr.slice(k);
+  }
+  for (let [x, y] of targets) {
+    if (b[0][0] < y) {
+      b = get([x, y], b);
+      if (b.length < n) {
+        ans++;
+        n = b.length;
+      }
+    }
+    if (b.length === 0) {
+      break;
+    }
+  }
+
+  return ans - 1;
+}
+
 // 3차 시도 실패
 // 더 효율적인 코드를 작성해야 한다.
 function solution(targets) {
