@@ -1,4 +1,39 @@
 //요격 시스템
+// 5차 실패
+// 속도만 신경쓰다 정확성을 날려먹음
+// 이미 격추한 목록을 적용 하는 부분을 추가해야함.
+// 알고리즘을 다시 생각 해봐야겠음.
+function solution(targets) {
+  let ans = 0,
+    n = targets.length,
+    count = 0;
+  targets.sort((a, b) => a[1] - b[1]);
+  let arr = [...targets];
+  arr.sort((a, b) => a[0] - b[0]);
+  function find(x) {
+    let [a, b] = [0, arr.length];
+    while (a < b) {
+      let m = Math.floor((b + a) / 2);
+      if (x <= arr[m][0]) {
+        b = m;
+      } else {
+        a = m + 1;
+      }
+    }
+    return a;
+  }
+  for (let i of targets) {
+    let [a, b] = i;
+    let k = find(b);
+    if (k > count) {
+      ans++;
+      count = k;
+    }
+  }
+
+  return ans - 1;
+}
+
 // 4차 시도 실패
 // 방향을 잘못 잡음
 function solution(targets) {
