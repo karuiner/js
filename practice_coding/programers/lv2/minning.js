@@ -1,4 +1,88 @@
 //광석 캐기
+
+//  풀이 시도 3 실패
+function solution(picks, minerals) {
+  let idx = 0,
+    n = minerals.length,
+    k = Math.floor(n / 5) + 1;
+  function check(idx) {
+    let ans = [0, 0, 0];
+    for (let i = idx; i < idx + 5; i++) {
+      if (minerals[i]) {
+        if (picks[0] > 0) {
+          ans[0]++;
+        }
+        if (picks[1] > 0) {
+          ans[1] += minerals[i] !== "diamond" ? 1 : 5;
+        }
+        if (picks[2] > 0) {
+          if (minerals[i] === "diamond") {
+            ans[2] += 25;
+          } else if (minerals[i] === "iron") {
+            ans[2] += 5;
+          } else {
+            ans[2]++;
+          }
+        }
+      } else {
+        break;
+      }
+    }
+    return ans;
+  }
+  let arr = [];
+  while (idx < minerals.length) {
+    let k = check(idx);
+    arr.push(k);
+    idx += 5;
+  }
+  let p = [],
+    q = 0;
+  for (let i = 0; i < k; i++) {
+    for (let j = q; j < 3; j++) {
+      if (picks[j] > 0) {
+        p.push(j);
+        picks[j]--;
+        q = j;
+        break;
+      }
+    }
+  }
+  function permu(arr) {
+    let ans = [],
+      n = arr.length;
+    if (n > 1) {
+      for (let i = 0; i < n; i++) {
+        let larr = [...arr.slice(0, i), ...arr.slice(i + 1)];
+        let sub = permu(larr);
+        sub = sub.map((x) => [arr[i]].concat(x));
+        ans = ans.concat(sub);
+      }
+      return ans;
+    } else {
+      return arr;
+    }
+  }
+  let arrp = permu(p),
+    ans = Infinity;
+  for (let i of arrp) {
+    let l = i.length,
+      sub = 0;
+    for (let j = 0; j < l; j++) {
+      let k = i[j];
+      sub += arr[j][k];
+      if (sub >= ans) {
+        break;
+      }
+    }
+    if (sub < ans) {
+      ans = sub;
+    }
+  }
+
+  return ans;
+}
+
 // 풀이시도 2 실패
 // 가능한 모든케이스를 만들고 최소 값을 찾는다.
 function solution(picks, minerals) {
