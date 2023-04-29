@@ -1,5 +1,82 @@
 //광석 캐기
 
+// 풀이 완료
+// 이전 과정중 런타임오류의 원인은 초기에 정의한 값으로
+// 일부케이스에서는 +1이 필요치 않은데 적용되어 문제가 된것으로 추정한다.
+// 해당 케이스를 수정하니 정상적인 결과를 내보낸다.
+function solution(picks, minerals) {
+  let idx = 0,
+    n = minerals.length,
+    k = 0;
+  let db = [
+    { diamond: 1, iron: 1, stone: 1 },
+    { diamond: 5, iron: 1, stone: 1 },
+    { diamond: 25, iron: 5, stone: 1 },
+  ];
+  let rt = [];
+  for (let i = 0; i < n; i += 5) {
+    let sub = [0, 0, 0],
+      m = i + 5 >= n ? n : i + 5;
+    for (let j = i; j < m; j++) {
+      for (let k = 0; k < 3; k++) {
+        sub[k] += db[k][minerals[j]];
+      }
+    }
+    rt.push(sub);
+    k++;
+  }
+
+  let p = [],
+    q = 0;
+  for (let i = 0; i < k; i++) {
+    for (let j = q; j < 3; j++) {
+      if (picks[j] > 0) {
+        p.push(j);
+        picks[j]--;
+        q = j;
+        break;
+      }
+    }
+  }
+
+  function* heapsAlgorithm(n, array) {
+    if (n === 1) {
+      yield array.slice();
+    } else {
+      for (let i = 0; i < n - 1; i++) {
+        yield* heapsAlgorithm(n - 1, array);
+        const j = n % 2 === 0 ? i : 0;
+        [array[j], array[n - 1]] = [array[n - 1], array[j]]; // Swap
+      }
+      yield* heapsAlgorithm(n - 1, array);
+    }
+  }
+
+  function* getAllPermutations(array) {
+    yield* heapsAlgorithm(array.length, array);
+  }
+
+  let arrp = getAllPermutations(p),
+    ans = 0;
+  for (let i of arrp) {
+    let l = i.length,
+      sub = 0;
+    for (let j = 0; j < l; j++) {
+      let k = i[j];
+      sub += rt[j][k];
+
+      if (ans > 0 && sub >= ans) {
+        break;
+      }
+    }
+    if (ans === 0 || sub < ans) {
+      ans = sub;
+    }
+  }
+
+  return ans;
+}
+
 //  풀이 시도 3 실패
 function solution(picks, minerals) {
   let idx = 0,
