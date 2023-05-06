@@ -1,5 +1,38 @@
 //뒤에 있는 큰 수 찾기
 
+// 풀이시도 4
+// 두문항만 시간초과  그외 모두 풀이
+function solution(numbers) {
+  let ans = [],
+    n = numbers.length;
+  let marr = Array(n).fill(-1),
+    mx = -1;
+  for (let i = 0; i < n; i++) {
+    let k = n - 1 - i;
+    if (mx < 0 || numbers[k] > mx) {
+      marr[k] = numbers[k];
+      mx = numbers[k];
+    } else {
+      marr[k] = mx;
+    }
+  }
+  for (let i = 0; i < n; i++) {
+    let a = numbers[i];
+    let max = marr[i];
+    if (a >= max) {
+      ans[i] = -1;
+    } else {
+      let j = i + 1;
+      while (j < n && numbers[j] <= a) {
+        j++;
+      }
+      ans[i] = numbers[j];
+    }
+  }
+
+  return ans;
+}
+
 //풀이시도 3 실패
 // 더나쁜 결과
 function solution(numbers) {
