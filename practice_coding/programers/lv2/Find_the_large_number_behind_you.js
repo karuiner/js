@@ -1,5 +1,32 @@
 //뒤에 있는 큰 수 찾기
 
+// 풀이시도  5
+function solution(numbers) {
+  let n = numbers.length,
+    ans = Array(n).fill(-1),
+    arr = [];
+
+  for (let i = 0; i < n; i++) {
+    let k = numbers[i];
+    if (arr.length > 0) {
+      let sub = [],
+        max = -1;
+      for (let j of arr) {
+        let b = numbers[j];
+        if (k > b) {
+          ans[j] = k;
+        } else {
+          sub.push(j);
+        }
+      }
+      arr = sub;
+    }
+    arr.push(i);
+  }
+
+  return ans;
+}
+
 // 풀이시도 4
 // 두문항만 시간초과  그외 모두 풀이
 function solution(numbers) {
