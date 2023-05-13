@@ -1,4 +1,40 @@
-// 큰 수 만들기 - 다시 시작
+// 큰 수 만들기
+
+// 풀이 시도 11
+// 한개 빼고 모두 성공
+// 방법은 단순히 앞에서부터 주어진 길이 내의 값중 가장 큰값을
+// 첫번째 기준으로 삼는다. 그앞의 값은 버린다. 그리고 주어진기렝서 버려진 숫자의 갯수를 제한다.
+// 선택된 다음 수부터 위 방법을 반복한다.
+// 모든 수를 돌 때 까지 주어진 길이가 소모되지 않으면
+// 주어진 배열의 마지막에서부터 길이만큼을 제한다.
+function solution(number, k) {
+  let idx = 0,
+    n = number.length;
+  let ans = "";
+  while (k > 0 && idx < n) {
+    let l = idx + k > n - 1 ? n - 1 : idx + k,
+      max = 0,
+      si = idx;
+    for (let i = idx; i <= l; i++) {
+      let k = number[i];
+      if (k > max) {
+        max = k;
+        si = i;
+      }
+    }
+    ans += max;
+    k -= si - idx;
+    idx = si + 1;
+  }
+
+  if (k === 0) {
+    ans = ans + number.slice(idx);
+  } else {
+    ans = number.slice(0, n - k);
+  }
+  return ans;
+}
+
 // 풀이시도 10
 function solution(number, k) {
   let idx = 0,
