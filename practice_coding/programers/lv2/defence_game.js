@@ -1,4 +1,56 @@
 //디펜스 게임
+// 시도 3
+function solution(n, k, enemy) {
+  let ans = 0,
+    l = enemy.length,
+    marr = [];
+  if (k >= l) {
+    return l;
+  }
+
+  function insert(x) {
+    let left = 0;
+    let right = marr.length;
+
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+
+      if (x > marr[mid]) {
+        right = mid;
+      } else {
+        left = mid + 1;
+      }
+    }
+
+    marr.splice(left, 0, x);
+  }
+
+  function get() {
+    return marr.shift();
+  }
+  for (let i of enemy) {
+    if (n > i) {
+      n -= i;
+      insert(i);
+    } else if (k > 0) {
+      if (marr.length > 0) {
+        let p = get();
+        insert(i);
+        n += p - i;
+      }
+      k--;
+    } else {
+      n -= i;
+    }
+
+    if (n >= 0) {
+      ans++;
+    }
+  }
+
+  return ans;
+}
+
 // 시도 2
 function solution(n, k, enemy) {
   let ans = 0,
