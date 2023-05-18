@@ -1,4 +1,31 @@
 //디펜스 게임
+// 시도 5
+// 단순히 순차적으로 셈하는것도 속도가 느리다..
+function solution(n, k, enemy) {
+  let ans = 0,
+    l = enemy.length,
+    arr = [],
+    c = 0;
+  if (k >= l) {
+    ans = l;
+  } else {
+    for (let i of enemy) {
+      if (i >= 0.5 * n && k > 0) {
+        k--;
+      } else {
+        n -= i;
+      }
+      if (n > 0) {
+        c++;
+      } else {
+        break;
+      }
+    }
+    ans = c;
+  }
+  return ans;
+}
+
 // 시도 4
 function solution(n, k, enemy) {
   let ans = 0,
