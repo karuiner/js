@@ -1,4 +1,65 @@
 //디펜스 게임
+// 시도 6
+// k의길이가 고정이라는점을 활용하면 좋을것도 같은데..
+function solution(n, k, enemy) {
+  let ans = 0,
+    l = enemy.length,
+    marr = [],
+    c = 0;
+  if (k >= l) {
+    return l;
+  }
+
+  function f() {
+    let arr = [],
+      n = 0;
+    return {
+      push: (x) => {
+        if (x <= arr[n - 1]) {
+          arr[n] = x;
+        } else if (x > arr[0]) {
+          arr = [x].concat(arr);
+        } else {
+          let left = 0;
+          let right = n;
+          while (left < right) {
+            const mid = Math.floor((left + right) / 2);
+            if (x > arr[mid]) {
+              right = mid;
+            } else {
+              left = mid + 1;
+            }
+          }
+          arr.splice(left, 0, x);
+        }
+      },
+      get: () => {
+        return arr.shift();
+      },
+      n: n,
+      arr: arr,
+    };
+  }
+  let m = f();
+
+  for (let i = 0; i < l; i++) {
+    let a = enemy[i];
+    if (k > 0) {
+      m.push(a);
+      k--;
+    } else if (n > 0) {
+      m.push(a);
+      let q = m.get();
+      n -= q;
+    } else {
+      break;
+    }
+    ans++;
+  }
+
+  return ans;
+}
+
 // 시도 5
 // 단순히 순차적으로 셈하는것도 속도가 느리다..
 function solution(n, k, enemy) {
