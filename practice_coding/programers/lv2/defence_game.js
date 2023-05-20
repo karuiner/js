@@ -1,4 +1,64 @@
 //디펜스 게임
+// 시도 7
+function solution(n, k, enemy) {
+  let ans = 0,
+    l = enemy.length,
+    marr = [],
+    c = 0;
+  let arr = [];
+  function f() {
+    let arr = [],
+      s = 0,
+      n = 0;
+    return {
+      push: (x) => {
+        if (n > 0 && x > arr[n - 1]) {
+          let i = 0;
+          if (x < arr[0]) {
+            let left = 0;
+            let right = n;
+            while (left < right) {
+              const mid = Math.floor((left + right) / 2);
+              if (x > arr[mid]) {
+                right = mid;
+              } else {
+                left = mid + 1;
+              }
+            }
+            i = left;
+          }
+          arr.splice(i, 0, x);
+          s += x;
+          if (n + 1 > k) {
+            s -= arr[n];
+            arr = arr.slice(0, k);
+          } else {
+            n++;
+          }
+        } else if (n === 0) {
+          arr[0] = x;
+          s = x;
+          n++;
+        }
+      },
+      sum: s,
+
+      n: n,
+      arr: arr,
+    };
+  }
+  let m = f();
+
+  for (let i of enemy) {
+    m.push(i);
+    console.log(m.sum, m.arr);
+    c += i;
+    arr.push(c);
+  }
+  console.log(arr);
+  return ans;
+}
+
 // 시도 6
 // k의길이가 고정이라는점을 활용하면 좋을것도 같은데..
 function solution(n, k, enemy) {
