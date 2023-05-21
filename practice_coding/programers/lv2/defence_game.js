@@ -1,4 +1,72 @@
 //디펜스 게임
+// 시도 8
+// 두개의 시간초과를 제외하고 모두 풀이함.
+// 방법
+// 순차적으로 진행하면서 주어진 갯수 만큼 채울수 있는 최대값 배열을 만들고 해당 배열의 합을 구한다.
+// 현재 주어진 값들을 합산하는 합 변수를 하나 정의한다.
+// 주어진 값과 최대 값 배열의 총합을 더한 값이 합산 값 변수 보다 작아지는 경우
+// 연산을 종료한다.
+// 이전까지의 횟수를 결과로 돌려준다.
+// 즉 현재 단계까지 수행하면서 무시되지 않은 스테이지의 값을 초기값과 비요하여 불가능 가능여부를 확인하는 것이다.
+
+function solution(n, k, enemy) {
+  let ans = 0,
+    l = enemy.length,
+    marr = [],
+    c = 0;
+
+  function f() {
+    let arr = [],
+      s = 0,
+      n = 0;
+    function push(x) {
+      s += x;
+      if (n === 0 || x <= arr[0]) {
+        arr.splice(0, 0, x);
+      } else if (x > arr[n - 1]) {
+        arr[n] = x;
+      } else {
+        let left = 0;
+        let right = n;
+        while (left < right) {
+          const mid = Math.floor((left + right) / 2);
+          if (x > arr[mid]) {
+            left = mid + 1;
+          } else {
+            right = mid;
+          }
+        }
+        arr.splice(left, 0, x);
+      }
+      if (n + 1 > k) {
+        let p = arr.shift();
+        s -= p;
+      } else {
+        n++;
+      }
+    }
+
+    return {
+      push: push,
+      sum: () => s,
+      n: () => n,
+      arr: arr,
+    };
+  }
+  let m = f(),
+    s = 0;
+
+  for (let i of enemy) {
+    m.push(i);
+    s += i;
+    if (s > m.sum() + n) {
+      break;
+    }
+    ans++;
+  }
+  return ans;
+}
+
 // 시도 7
 function solution(n, k, enemy) {
   let ans = 0,
