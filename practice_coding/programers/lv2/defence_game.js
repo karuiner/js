@@ -1,4 +1,74 @@
 //디펜스 게임
+// 시도 9
+function solution(n, k, enemy) {
+  let ans = k,
+    l = enemy.length,
+    marr = [],
+    c = 0;
+  if (l <= k) {
+    return l;
+  }
+
+  function f(k) {
+    let arr = enemy.slice(0, k),
+      s = 0,
+      n = 0;
+    arr.sort((a, b) => a - b);
+    for (let i of arr) {
+      s += i;
+      n++;
+    }
+
+    function push(x) {
+      s += x;
+      if (n === 0 || x <= arr[0]) {
+        arr.splice(0, 0, x);
+      } else if (x > arr[n - 1]) {
+        arr[n] = x;
+      } else {
+        let left = 0;
+        let right = n;
+        while (left < right) {
+          const mid = Math.floor((left + right) / 2);
+          if (x > arr[mid]) {
+            left = mid + 1;
+          } else {
+            right = mid;
+          }
+        }
+        arr.splice(left, 0, x);
+      }
+      if (n + 1 > k) {
+        let p = arr.shift();
+        s -= p;
+      } else {
+        n++;
+      }
+    }
+
+    return {
+      push: push,
+      sum: () => s,
+      n: () => n,
+      arr: arr,
+    };
+  }
+  let m = f(k),
+    s = m.sum();
+
+  for (let i = k; i < l; i++) {
+    let a = enemy[i];
+    m.push(a);
+    s += a;
+    if (s > m.sum() + n) {
+      break;
+    }
+
+    ans++;
+  }
+  return ans;
+}
+
 // 시도 8
 // 두개의 시간초과를 제외하고 모두 풀이함.
 // 방법
