@@ -1,4 +1,97 @@
 //디펜스 게임
+// 시도 10
+// 잘못된 접근
+function solution(n, k, enemy) {
+  let ans = k,
+    l = enemy.length,
+    marr = [],
+    c = 0;
+  if (l <= k) {
+    return l;
+  }
+
+  function f(k) {
+    let arr = enemy.slice(0, k),
+      s = 0,
+      n = 0,
+      t = 0,
+      key = [],
+      db = [];
+    for (let i of arr) {
+      if (db[i] === undefined) {
+        db[i] = 0;
+        key[n] = i;
+        n++;
+      }
+      db[i]++;
+      s += i;
+      t++;
+    }
+    key.sort((a, b) => a - b);
+
+    function push(x) {
+      s += x;
+      if (n === 0 || x <= key[0]) {
+        key.splice(0, 0, x);
+        db[x] = 1;
+      } else if (x > key[n - 1]) {
+        key[n] = x;
+        db[x] = 1;
+      } else {
+        if (db[x] === undefined) {
+          let left = 0;
+          let right = n;
+          while (left < right) {
+            const mid = Math.floor((left + right) / 2);
+            if (x > arr[mid]) {
+              left = mid + 1;
+            } else {
+              right = mid;
+            }
+          }
+
+          arr.splice(left, 0, x);
+          db[x] = 0;
+        }
+        db[x]++;
+      }
+      if (t + 1 > k) {
+        let q = key[0];
+        if (db[q] > 1) {
+          db[q]--;
+        } else {
+          key.shift();
+          delete db[q];
+        }
+        s -= q;
+      } else {
+        t++;
+      }
+    }
+
+    return {
+      push: push,
+      sum: () => s,
+      n: () => n,
+      arr: arr,
+    };
+  }
+  let m = f(k),
+    s = m.sum();
+
+  for (let i = k; i < l; i++) {
+    let a = enemy[i];
+    m.push(a);
+    s += a;
+    if (s > m.sum() + n) {
+      break;
+    }
+
+    ans++;
+  }
+  return ans;
+}
+
 // 시도 9
 function solution(n, k, enemy) {
   let ans = k,
